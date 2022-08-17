@@ -1,4 +1,4 @@
-import { ComponentPropsWithoutRef, ElementType, PropsWithChildren } from 'react';
+import type { ComponentPropsWithoutRef, ElementType, PropsWithChildren } from 'react';
 import classnames from 'classnames';
 
 type ButtonProps<T extends ElementType> = PropsWithChildren<{
