@@ -1,4 +1,5 @@
 import path from 'path';
+import nodeExternals from 'webpack-node-externals';
 import TerserPlugin from 'terser-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -73,6 +74,7 @@ const cleintConfig: Configuration = {
 
 const serverConfig: Configuration = {
   target: 'node',
+  externals: [nodeExternals()],
   entry: './src/server/app.ts',
   mode: process.env.NODE_ENV as Environment ?? 'development',
   output: {
