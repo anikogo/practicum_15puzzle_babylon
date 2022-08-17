@@ -54,3 +54,31 @@ h2 {
 .visually-hidden {
     @apply absolute w-px h-px -m-px border-0 p-0 whitespace-nowrap overflow-hidden
 }
+
+.scene {
+    text-align: center;
+    margin-top: 80px;
+}
+
+.tiles {
+    display: grid;
+    grid-gap: 10px;
+    width: 310px;
+    height: 310px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+.scene .text {
+    font-size: 50px;
+}
+
+.square {
+    background: #c3dafe;
+    width: 150px;
+    height: 150px;
+    font-size: 90px;
+    display: inline-grid;
+    place-content: center;
+    border-radius: 5px;
+}
