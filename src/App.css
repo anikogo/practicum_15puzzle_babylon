@@ -69,10 +69,6 @@ h2 {
     grid-template-rows: repeat(2, 1fr);
 }
 
-.scene .text {
-    font-size: 50px;
-}
-
 .square {
     background: #c3dafe;
     width: 150px;

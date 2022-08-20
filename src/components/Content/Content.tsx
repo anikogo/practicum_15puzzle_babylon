@@ -3,9 +3,10 @@ import classnames from 'classnames';
 
 type Props = PropsWithChildren<{
   heading?: string;
+  className?: string;
 }>;
 
-export default function Content({ heading, children }: Props) {
+export default function Content({ heading, className, children }: Props) {
   return (
     <>
       {heading && (
@@ -19,6 +20,7 @@ export default function Content({ heading, children }: Props) {
           {
             'pt-20': !heading,
           },
+          className,
         )}
       >
         {children}
