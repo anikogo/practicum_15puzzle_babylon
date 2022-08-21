@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import classnames from 'classnames';
@@ -8,6 +7,7 @@ import { Popover, Transition } from '@headlessui/react';
 import { MenuIcon } from '@heroicons/react/outline';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 
+import { Fragment } from 'react';
 import Tab from '../Tab';
 import Logo from '../Logo';
 import Button from '../Button';
@@ -25,6 +25,14 @@ export default function Header({ user }: HeaderProps) {
           <div className="flex justify-start lg:w-0 lg:flex-1 space-x-6">
             <Link to="/"><Logo /></Link>
             <nav className="hidden md:flex items-center space-x-2">
+              <Button
+                variant={pathname === '/game' ? 'filled' : 'link'}
+                color="green"
+                as={Link}
+                to="/game"
+              >
+                Game
+              </Button>
               <Button
                 variant={pathname === '/leaderboard' ? 'filled' : 'link'}
                 color="green"
