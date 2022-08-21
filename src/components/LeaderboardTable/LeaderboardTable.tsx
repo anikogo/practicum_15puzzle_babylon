@@ -116,7 +116,7 @@ export default function LeaderboardTable({ users }: { users: (User & { score: nu
   ) as TableTypeWorkaround<User & { score: number }>;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 pt-4 sm:px-6">
+    <>
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -165,6 +165,6 @@ export default function LeaderboardTable({ users }: { users: (User & { score: nu
         </div>
       </div>
       <Pagination {...paginationProps} />
-    </div>
+    </>
   );
 }
