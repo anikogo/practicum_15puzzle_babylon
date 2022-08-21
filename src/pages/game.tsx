@@ -77,10 +77,8 @@ export default function GamePage() {
   }, [numbers, sideSize]);
 
   return (
-    <>
-      <Content heading="Game">
-        <canvas ref={ref} width={sideSize} height={sideSize} />
-      </Content>
-    </>
+    <Content heading="Game">
+      <canvas ref={ref} width={sideSize} height={sideSize} />
+    </Content>
   );
 }
