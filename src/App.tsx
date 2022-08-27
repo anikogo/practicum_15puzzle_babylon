@@ -10,7 +10,6 @@ import LeaderboardPage from './pages/leaderboard';
 import SignInPage from './pages/signin';
 import SignUpPage from './pages/signup';
 import ProfilePage from './pages/profile';
-import GamePage from './pages/game';
 
 export default function App(): JSX.Element {
   return (
@@ -24,7 +23,6 @@ export default function App(): JSX.Element {
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/game" element={<GamePage />} />
         <Route path="*" element={<Page404 />} />
       </Routes>
     </Router>

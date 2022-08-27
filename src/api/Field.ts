@@ -9,12 +9,15 @@ export default class Field {
 
   numbers: number[];
 
-  // eslint-disable-next-line max-len
-  constructor(fieldSize: number, fieldColor: string, ctx: CanvasRenderingContext2D, tiles: Record<string, number>[], numbers: number[]) {
+  constructor(
+    fieldSize: number,
+    ctx: CanvasRenderingContext2D,
+    numbers: number[],
+  ) {
     this.size = fieldSize;
-    this.color = fieldColor;
+    this.color = 'lightgreen';
     this.ctx = ctx;
-    this.tiles = tiles;
+    this.tiles = [];
     this.numbers = numbers;
   }
 
@@ -57,7 +60,6 @@ export default class Field {
     this.drawField();
     this.tiles = [];
 
-    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < this.numbers.length; i++) {
       if (i < 4 && i > 0) x += tileSize;
 
@@ -144,5 +146,56 @@ export default class Field {
     const ypos: number = 4 - Math.floor((this.size - y) / (this.size / 4));
 
     return (ypos - 1) * 4 + xpos - 1;
+  }
+
+  handleClick(e: MouseEvent, rect: DOMRect) {
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const idx = this.getTileIndex(x, y);
+
+    if (this.tiles[idx - 1]) {
+      if (this.tiles[idx - 1].num === 0 && idx !== 0 && idx !== 4 && idx !== 8 && idx !== 12) {
+        this.updateTile(idx, 'left');
+        return;
+      }
+    }
+
+    if (this.tiles[idx + 1]) {
+      if (this.tiles[idx + 1].num === 0 && idx !== 3 && idx !== 7 && idx !== 11 && idx !== 15) {
+        this.updateTile(idx, 'right');
+        return;
+      }
+    }
+
+    if (this.tiles[idx - 4]) {
+      if (this.tiles[idx - 4].num === 0 && idx > 3) {
+        this.updateTile(idx, 'top');
+        return;
+      }
+    }
+
+    if (this.tiles[idx + 4]) {
+      // eslint-disable-next-line max-len
+      if (this.tiles[idx + 4].num === 0 && idx < 12) {
+        this.updateTile(idx, 'bottom');
+      }
+    }
+  }
+
+  keyboardMovie(e: KeyboardEvent) {
+    const idx = this.tiles.findIndex((elem) => elem.num === 0);
+
+    if (e.code === 'ArrowRight' && idx !== 0 && idx !== 4 && idx !== 8 && idx !== 12) {
+      this.updateTile(idx - 1, 'right');
+    }
+    if (e.code === 'ArrowLeft' && idx !== 3 && idx !== 7 && idx !== 11 && idx !== 15) {
+      this.updateTile(idx + 1, 'left');
+    }
+    if (e.code === 'ArrowDown' && idx > 3) {
+      this.updateTile(idx - 4, 'bottom');
+    }
+    if (e.code === 'ArrowUp' && idx < 12) {
+      this.updateTile(idx + 4, 'top');
+    }
   }
 }

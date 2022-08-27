@@ -26,14 +26,6 @@ export default function Header({ user }: HeaderProps) {
             <Link to="/"><Logo /></Link>
             <nav className="hidden md:flex items-center space-x-2">
               <Button
-                variant={pathname === '/game' ? 'filled' : 'link'}
-                color="green"
-                as={Link}
-                to="/game"
-              >
-                Game
-              </Button>
-              <Button
                 variant={pathname === '/leaderboard' ? 'filled' : 'link'}
                 color="green"
                 as={Link}
