@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import classnames from 'classnames';
@@ -8,6 +7,7 @@ import { Popover, Transition } from '@headlessui/react';
 import { MenuIcon } from '@heroicons/react/outline';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 
+import { Fragment } from 'react';
 import Tab from '../Tab';
 import Logo from '../Logo';
 import Button from '../Button';

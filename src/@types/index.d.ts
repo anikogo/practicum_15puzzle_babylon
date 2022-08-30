@@ -1,9 +1,13 @@
 declare module '*.jpg';
 
 type User = {
-  username: string;
+  id: number;
+  first_name: string;
+  second_name: string;
+  display_name: string;
+  login: string;
   email: string;
-  firstname: string;
-  lastname: string;
+  phone: string;
+  avatar?: string;
   password?: string;
 };
