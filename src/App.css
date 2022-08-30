@@ -11,7 +11,8 @@ body {
 }
 
 #root {
-    @apply flex flex-col h-full
+    @apply grid min-h-screen;
+    grid-auto-rows: min-content;
 }
 
 h1,
@@ -67,10 +68,6 @@ h2 {
     height: 310px;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-}
-
-.scene .text {
-    font-size: 50px;
 }
 
 .square {

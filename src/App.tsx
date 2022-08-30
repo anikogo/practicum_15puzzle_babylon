@@ -15,7 +15,6 @@ export default function App(): JSX.Element {
   return (
     <Router>
       <Header />
-
       <Routes>
         <Route path="/" element={<IndexPage />} />
         <Route path="/forum" element={<ForumPage />} />
