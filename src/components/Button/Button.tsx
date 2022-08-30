@@ -21,8 +21,9 @@ export default function Button<T extends ElementType = 'button'>({
       className={classnames(
         'btn',
         {
-          [`bg-${color}-500 border-2 border-transparent hover:bg-${color}-300 text-white`]: variant === 'filled',
-          [`text-${color}-500 border-2 border-${color}-500 hover:text-${color}-300 hover:border-${color}-300 bg-transparent`]: variant === 'outline',
+          [`bg-${color}-500 border-transparent hover:bg-${color}-300 text-white`]: variant === 'filled',
+          [`text-${color}-500 border-${color}-500 hover:text-${color}-300 hover:border-${color}-300 bg-transparent`]: variant === 'outline',
+          [`text-${color}-500 border-transparent hover:text-${color}-300 hover:border-${color}-300 bg-transparent`]: variant === 'link',
           'hover:text-gray-500 hover:bg-gray-100': variant === 'icon',
           'focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500': variant === 'icon',
         },

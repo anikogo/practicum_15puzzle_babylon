@@ -1,3 +1,5 @@
+declare module '*.jpg';
+
 type User = {
   username: string;
   email: string;
