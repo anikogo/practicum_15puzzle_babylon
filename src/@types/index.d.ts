@@ -1,5 +1,3 @@
-declare module '*.jpg';
-
 type User = {
   id: number;
   first_name: string;
