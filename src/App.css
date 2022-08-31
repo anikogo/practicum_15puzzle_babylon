@@ -58,20 +58,28 @@ h2 {
 
 .scene {
     text-align: center;
-    margin-top: 80px;
+}
+
+.x2 .tiles {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    width: 310px;
+    height: 310px;
+}
+
+.x3 .tiles {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 470px;
+    height: 470px;
 }
 
 .tiles {
     display: grid;
     grid-gap: 10px;
-    width: 310px;
-    height: 310px;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
 }
 
 .square {
-    background: #c3dafe;
     width: 150px;
     height: 150px;
     font-size: 90px;
