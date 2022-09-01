@@ -34,7 +34,12 @@ const inputs = [
 ];
 
 export default function SignInPage() {
-  const { control, handleSubmit } = useForm<FormPayload>();
+  const { control, handleSubmit } = useForm<FormPayload>({
+    defaultValues: {
+      login: '',
+      password: '',
+    },
+  });
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);

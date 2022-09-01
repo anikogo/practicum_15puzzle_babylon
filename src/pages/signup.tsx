@@ -78,41 +78,52 @@ const inputs = [
 ];
 
 export default function SignUpPage() {
-  const { control, handleSubmit } = useForm<FormPayload>();
+  const { control, handleSubmit } = useForm<FormPayload>({
+    defaultValues: {
+      first_name: '',
+      second_name: '',
+      login: '',
+      email: '',
+      password: '',
+      phone: '',
+    },
+  });
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
   });
   return (
-    <Content heading="Sign Up">
-      <h1 className="font-bold leading-tight  text-4xl text-center mb-6">Sign In Page</h1>
-      <form onSubmit={onSubmit} className="rounded-xl bg-white w-[445px] grid">
-        {inputs.map((input) => (
-          <Controller
-            key={input.name}
-            name={input.name as keyof FormPayload}
-            rules={{
-              pattern: input.pattern,
-              required: input.required,
-            }}
-            control={control}
-            render={({ field, fieldState }) => (
-              <Input
-                {...field}
-                {...input}
-                errorText={fieldState.error?.message}
-              />
-            )}
-          />
-        ))}
-        <Button
-          variant="filled"
-          color="green"
-          className="mt-4 mb-16"
-        >
-          <span>Sign up</span>
-        </Button>
-      </form>
+    <Content heading="Sign Up" className="h-[calc(100vh_-_128px)] w-full flex">
+      <div className="rounded-3xl bg-gray-100 w-max h-full p-8 m-auto">
+        <h1 className="font-bold leading-tight  text-4xl text-center mb-6">Sign Up Page</h1>
+        <form onSubmit={onSubmit} className="w-[445px] grid">
+          {inputs.map((input) => (
+            <Controller
+              key={input.name}
+              name={input.name as keyof FormPayload}
+              rules={{
+                pattern: input.pattern,
+                required: input.required,
+              }}
+              control={control}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  {...input}
+                  errorText={fieldState.error?.message}
+                />
+              )}
+            />
+          ))}
+          <Button
+            variant="filled"
+            color="green"
+            className="mt-4 mb-16"
+          >
+            <span>Sign up</span>
+          </Button>
+        </form>
+      </div>
     </Content>
   );
 }
