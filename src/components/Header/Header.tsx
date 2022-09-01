@@ -1,3 +1,6 @@
+import { Fragment, useEffect } from 'react';
+import type { MouseEventHandler } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import classnames from 'classnames';
@@ -7,18 +10,42 @@ import { Popover, Transition } from '@headlessui/react';
 import { MenuIcon } from '@heroicons/react/outline';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 
-import { Fragment } from 'react';
 import Tab from '../Tab';
 import Logo from '../Logo';
 import Button from '../Button';
 
+import { useGetUserMutation, useSignOutMutation } from '../../store';
+import { setCredentials } from '../../store/services/authApi/userSlice';
+import type { RootState } from '../../store';
+
 type HeaderProps = {
-  user?: User;
   disabled?: boolean;
 };
 
-export default function Header({ user, disabled }: HeaderProps) {
+export default function Header({ disabled }: HeaderProps) {
   const { pathname } = useLocation();
+  const dispatch = useDispatch();
+
+  const [getUser] = useGetUserMutation();
+  const [signOut] = useSignOutMutation();
+  const user = useSelector((state: RootState) => state.user.data);
+
+  useEffect(() => {
+    if (!user) {
+      getUser().unwrap()
+        .then((userData) => dispatch(setCredentials(userData)));
+    }
+  }, [user]);
+
+  const signOutHandler = (close: () => void): MouseEventHandler => (event) => {
+    event.preventDefault();
+    signOut().then(() => {
+      close();
+      dispatch(setCredentials(null));
+      localStorage.removeItem('userAuth');
+    });
+  };
+
   return (
     <Popover as="header" className="bg-gray-700 fixed w-full top-0 z-10 border-b-2 border-gray-800">
       <div className="mx-auto px-4 sm:px-6">
@@ -74,7 +101,7 @@ export default function Header({ user, disabled }: HeaderProps) {
                       className="flex items-center"
                       active={open || pathname === '/profile'}
                     >
-                      <span>Account</span>
+                      <span>{user.display_name ?? `${user.first_name} ${user.second_name}`}</span>
                       <ChevronDownIcon
                         className={classnames('ml-2 h-5 w-5', {
                           'text-gray-600': open,
@@ -107,7 +134,14 @@ export default function Header({ user, disabled }: HeaderProps) {
                             >
                               Profile
                             </Tab>
-                            <Tab as={Link} to="/signout" className="w-full" onClick={() => close()}>Sign Out</Tab>
+                            <Tab
+                              to="/"
+                              as={Link}
+                              className="w-full"
+                              onClick={signOutHandler(close)}
+                            >
+                              Sign Out
+                            </Tab>
                           </div>
                         </div>
                       </Popover.Panel>

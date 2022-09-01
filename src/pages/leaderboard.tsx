@@ -6,6 +6,7 @@ import useDataMock from '../_demodata/useDataMock';
 export default function LeaderboardPage() {
   const handleError = useErrorHandler();
   const { data = [], error } = useDataMock<(User & { score: number })[]>('users');
+  console.log(data, error);
   if (error) {
     handleError(error);
   }
