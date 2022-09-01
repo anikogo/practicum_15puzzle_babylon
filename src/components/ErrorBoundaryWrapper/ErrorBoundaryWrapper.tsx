@@ -13,9 +13,9 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <>
       <Header disabled />
-      <Content className="bg-gray-100 w-full h-[100vh]">
+      <Content className="bg-white w-full h-[100vh]">
         <div className="grow h-full w-max flex items-center mx-auto">
-          <div role="alert" className="m-auto bg-white content-center p-8 rounded-3xl">
+          <div role="alert" className="m-auto bg-gray-100 content-center p-8 rounded-3xl">
             <div className="scene x3">
               <div className="tiles">
                 {'APPERROR'.split('').map((char, index) => (
