@@ -26,8 +26,8 @@ export default function IndexPage() {
   }, [numbers, sideSize]);
 
   return (
-    <Content heading="Game">
-      <canvas ref={ref} width={sideSize} height={sideSize} className="mt-6" />
+    <Content heading="Game" className="flex w-full h-[calc(100vh_-_128px)]">
+      <canvas ref={ref} width={sideSize} height={sideSize} className="m-auto" />
     </Content>
   );
 }
