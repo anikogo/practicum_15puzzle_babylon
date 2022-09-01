@@ -71,7 +71,7 @@
     "react-hook-form": "7.34.2",
     "react-redux": "8.0.2",
     "react-router-dom": "6.3.0",
-    "react-table": "7.7.0",
+    "react-table": "7.8.0",
     "tailwindcss-border-gradients": "2.0.3"
   }
 }
