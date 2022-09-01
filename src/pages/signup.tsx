@@ -95,7 +95,7 @@ export default function SignUpPage() {
   return (
     <Content heading="Sign Up" className="h-[calc(100vh_-_128px)] w-full flex">
       <div className="rounded-3xl bg-gray-100 w-max h-full p-8 m-auto">
-        <h1 className="font-bold leading-tight  text-4xl text-center mb-6">Sign Up Page</h1>
+        <h2 className="text-center">Creane new account</h2>
         <form onSubmit={onSubmit} className="w-[445px] grid">
           {inputs.map((input) => (
             <Controller
