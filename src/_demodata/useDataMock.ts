@@ -6,7 +6,7 @@ import users from './users';
 type FetchState<T> = {
   loading: boolean;
   data?: T;
-  error: boolean | string;
+  error: Error | null;
 };
 
 const demoData: Record<string, unknown> = {
@@ -17,7 +17,7 @@ const demoData: Record<string, unknown> = {
 export default function useDataMock<T>(url: string) {
   const [state, setState] = useState<FetchState<T>>({
     loading: true,
-    error: false,
+    error: null,
     data: undefined,
   });
 
@@ -31,7 +31,7 @@ export default function useDataMock<T>(url: string) {
   })
     .then((data) => setState({
       loading: false,
-      error: false,
+      error: null,
       data: data as T,
     }))
     .catch((error) => setState({

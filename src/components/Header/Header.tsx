@@ -14,42 +14,49 @@ import Button from '../Button';
 
 type HeaderProps = {
   user?: User;
+  disabled?: boolean;
 };
 
-export default function Header({ user }: HeaderProps) {
+export default function Header({ user, disabled }: HeaderProps) {
   const { pathname } = useLocation();
   return (
     <Popover as="header" className="bg-gray-700 fixed w-full top-0 z-10 border-b-2 border-gray-800">
       <div className="mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-2 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1 space-x-6">
-            <Link to="/"><Logo /></Link>
-            <nav className="hidden md:flex items-center space-x-2">
-              <Button
-                variant={pathname === '/leaderboard' ? 'filled' : 'link'}
-                color="green"
-                as={Link}
-                to="/leaderboard"
-              >
-                Leaderboard
-              </Button>
-              <Button
-                variant={pathname === '/forum' ? 'filled' : 'link'}
-                color="green"
-                as={Link}
-                to="/forum"
-              >
-                Forum
-              </Button>
-              <Button
-                variant={pathname === '/about' ? 'filled' : 'link'}
-                color="green"
-                as={Link}
-                to="/about"
-              >
-                About
-              </Button>
-            </nav>
+            {disabled ? (
+              <Logo />
+            ) : (
+              <>
+                <Link to="/"><Logo /></Link>
+                <nav className="hidden md:flex items-center space-x-2">
+                  <Button
+                    variant={pathname === '/leaderboard' ? 'filled' : 'link'}
+                    color="green"
+                    as={Link}
+                    to="/leaderboard"
+                  >
+                    Leaderboard
+                  </Button>
+                  <Button
+                    variant={pathname === '/forum' ? 'filled' : 'link'}
+                    color="green"
+                    as={Link}
+                    to="/forum"
+                  >
+                    Forum
+                  </Button>
+                  <Button
+                    variant={pathname === '/about' ? 'filled' : 'link'}
+                    color="green"
+                    as={Link}
+                    to="/about"
+                  >
+                    About
+                  </Button>
+                </nav>
+              </>
+            )}
           </div>
           <div className="-mr-2 -my-2 md:hidden">
             <Button as={Popover.Button} variant="icon">
