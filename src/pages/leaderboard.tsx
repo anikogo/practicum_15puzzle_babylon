@@ -11,7 +11,7 @@ export default function LeaderboardPage() {
   }
   return (
     <Content className="bg-gray-100" heading="Leaderboard">
-      <LeaderboardTable users={data.slice(0, 100)} />
+      <LeaderboardTable users={data} />
     </Content>
   );
 }
