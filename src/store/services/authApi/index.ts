@@ -14,6 +14,7 @@ const authApi = createApi({
         url: '/signup',
         method: 'POST',
         credentials: 'include',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -25,6 +26,7 @@ const authApi = createApi({
         url: '/signin',
         method: 'POST',
         credentials: 'include',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -36,6 +38,7 @@ const authApi = createApi({
         url: '/user',
         method: 'GET',
         credentials: 'include',
+        mode: 'no-cors',
       }),
       invalidatesTags: ['User'],
     }),
@@ -44,6 +47,7 @@ const authApi = createApi({
         url: '/logout',
         method: 'POST',
         credentials: 'include',
+        mode: 'no-cors',
       }),
       invalidatesTags: ['User'],
     }),
