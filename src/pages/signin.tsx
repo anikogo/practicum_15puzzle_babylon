@@ -1,8 +1,13 @@
 import { useForm, Controller } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useErrorHandler } from 'react-error-boundary';
 
 import Content from '../components/Content';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import { useGetUserMutation, useSignInMutation } from '../store';
+import { setCredentials } from '../store/services/authApi/userSlice';
 
 type FormPayload = {
   login: string;
@@ -29,11 +34,16 @@ const inputs = [
     },
     required: true,
     type: 'password',
-    autoComplete: 'password',
+    autoComplete: 'current-password',
   },
 ];
 
 export default function SignInPage() {
+  const errorHandler = useErrorHandler();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [signIn] = useSignInMutation();
+  const [getUser] = useGetUserMutation();
   const { control, handleSubmit } = useForm<FormPayload>({
     defaultValues: {
       login: '',
@@ -41,8 +51,15 @@ export default function SignInPage() {
     },
   });
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      await signIn(data);
+      const userData = await getUser().unwrap();
+      await dispatch(setCredentials(userData));
+      navigate('/');
+    } catch ({ status, data: { reason } }) {
+      errorHandler(new Error(`${status}: ${reason}`));
+    }
   });
   return (
     <Content heading="Sign In" className="h-[calc(100vh_-_128px)] w-full flex">
