@@ -23,7 +23,6 @@ export default function App(): JSX.Element {
       <Provider store={store}>
         <Router>
           <ErrorBoundaryWrapper>
-            {/* <Preloader /> */}
             <Routes>
               <Route path="/" element={<IndexPage />} />
               <Route path="/forum" element={<ForumPage />} />
