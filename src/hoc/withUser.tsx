@@ -1,15 +1,12 @@
 import { ComponentType, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { useErrorHandler } from 'react-error-boundary';
 import type { AxiosError } from 'axios';
 
 import Preloader from '../components/Preloader';
-import makeDataSelector from '../utils/makeDataSelector';
 
+import useUser from '../hook/useUser';
 import { useGetUserMutation } from '../store';
-
-const userSelector = makeDataSelector('user');
 
 export default function withUser<P extends Record<string, unknown>>(
   Page: ComponentType<P>,
@@ -17,7 +14,7 @@ export default function withUser<P extends Record<string, unknown>>(
 ) {
   return function WithUser(pageProps: P & { user?: User }) {
     const handleErrors = useErrorHandler();
-    let userData: User | null = useSelector(userSelector);
+    let userData: User | null = useUser();
     const [getUser, {
       isUninitialized,
       isLoading,

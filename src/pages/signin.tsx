@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useErrorHandler } from 'react-error-boundary';
@@ -5,6 +6,9 @@ import { useErrorHandler } from 'react-error-boundary';
 import Content from '../components/Content';
 import Input from '../components/Input';
 import Button from '../components/Button';
+
+import useUser from '../hook/useUser';
+import withUser from '../hoc/withUser';
 import { useSignInMutation } from '../store';
 
 type FormPayload = {
@@ -36,15 +40,22 @@ const inputs = [
   },
 ];
 
-export default function SignInPage() {
+function SignInPage() {
   const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+  const userData = useUser();
   const [signIn] = useSignInMutation();
   const { control, handleSubmit } = useForm<FormPayload>({
     defaultValues: {
       login: '',
       password: '',
     },
+  });
+
+  useEffect(() => {
+    if (userData) {
+      navigate('/');
+    }
   });
 
   const onSubmit = handleSubmit(async (data) => {
@@ -90,3 +101,5 @@ export default function SignInPage() {
     </Content>
   );
 }
+
+export default withUser(SignInPage, false);

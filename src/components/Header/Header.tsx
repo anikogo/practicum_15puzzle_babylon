@@ -1,6 +1,5 @@
 import { Fragment } from 'react';
 import type { MouseEventHandler } from 'react';
-import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import classnames from 'classnames';
@@ -14,20 +13,18 @@ import Tab from '../Tab';
 import Logo from '../Logo';
 import Button from '../Button';
 
+import useUser from '../../hook/useUser';
 import { useSignOutMutation } from '../../store';
-import makeDataSelector from '../../utils/makeDataSelector';
 
 type HeaderProps = {
   disabled?: boolean;
 };
 
-const userSelector = makeDataSelector('user');
-
 export default function Header({ disabled }: HeaderProps) {
   const { pathname } = useLocation();
+  const user = useUser();
 
   const [signOut] = useSignOutMutation();
-  const user = useSelector(userSelector);
 
   const signOutHandler = (close: () => void): MouseEventHandler => (event) => {
     event.preventDefault();
