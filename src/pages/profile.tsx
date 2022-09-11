@@ -1,7 +1,10 @@
 import Content from '../components/Content';
+import withUser from '../hoc/withUser';
 
-export default function ProfilePage() {
+function ProfilePage() {
   return (
     <Content heading="Profile" />
   );
 }
+
+export default withUser(ProfilePage);

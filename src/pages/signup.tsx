@@ -6,7 +6,7 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import Content from '../components/Content';
 
-import { useSignUpMutation } from '../store/services/authApi';
+import { useSignUpMutation } from '../store';
 
 type FormPayload = Omit<User, 'id' | 'display_name'>;
 

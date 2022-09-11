@@ -1,0 +1,150 @@
+$boxWidth: 33px;
+$animationDuration: 15s;
+$animationStepDuration: $animationDuration / 7;
+
+@keyframes slide {
+    0% {
+        transform : translate(0, 0);
+    }
+    2% {
+        transform : translate($boxWidth, 0);
+    }
+
+    12.5% {
+        transform : translate($boxWidth, 0);
+    }
+    15.5% {
+        transform : translate(calc(2 * $boxWidth), 0);
+    }
+
+    25% {
+        transform : translate(calc(2 * $boxWidth), 0);
+    }
+    27% {
+        transform : translate(calc(2 * $boxWidth), $boxWidth);
+    }
+
+    37.5% {
+        transform : translate(calc(2 * $boxWidth), $boxWidth);
+    }
+    39.5% {
+        transform : translate($boxWidth, $boxWidth);
+    }
+
+    50% {
+        transform : translate($boxWidth, $boxWidth);
+    }
+    52% {
+        transform : translate($boxWidth, calc(2 * $boxWidth));
+    }
+
+    62.5% {
+        transform : translate($boxWidth, calc(2 * $boxWidth));
+    }
+    64.5% {
+        transform : translate(0, calc(2 * $boxWidth));
+    }
+
+    75% {
+        transform : translate(0, calc(2 * $boxWidth));
+    }
+    77% {
+        transform : translate(0, $boxWidth);
+    }
+
+    87.5% {
+        transform : translate(0, $boxWidth);
+    }
+    89.5% {
+        transform : translate(0, 0);
+    }
+
+    100% {
+        transform : translate(0, 0);
+    }
+}
+
+@keyframes gradient1 {
+    from {
+        stop-color : #4383b8;
+    }
+    50% {
+        stop-color: #8013b9;
+    }
+    to {
+        stop-color: #4383b8;
+    }
+}
+@keyframes gradient2 {
+    from {
+        stop-color : #4aa06c;
+    }
+    50% {
+        stop-color: #b22358;
+    }
+    to {
+        stop-color: #4aa06c;
+    }
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fffd;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeOut 1s ease-in-out forwards;
+}
+
+svg#loading {
+    display: block;
+    margin: auto;
+    width: 20rem;
+    height: auto;
+//transform : rotate(180deg); //animation: rotate @animationDuration / 2 linear 0s infinite;
+}
+
+#gradient > stop[offset="0%"] {
+    animation : gradient1 $animationDuration ease 0s infinite;
+}
+#gradient > stop[offset="100%"] {
+    animation : gradient2 $animationDuration ease 0s infinite;
+}
+.rect {
+    animation : slide $animationDuration ease infinite;
+}
+#rect1 {
+    animation-delay : calc(-0 * $animationStepDuration);
+}
+#rect2 {
+    animation-delay : calc(-1 * $animationStepDuration);
+}
+#rect3 {
+    animation-delay : calc(-2 * $animationStepDuration);
+}
+#rect4 {
+    animation-delay : calc(-3 * $animationStepDuration);
+}
+#rect5 {
+    animation-delay : calc(-4 * $animationStepDuration);
+}
+#rect6 {
+    animation-delay : calc(-5 * $animationStepDuration);
+}
+#rect7 {
+    animation-delay : calc(-6 * $animationStepDuration);
+}

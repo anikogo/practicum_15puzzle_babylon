@@ -1,6 +1,6 @@
-import { Fragment, useEffect } from 'react';
+import { Fragment } from 'react';
 import type { MouseEventHandler } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import classnames from 'classnames';
@@ -14,34 +14,25 @@ import Tab from '../Tab';
 import Logo from '../Logo';
 import Button from '../Button';
 
-import { useGetUserMutation, useSignOutMutation } from '../../store';
-import { setCredentials } from '../../store/services/authApi/userSlice';
-import type { RootState } from '../../store';
+import { useSignOutMutation } from '../../store';
+import makeDataSelector from '../../utils/makeDataSelector';
 
 type HeaderProps = {
   disabled?: boolean;
 };
 
+const userSelector = makeDataSelector('user');
+
 export default function Header({ disabled }: HeaderProps) {
   const { pathname } = useLocation();
-  const dispatch = useDispatch();
 
-  const [getUser] = useGetUserMutation();
   const [signOut] = useSignOutMutation();
-  const user = useSelector((state: RootState) => state.user.data);
-
-  useEffect(() => {
-    if (!user) {
-      getUser().unwrap()
-        .then((userData) => dispatch(setCredentials(userData)));
-    }
-  }, [user]);
+  const user = useSelector(userSelector);
 
   const signOutHandler = (close: () => void): MouseEventHandler => (event) => {
     event.preventDefault();
     signOut().then(() => {
       close();
-      dispatch(setCredentials(null));
       localStorage.removeItem('userAuth');
     });
   };

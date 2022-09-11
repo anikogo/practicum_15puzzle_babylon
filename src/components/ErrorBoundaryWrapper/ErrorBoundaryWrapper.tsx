@@ -18,10 +18,11 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
           <div role="alert" className="m-auto bg-gray-100 content-center p-8 rounded-3xl">
             <div className="scene x3">
               <div className="tiles">
-                {'APPERROR'.split('').map((char, index) => (
-                  // eslint-disable-next-line react/no-array-index-key
-                  <div key={char + index} className={`square s${index} bg-red-600`}>{char}</div>
-                ))}
+                {'APPERROR'.split('')
+                  .map((char, index) => ({ char, id: `${char}-${index}` }))
+                  .map(({ char, id }, index) => (
+                    <div key={id} className={`square s${index} bg-red-600`}>{char}</div>
+                  ))}
               </div>
               <div className="w-full flex justify-between max-w-[410px]">
                 <pre className="my-4 text-left whitespace-normal">{error.message}</pre>

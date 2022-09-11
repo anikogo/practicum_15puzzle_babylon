@@ -1,6 +1,6 @@
-import apiSlice from '../index';
+import appApi from '..';
 
-const licenseUsersEndpoints = apiSlice
+const licenseUsersEndpoints = appApi
   .enhanceEndpoints({
     addTagTypes: ['Leaderboard'],
   })

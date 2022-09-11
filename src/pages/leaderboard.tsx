@@ -1,9 +1,11 @@
 import { useErrorHandler } from 'react-error-boundary';
+
 import Content from '../components/Content';
 import LeaderboardTable from '../components/LeaderboardTable';
 import useDataMock from '../_demodata/useDataMock';
+import withUser from '../hoc/withUser';
 
-export default function LeaderboardPage() {
+function LeaderboardPage() {
   const handleError = useErrorHandler();
   const { data = [], error } = useDataMock<(User & { score: number })[]>('users');
   if (error) {
@@ -15,3 +17,5 @@ export default function LeaderboardPage() {
     </Content>
   );
 }
+
+export default withUser(LeaderboardPage);
