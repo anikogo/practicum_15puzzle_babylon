@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import ErrorBoundaryWrapper from './components/ErrorBoundaryWrapper';
-// import Preloader from './components/Preloader';
 
 import IndexPage from './pages/index';
 import Page404 from './pages/404';
