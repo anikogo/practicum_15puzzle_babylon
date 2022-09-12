@@ -1,13 +1,15 @@
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { useErrorHandler } from 'react-error-boundary';
 
 import Content from '../components/Content';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import { useGetUserMutation, useSignInMutation } from '../store';
-import { setCredentials } from '../store/services/authApi/userSlice';
+
+import useUser from '../hook/useUser';
+import withUser from '../hoc/withUser';
+import { useSignInMutation } from '../store';
 
 type FormPayload = {
   login: string;
@@ -38,12 +40,11 @@ const inputs = [
   },
 ];
 
-export default function SignInPage() {
+function SignInPage() {
   const errorHandler = useErrorHandler();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const userData = useUser();
   const [signIn] = useSignInMutation();
-  const [getUser] = useGetUserMutation();
   const { control, handleSubmit } = useForm<FormPayload>({
     defaultValues: {
       login: '',
@@ -51,11 +52,15 @@ export default function SignInPage() {
     },
   });
 
+  useEffect(() => {
+    if (userData) {
+      navigate('/');
+    }
+  });
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       await signIn(data);
-      const userData = await getUser().unwrap();
-      await dispatch(setCredentials(userData));
       navigate('/');
     } catch ({ status, data: { reason } }) {
       errorHandler(new Error(`${status}: ${reason}`));
@@ -96,3 +101,5 @@ export default function SignInPage() {
     </Content>
   );
 }
+
+export default withUser(SignInPage, false);

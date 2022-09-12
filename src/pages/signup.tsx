@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { useErrorHandler } from 'react-error-boundary';
@@ -6,7 +7,9 @@ import Input from '../components/Input';
 import Button from '../components/Button';
 import Content from '../components/Content';
 
-import { useSignUpMutation } from '../store/services/authApi';
+import useUser from '../hook/useUser';
+import withUser from '../hoc/withUser';
+import { useSignUpMutation } from '../store';
 
 type FormPayload = Omit<User, 'id' | 'display_name'>;
 
@@ -74,9 +77,10 @@ const inputs = [
   },
 ];
 
-export default function SignUpPage() {
+function SignUpPage() {
   const errorHandler = useErrorHandler();
   const navigate = useNavigate();
+  const userData = useUser();
   const [signUp] = useSignUpMutation();
   const { control, handleSubmit } = useForm<FormPayload>({
     defaultValues: {
@@ -87,6 +91,12 @@ export default function SignUpPage() {
       password: '',
       phone: '',
     },
+  });
+
+  useEffect(() => {
+    if (userData) {
+      navigate('/');
+    }
   });
 
   const onSubmit = handleSubmit((data) => {
@@ -130,3 +140,5 @@ export default function SignUpPage() {
     </Content>
   );
 }
+
+export default withUser(SignUpPage, false);

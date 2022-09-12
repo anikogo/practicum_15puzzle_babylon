@@ -3,8 +3,9 @@ import Field from '../api/Field';
 import shuffle from '../api/shuffleArray';
 import filedSize15 from '../api/dimensions';
 import Content from '../components/Content';
+import withUser from '../hoc/withUser';
 
-export default function IndexPage() {
+function IndexPage() {
   const sideSize: number = filedSize15.sideSize as number;
 
   const numbers: number[] = shuffle(filedSize15.arr as number[]);
@@ -31,3 +32,5 @@ export default function IndexPage() {
     </Content>
   );
 }
+
+export default withUser(IndexPage);

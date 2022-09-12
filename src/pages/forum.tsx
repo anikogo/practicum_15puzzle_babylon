@@ -1,7 +1,10 @@
 import Content from '../components/Content';
+import withUser from '../hoc/withUser';
 
-export default function ForumPage() {
+function ForumPage() {
   return (
     <Content heading="Forum" />
   );
 }
+
+export default withUser(ForumPage);

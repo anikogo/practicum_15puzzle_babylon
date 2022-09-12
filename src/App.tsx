@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import ErrorBoundaryWrapper from './components/ErrorBoundaryWrapper';
-import Header from './components/Header';
 
 import IndexPage from './pages/index';
 import Page404 from './pages/404';
@@ -23,7 +22,6 @@ export default function App(): JSX.Element {
       <Provider store={store}>
         <Router>
           <ErrorBoundaryWrapper>
-            <Header />
             <Routes>
               <Route path="/" element={<IndexPage />} />
               <Route path="/forum" element={<ForumPage />} />
