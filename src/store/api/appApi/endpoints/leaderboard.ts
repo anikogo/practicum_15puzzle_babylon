@@ -10,6 +10,7 @@ const licenseUsersEndpoints = appApi
         query: (body) => ({
           url: '/leaderboard',
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -20,6 +21,7 @@ const licenseUsersEndpoints = appApi
         query: (body) => ({
           url: '/leaderboard/all',
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -30,6 +32,7 @@ const licenseUsersEndpoints = appApi
         query: ({ body, teamName }) => ({
           url: `/leaderboard/${teamName}`,
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
