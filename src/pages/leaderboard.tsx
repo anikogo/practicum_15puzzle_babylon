@@ -4,8 +4,9 @@ import { useGetTeamUsersQuery } from '../store/api/appApi/endpoints/leaderboard'
 import Content from '../components/Content';
 import LeaderboardTable from '../components/LeaderboardTable';
 import Preloader from '../components/Preloader/index';
+import withUser from '../hoc/withUser';
 
-export default function LeaderboardPage() {
+function LeaderboardPage() {
   const handleError = useErrorHandler();
 
   const teamName = 'babylon';
@@ -35,7 +36,9 @@ export default function LeaderboardPage() {
 
   return (
     <Content className="bg-gray-100" heading="Leaderboard">
-      {isLoading ? (<Preloader />) : (<LeaderboardTable users={tableData} />) }
+      { isLoading ? (<Preloader />) : (<LeaderboardTable users={tableData} />) }
     </Content>
   );
 }
+
+export default withUser(LeaderboardPage);

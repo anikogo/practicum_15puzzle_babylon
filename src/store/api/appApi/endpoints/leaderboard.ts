@@ -10,33 +10,21 @@ const licenseUsersEndpoints = appApi
         query: (body) => ({
           url: '/leaderboard',
           method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body,
+          data: body,
         }),
       }),
       getAllUsers: builder.query({
         query: (body) => ({
           url: '/leaderboard/all',
           method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body,
+          data: body,
         }),
       }),
       getTeamUsers: builder.query({
         query: ({ body, teamName }) => ({
           url: `/leaderboard/${teamName}`,
           method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body,
+          data: body,
         }),
       }),
     }),

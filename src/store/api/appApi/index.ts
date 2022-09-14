@@ -1,6 +1,8 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
-const baseQuery = fetchBaseQuery({ baseUrl: 'https://ya-praktikum.tech/api/v2/' });
+import { getBaseQuery } from '../../baseQuery';
+
+const baseQuery = getBaseQuery('https://ya-praktikum.tech/api/v2/');
 
 const appApi = createApi({
   reducerPath: 'appApi',
