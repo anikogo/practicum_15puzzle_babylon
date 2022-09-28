@@ -1,34 +1,36 @@
-import { useEffect, useRef } from 'react';
-import Field from '../api/Field';
-import shuffle from '../api/shuffleArray';
-import filedSize15 from '../api/dimensions';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import Game from '../game/Game';
 import Content from '../components/Content';
 import withUser from '../hoc/withUser';
 
 function IndexPage() {
-  const sideSize: number = filedSize15.sideSize as number;
-
-  const numbers: number[] = shuffle(filedSize15.arr as number[]);
+  const [boardSize] = useState(4);
+  const game = useMemo(() => new Game(boardSize), [boardSize]);
 
   const ref = useRef<HTMLCanvasElement>(null);
 
+  const fieldSize = Math.floor(globalThis.innerHeight / 8) * boardSize;
+
   useEffect(() => {
-    const ctx: CanvasRenderingContext2D = ref.current?.getContext('2d') as CanvasRenderingContext2D;
-    if (!ctx) throw new Error('Error');
+    const canvas = ref.current;
+    if (!canvas) throw new Error('Error');
 
-    const rect: DOMRect = ref.current?.getBoundingClientRect() as DOMRect;
+    game.init(canvas);
+    game.start();
 
-    const field = new Field(sideSize, ctx, numbers);
-    field.spawnTiles();
-
-    document.addEventListener('keyup', (e: KeyboardEvent) => { field.keyboardMovie(e); });
-
-    ref.current?.addEventListener('click', (e: MouseEvent) => { field.handleClick(e, rect); });
-  }, [numbers, sideSize]);
+    return () => {
+      game.stop();
+    };
+  }, [game, boardSize]);
 
   return (
     <Content heading="Game" className="flex w-full h-[calc(100vh_-_128px)]">
-      <canvas ref={ref} width={sideSize} height={sideSize} className="m-auto" />
+      <canvas ref={ref} width={fieldSize} height={fieldSize} className="m-auto" />
     </Content>
   );
 }
