@@ -6,8 +6,9 @@ import {
 } from 'react';
 import Game from '../game/Game';
 import Content from '../components/Content';
+import withUser from '../hoc/withUser';
 
-export default function IndexPage() {
+function IndexPage() {
   const [boardSize] = useState(4);
   const game = useMemo(() => new Game(boardSize), [boardSize]);
 
@@ -33,3 +34,5 @@ export default function IndexPage() {
     </Content>
   );
 }
+
+export default withUser(IndexPage);
