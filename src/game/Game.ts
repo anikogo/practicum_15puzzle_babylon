@@ -1,6 +1,7 @@
 import Field from './Field';
 import { populateArray, shuffleArray } from '../utils';
 import Tile from './Tile';
+import Stats from './Stats';
 
 export default class Game {
   sideSize: number;
@@ -8,8 +9,6 @@ export default class Game {
   tileWidth: number;
 
   state: string;
-
-  #movesCount: number;
 
   tiles: Tile[];
 
@@ -19,9 +18,11 @@ export default class Game {
 
   numbers: number[];
 
-  private field: Field | undefined;
+  #field?: Field;
 
-  private isAnimate: boolean;
+  #stats?: Stats;
+
+  #isAnimate: boolean;
 
   constructor(sideSize: number) {
     this.sideSize = sideSize;
@@ -29,8 +30,7 @@ export default class Game {
     this.numbers = [];
     this.tileWidth = Math.floor(globalThis.innerHeight / 8);
     this.state = 'stopped';
-    this.#movesCount = 0;
-    this.isAnimate = false;
+    this.#isAnimate = false;
   }
 
   isSolvable() {
@@ -101,8 +101,10 @@ export default class Game {
       this.ctx = canvas.getContext('2d');
 
       if (this.ctx) {
-        this.field = new Field(this.sideSize, this.ctx);
-        this.field.draw();
+        this.#field = new Field(this.sideSize, this.ctx);
+        this.#field.draw();
+        this.#stats = new Stats(this.ctx, this.#field.width + 30, 40);
+        this.#stats.draw();
 
         document.addEventListener('keydown', this.onArrowKeyPress.bind(this));
         this.canvas.addEventListener('click', this.handleClick.bind(this));
@@ -111,8 +113,7 @@ export default class Game {
   }
 
   start() {
-    if (this.state === 'stopped') {
-      this.#movesCount = 0;
+    if (this.state !== 'started') {
       this.generateNumbers();
       this.spawnTiles();
       this.state = 'started';
@@ -120,14 +121,14 @@ export default class Game {
   }
 
   stop() {
-    if (this.field) {
+    if (this.#field) {
       document.removeEventListener('keydown', this.onArrowKeyPress.bind(this));
       this.canvas?.removeEventListener('click', this.handleClick.bind(this));
     }
   }
 
   moveTile(tile: Tile, code?: string) {
-    if (!this.isAnimate) {
+    if (!this.#isAnimate) {
       const [zeroCol, zeroRow, zeroIdx] = this.getTilePos(0);
       const zeroTile = this.tiles[zeroIdx];
       const [col, row, ttmIdx] = this.getTilePos(+tile.content);
@@ -144,17 +145,21 @@ export default class Game {
         const newZeroY = tile.y;
         const newTileX = zeroTile.x;
         const newTileY = zeroTile.y;
-        this.isAnimate = true;
-        this.field?.draw();
+        this.#isAnimate = true;
         tile.move(newTileX, newTileY)
           .then(() => {
+            if (this.#stats) {
+              if (this.#stats.state === 'stopped') {
+                this.#stats.startTimer();
+              }
+              this.#stats.movesCount++;
+            }
             zeroTile.x = newZeroX;
             zeroTile.y = newZeroY;
             zeroTile.draw();
-            this.#movesCount += 1;
-            this.isAnimate = false;
+            this.#isAnimate = false;
+            this.isVictory();
           });
-        this.isVictory();
       }
     }
   }
@@ -211,10 +216,7 @@ export default class Game {
     }
 
     // eslint-disable-next-line no-alert
+    this.#stats?.stopTimer();
     alert('Eeeah');
-  }
-
-  get movesCount() {
-    return this.#movesCount;
   }
 }
