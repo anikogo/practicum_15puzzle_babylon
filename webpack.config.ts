@@ -7,7 +7,6 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import NodemonPlugin from 'nodemon-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 
 type Environment = 'development' | 'production' | 'none' | undefined;
 
@@ -62,9 +61,6 @@ const client = merge<Configuration>(common, {
     filename: 'bundle.js',
     path: path.join(__dirname, 'dist'),
   },
-  plugins: [
-    new BundleAnalyzerPlugin(),
-  ],
   optimization: {
     minimize: process.env.NODE_ENV === 'production',
     minimizer: [new TerserPlugin()],
