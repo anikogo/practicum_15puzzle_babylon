@@ -5,8 +5,8 @@ export default class Field {
 
   ctx: CanvasRenderingContext2D;
 
-  constructor(width: number, ctx: CanvasRenderingContext2D) {
-    this.width = width;
+  constructor(boardSize: number, ctx: CanvasRenderingContext2D) {
+    this.width = Math.floor(globalThis.innerHeight / 8) * boardSize;
     this.color = 'lightgreen';
     this.ctx = ctx;
   }

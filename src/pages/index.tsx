@@ -30,7 +30,12 @@ function IndexPage() {
 
   return (
     <Content heading="Game" className="flex w-full h-[calc(100vh_-_128px)]">
-      <canvas ref={ref} width={fieldSize} height={fieldSize} className="m-auto" />
+      <canvas
+        ref={ref}
+        width={fieldSize + 250}
+        height={fieldSize}
+        className="m-auto p-6 rounded-2xl bg-emerald-800"
+      />
     </Content>
   );
 }
