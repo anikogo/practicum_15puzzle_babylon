@@ -1,7 +1,22 @@
-import ReactDOM from 'react-dom/client';
+import { StrictMode } from 'react';
+import * as ReactDOM from 'react-dom';
+
+import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+
+import { store, history } from './store';
+
 import App from './App';
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const root = ReactDOM.createRoot(document.getElementById('root')!);
-const app = <App />;
-root.render(app);
+import './styles.css';
+
+ReactDOM.hydrate(
+  <StrictMode>
+    <Provider store={store}>
+      <HistoryRouter history={history}>
+        <App />
+      </HistoryRouter>
+    </Provider>
+  </StrictMode>,
+  document.getElementById('app'),
+);

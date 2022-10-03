@@ -8,19 +8,17 @@
     "moduleResolution": "node",
     "target": "es2016",
     "jsx": "react-jsx",
-    "importHelpers": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "esModuleInterop": true,
     "strict": true,
+    "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "skipLibCheck": true,
     "declaration": false,
-    "sourceMap": false,
-    "baseUrl": ".",
-    "outDir": "./dist",
+    "sourceMap": true,
+    "outDir": "dist",
     "paths": {
       "*": ["./src/*"]
     },
@@ -28,6 +26,7 @@
   },
   "include": [
     "src",
+    "src/**/*",
     "typings/**/*.d.ts",
     "./node_modules/@types",
     "./webpack.config.ts"

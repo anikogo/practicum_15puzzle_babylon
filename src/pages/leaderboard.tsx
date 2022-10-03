@@ -1,15 +1,17 @@
+import { useEffect, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
-import { useGetTeamUsersQuery } from '../store/api/appApi/endpoints/leaderboard';
+import { useGetTeamUsersMutation } from '../store/api';
 
 import Content from '../components/Content';
 import LeaderboardTable from '../components/LeaderboardTable';
 import Preloader from '../components/Preloader/index';
 import withUser from '../hoc/withUser';
+import PageMeta from '../components/PageMeta';
 
 function LeaderboardPage() {
   const handleError = useErrorHandler();
+  const [tableData, setTableData] = useState<(User & { score: number; })[]>();
 
-  const teamName = 'babylon';
   const Urls = {
     AVATAR: {
       DEFAULT: 'https://robohash.org/corporissitanimi.png?size=50x50&set=set1',
@@ -17,27 +19,39 @@ function LeaderboardPage() {
     },
   };
 
-  const body = { ratingFieldName: 'score', cursor: 0, limit: 50 };
-  const { data = [], error, isLoading } = useGetTeamUsersQuery({ body, teamName });
-
-  const tableData = data.map((item: { data: (User & { score: number }) }) => ({
-    login: item.data.login,
-    email: item.data.email,
-    avatar: item.data.avatar ? `${Urls.AVATAR.CUSTOM}${item.data?.avatar}` : Urls.AVATAR.DEFAULT,
-    score: item.data.score || 0,
-    display_name: item.data.display_name || 'default',
-    first_name: item.data.first_name || 'default',
-    second_name: item.data.second_name || 'default',
-  }));
+  const [getUsers, { data, error, isLoading }] = useGetTeamUsersMutation();
+  useEffect(() => {
+    if (!tableData) {
+      getUsers({
+        ratingFieldName: 'score',
+        cursor: 0,
+        limit: 0,
+      }).then(() => {
+        setTableData(data
+          ?.map((item) => ({
+            ...item.data,
+            avatar: item.data.avatar
+              ? `${Urls.AVATAR.CUSTOM}${item.data?.avatar}`
+              : Urls.AVATAR.DEFAULT,
+          })));
+      });
+    }
+  }, [data]);
 
   if (error) {
     handleError(error);
   }
 
   return (
-    <Content className="bg-gray-100" heading="Leaderboard">
-      { isLoading ? (<Preloader />) : (<LeaderboardTable users={tableData} />) }
-    </Content>
+    <>
+      <PageMeta
+        title="Leaderboard"
+        description="Game leaderboard with user stats"
+      />
+      <Content className="bg-gray-100" heading="Leaderboard">
+        { isLoading ? (<Preloader />) : (<LeaderboardTable users={tableData ?? []} />) }
+      </Content>
+    </>
   );
 }
 
