@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
-import { useGetTeamUsersMutation } from '../store/api';
 
 import Content from '../components/Content';
 import LeaderboardTable from '../components/LeaderboardTable';
-import Preloader from '../components/Preloader/index';
-import withUser from '../hoc/withUser';
+import Preloader from '../components/Preloader';
 import PageMeta from '../components/PageMeta';
+
+import withUser from '../hoc/withUser';
+
+import { useGetTeamUsersMutation } from '../store/api';
 
 function LeaderboardPage() {
   const handleError = useErrorHandler();

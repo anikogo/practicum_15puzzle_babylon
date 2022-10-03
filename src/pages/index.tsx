@@ -4,6 +4,7 @@ import {
   useRef,
   useState,
 } from 'react';
+
 import Game from '../game/Game';
 import Content from '../components/Content';
 import withUser from '../hoc/withUser';

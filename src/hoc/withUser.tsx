@@ -1,4 +1,4 @@
-import { ComponentType, useEffect } from 'react';
+import { useEffect, type ComponentType } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useErrorHandler } from 'react-error-boundary';
 import type { AxiosError } from 'axios';
