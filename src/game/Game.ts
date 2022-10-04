@@ -205,6 +205,14 @@ export default class Game {
     }
   }
 
+  calcScore() {
+    if (this.#stats) {
+      const { movesCount, time } = this.#stats;
+      return Math.round((movesCount / time) * 100);
+    }
+    return 0;
+  }
+
   isVictory() {
     const etalon: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
 
@@ -217,6 +225,7 @@ export default class Game {
 
     // eslint-disable-next-line no-alert
     this.#stats?.stopTimer();
-    alert('Eeeah');
+    const score = this.calcScore();
+    alert(`Eeeah, you win! Your score is: ${score}`);
   }
 }

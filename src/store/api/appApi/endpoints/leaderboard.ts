@@ -6,7 +6,7 @@ const licenseUsersEndpoints = appApi
   })
   .injectEndpoints({
     endpoints: (builder) => ({
-      addUser: builder.query({
+      addUser: builder.mutation({
         query: (body) => ({
           url: '/leaderboard',
           method: 'POST',
@@ -31,7 +31,7 @@ const licenseUsersEndpoints = appApi
   });
 
 export const {
-  useAddUserQuery,
+  useAddUserMutation,
   useGetAllUsersQuery,
   useGetTeamUsersQuery,
 } = licenseUsersEndpoints;
