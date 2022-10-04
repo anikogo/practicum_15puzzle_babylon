@@ -36,8 +36,6 @@ export const store = configureStore({
     .concat(appApi.middleware, authApi.middleware, routerMiddleware),
 });
 
-// store.close = () => store.dispatch();
-
 export const history = createReduxHistory(store);
 
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors
