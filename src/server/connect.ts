@@ -5,8 +5,10 @@ import Topic from './src/models/Topic';
 import Comment from './src/models/Comment';
 import Like from './src/models/Like';
 
+require('dotenv').config();
+
 const sequelizeOptions: SequelizeOptions = {
-  host: process.env.DB_HOST || 'postgres',
+  host: process.env.DB_HOST || 'localhost',
   port: 5432,
   username: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'newPassword',
