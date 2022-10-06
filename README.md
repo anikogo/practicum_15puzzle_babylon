@@ -5,15 +5,17 @@ Yandex Practicum Middle Frontend Developer | Module 2 | Game 15puzzle | Babylon 
 ### .env
 create .env in root
 
-`
-DB_HOST= # 
+```
+DB_HOST= #
 
 DB_USER= #
 
 DB_PASSWORD= #
 
 DB_NAME= #
-`
+```
+
+docker
 
 `docker-compose build`
 
