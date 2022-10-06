@@ -18,9 +18,7 @@ const sequelizeOptions: SequelizeOptions = {
 
 const sequelize = new Sequelize(sequelizeOptions);
 
-sequelize.addModels([
-  User, Topic, Comment, Like,
-]);
+sequelize.addModels([User, Topic, Comment, Like]);
 
 const dbConnect = async () => {
   try {
