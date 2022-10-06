@@ -53,7 +53,7 @@ const signinUser = (req: Request, res: Response, next: NextFunction) => {
       }
 
       const token = jwt.sign({ id: user.id }, DEV_JWT_SECRET, {
-       expiresIn: 86400, // 24 hours
+        expiresIn: 86400, // 24 hours
       });
 
       return res.send({ token });
@@ -69,9 +69,7 @@ const getUser = (req: Request, res: Response, next: NextFunction) => {
       where: { id },
       attributes: ['id', 'avatar_path', 'display_name', 'email'],
     })
-    .then((user: User | null) => {
-      res.send(user);
-    })
+    .then((user: User | null) => res.send(user))
     .catch(next);
 };
 
@@ -80,9 +78,7 @@ const getUsers = (_req: Request, res: Response, next: NextFunction) => {
     .findAll({
       attributes: ['id', 'avatar_path', 'display_name', 'email'],
     })
-    .then((users: Array<User>) => {
-      res.send(users);
-    })
+    .then((users: Array<User>) => res.send(users))
     .catch(next);
 };
 
@@ -97,7 +93,7 @@ const updateUser = (req: Request, res: Response, next: NextFunction) => {
         user = req.body as User;
       }
 
-      res.send(user);
+      return res.send(user);
     })
     .catch(next);
 };

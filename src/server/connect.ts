@@ -3,9 +3,10 @@ import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
 import User from './src/models/User';
 import Topic from './src/models/Topic';
 import Comment from './src/models/Comment';
+import Like from './src/models/Like';
 
 const sequelizeOptions: SequelizeOptions = {
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'postgres',
   port: 5432,
   username: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'newPassword',
@@ -16,7 +17,7 @@ const sequelizeOptions: SequelizeOptions = {
 const sequelize = new Sequelize(sequelizeOptions);
 
 sequelize.addModels([
-  User, Topic, Comment,
+  User, Topic, Comment, Like,
 ]);
 
 const dbConnect = async () => {

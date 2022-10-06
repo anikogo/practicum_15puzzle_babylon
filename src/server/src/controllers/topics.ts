@@ -14,24 +14,21 @@ const addTopic = (req: Request, res: Response, next: NextFunction) => {
         include: [Comment],
       },
     )
-    .then((result: unknown) => {
-      res.status(201).send(result);
-    })
+    .then((result: unknown) => res.status(201).send(result))
     .catch(next);
 };
 
 const getTopics = (_req: Request, res: Response, next: NextFunction) => Topic
-  .findAll()
-  .then((result: Array<Topic>) => {
-    res.send(result);
+  .findAll({
+    attributes: ['id', 'title', 'description', 'created_by'],
+    include: [Comment],
   })
+  .then((result: Array<Topic>) => res.send(result))
   .catch(next);
 
 const getTopic = (req: Request, res: Response, next: NextFunction) => Topic
   .findOne({ where: { id: req.params.id }, include: [Comment] })
-  .then((result: Topic | null) => {
-    res.send(result);
-  })
+  .then((result: Topic | null) => res.send(result))
   .catch(next);
 
 const editTopic = (req: Request, res: Response, next: NextFunction) => Topic
@@ -43,8 +40,8 @@ const editTopic = (req: Request, res: Response, next: NextFunction) => Topic
       // eslint-disable-next-line no-param-reassign
       topic = req.body as Topic;
     }
-    
-    res.send(topic);
+
+    return res.send(topic);
   })
   .catch(next);
 
@@ -54,10 +51,11 @@ const deleteTopic = (req: Request, res: Response, next: NextFunction) => {
     .then((topic: Topic | null) => {
       if (topic) {
         topic.destroy();
-        res.send({ message: 'topic was deleted' });
+
+        return res.send({ message: 'topic was deleted' });
       }
 
-      res.status(404).send({ message: 'topic was not deleted' });
+      return res.status(404).send({ message: 'topic was not deleted' });
     })
     .catch(next);
 };

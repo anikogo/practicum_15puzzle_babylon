@@ -26,4 +26,10 @@ router.use(
   require('./comments'),
 );
 
+router.use(
+  Urls.API.BASE,
+  auth,
+  require('./likes'),
+);
+
 export default router;

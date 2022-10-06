@@ -6,17 +6,10 @@ import {
   addComment,
   editComment,
   deleteComment,
-  getComments,
   getComment,
 } from '../controllers/comments';
 
 const router = require('express').Router();
-
-router.get(
-  Urls.API.COMMENTS.INDEX,
-  validateCommentData,
-  getComments,
-);
 
 router.get(
   Urls.API.COMMENTS.GET,

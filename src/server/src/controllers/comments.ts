@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 
 import Comment from '../models/Comment';
+import Like from '../models/Like';
 
 const addComment = (req: Request, res: Response, next: NextFunction) => Comment
   .create(req.body)
@@ -9,13 +10,11 @@ const addComment = (req: Request, res: Response, next: NextFunction) => Comment
   })
   .catch(next);
 
-const getComments = (req: Request, res: Response, next: NextFunction) => Comment
-  .findAll({ where: { topicId: req.params.id } })
-  .then((comments: Array<Comment>) => res.send(comments))
-  .catch(next);
-
 const getComment = (req: Request, res: Response, next: NextFunction) => Comment
-  .findAll({ where: { id: req.params.id } })
+  .findAll({
+    where: { id: req.params.id },
+    include: [Like],
+  })
   .then((comments: Array<Comment>) => res.send(comments))
   .catch(next);
 
@@ -40,7 +39,6 @@ const deleteComment = (req: Request, res: Response, next: NextFunction) => Comme
 export {
   addComment,
   getComment,
-  getComments,
   editComment,
   deleteComment,
 };

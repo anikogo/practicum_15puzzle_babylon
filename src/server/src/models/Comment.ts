@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { Optional } from 'sequelize';
 import {
   Model,
@@ -9,10 +10,11 @@ import {
   ForeignKey,
   BelongsTo,
   DataType,
+  HasMany,
 } from 'sequelize-typescript';
 import User from './User';
-// eslint-disable-next-line import/no-cycle
 import Topic from './Topic';
+import Like from './Like';
 
 export interface CommentAttributes {
   id: number;
@@ -60,4 +62,7 @@ CommentCreationAttributes
 
   @BelongsTo(() => Topic)
     topic!: Topic;
+
+  @HasMany(() => Like)
+    likes!: Like[];
 }

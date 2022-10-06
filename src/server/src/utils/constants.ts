@@ -14,7 +14,7 @@ const Urls = {
       DELETE: '/api/topics/:id',
     },
     COMMENTS: {
-      INDEX: '/api/comments/:id',
+      INDEX: '/api/comments',
       ADD: '/api/comments/add',
       GET: '/api/commentS/:id',
       EDIT: '/api/comments/edit/:id',
@@ -25,6 +25,11 @@ const Urls = {
       GET: '/api/users/:id',
       UPDATE: '/api/users/patch',
       LOGOUT: '/api/users/logout',
+    },
+    LIKE: {
+      INDEX: '/api/likes',
+      ADD: '/api/likes/add',
+      DELETE: '/api/likes/remove/:id',
     },
   },
 };
