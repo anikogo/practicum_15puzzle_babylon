@@ -1,16 +1,33 @@
+// eslint-disable-next-line import/no-import-module-exports
 import { NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import Unauthorized from '../errors/Unauthorized';
 
-import Forbidden from '../errors/Forbidden';
+import DEV_JWT_SECRET from '../utils/devConfig';
 
-const auth = (
-  req: any,
-  next: NextFunction,
-) => {
-  if (req.user) {
-    return next();
+const auth = (req: Request | any, _res: Response, next: NextFunction) => {
+  const { authorization } = req.headers;
+
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    throw new Unauthorized();
   }
 
-  throw new Forbidden();
+  const token = authorization.replace('Bearer ', '');
+
+  let payload;
+
+  try {
+    payload = jwt.verify(
+      token,
+      process.env.NODE_ENV === 'production' ? process.env.JWT_SECRET as string : DEV_JWT_SECRET,
+    );
+  } catch (err) {
+    throw new Unauthorized();
+  }
+
+  req.user = payload;
+
+  next();
 };
 
 export default auth;

@@ -1,17 +1,17 @@
 import { celebrate, Joi } from 'celebrate';
-// import validator from 'validator';
+import validator from 'validator';
 
-// const checkUrl = (value: string, helpers: any) => {
-//   if (validator.isURL(value)) {
-//     return value;
-//   }
+const checkUrl = (value: string, helpers: any) => {
+  if (validator.isURL(value)) {
+    return value;
+  }
 
-//   return helpers.message('bad data');
-// };
+  return helpers.message('bad data');
+};
 
 const validateUserData = celebrate({
   body: Joi.object().keys({
-    // avatar_path: Joi.string().custom(checkUrl),
+    avatar_path: Joi.string().custom(checkUrl),
     display_name: Joi.string().min(2).max(30),
     email: Joi.string().required().email(),
   }),
@@ -28,7 +28,7 @@ const validateRegistrData = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     display_name: Joi.string().min(2).max(30),
-    avatar_path: Joi.string().min(2).max(30),
+    avatar_path: Joi.string().custom(checkUrl),
     password: Joi.string().required(),
   }),
 });
@@ -44,6 +44,9 @@ const validateTopicData = celebrate({
 const validateCommentData = celebrate({
   body: Joi.object().keys({
     content: Joi.string().min(2).max(60),
+    userId: Joi.number(),
+    parentId: Joi.number(),
+    topicId: Joi.number(),
   }),
 });
 

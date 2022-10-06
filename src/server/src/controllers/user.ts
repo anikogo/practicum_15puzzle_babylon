@@ -7,7 +7,7 @@ import User from '../models/User';
 import Unauthorized from '../errors/Unauthorized';
 import BadRequest from '../errors/BadRequest';
 
-const DEV_JWT_SECRET = 'DEV_JWT_SECRET';
+import DEV_JWT_SECRET from '../utils/devConfig';
 
 const signupUser = (req: Request, res: Response, next: NextFunction) => {
   const {
@@ -53,7 +53,7 @@ const signinUser = (req: Request, res: Response, next: NextFunction) => {
       }
 
       const token = jwt.sign({ id: user.id }, DEV_JWT_SECRET, {
-        expiresIn: 86400, // 24 hours
+       expiresIn: 86400, // 24 hours
       });
 
       return res.send({ token });
@@ -86,8 +86,20 @@ const getUsers = (_req: Request, res: Response, next: NextFunction) => {
     .catch(next);
 };
 
-const logoutUser = () => {
-  //
+const updateUser = (req: Request, res: Response, next: NextFunction) => {
+  User
+    .findOne({
+      where: { id: req.body.id },
+    })
+    .then((user: User | null) => {
+      if (user) {
+        // eslint-disable-next-line no-param-reassign
+        user = req.body as User;
+      }
+
+      res.send(user);
+    })
+    .catch(next);
 };
 
 export {
@@ -95,5 +107,5 @@ export {
   signinUser,
   getUser,
   getUsers,
-  logoutUser,
+  updateUser,
 };

@@ -5,7 +5,6 @@ import { validateLoginData, validateRegistrData } from '../utils/validator';
 import {
   signupUser,
   signinUser,
-  logoutUser,
   getUsers,
   getUser,
 } from '../controllers/user';
@@ -32,11 +31,6 @@ router.post(
   Urls.API.AUTH.SIGNIN,
   validateLoginData,
   signinUser,
-);
-
-router.post(
-  Urls.API.USERS.LOGOUT,
-  logoutUser,
 );
 
 module.exports = router;

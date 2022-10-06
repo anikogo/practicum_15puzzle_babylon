@@ -5,7 +5,13 @@ const router = require('express').Router();
 
 router.use(
   Urls.API.BASE,
-  require('./user'),
+  require('./auth'),
+);
+
+router.use(
+  Urls.API.BASE,
+  auth,
+  require('./users'),
 );
 
 router.use(

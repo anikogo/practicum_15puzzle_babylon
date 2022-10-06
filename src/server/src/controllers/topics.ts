@@ -43,6 +43,7 @@ const editTopic = (req: Request, res: Response, next: NextFunction) => Topic
       // eslint-disable-next-line no-param-reassign
       topic = req.body as Topic;
     }
+    
     res.send(topic);
   })
   .catch(next);
