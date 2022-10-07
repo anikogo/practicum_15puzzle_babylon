@@ -4,6 +4,8 @@
       "dom",
       "es2019"
     ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "es2016",
@@ -15,23 +17,27 @@
     "strict": true,
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
     "declaration": false,
     "sourceMap": true,
     "outDir": "dist",
     "paths": {
       "*": ["./src/*"]
     },
-    "typeRoots": ["typings/**/*.d.ts", "node_modules/@types"],
+    "typeRoots": [
+      "typings/**/*.d.ts",
+      "node_modules/@types"
+    ],
   },
   "include": [
     "src",
     "src/**/*",
     "typings/**/*.d.ts",
     "./node_modules/@types",
-    "./webpack.config.ts"
+    "./webpack.config.ts",
+    "./**/*.ts"
   ],
   "exclude": [
-    "**/*.js"
+    "**/*.js",
+    "node_modules"
   ]
 }
