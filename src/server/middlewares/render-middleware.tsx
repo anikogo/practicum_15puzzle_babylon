@@ -8,10 +8,10 @@ import { Provider as ReduxProvider } from 'react-redux';
 import Helmet from 'react-helmet';
 import type { HelmetData } from 'react-helmet';
 
-import App from '../App';
-import { store } from '../store';
-import type { RootState } from '../store';
-import routes from '../routes';
+import App from '../../App';
+import { store } from '../../store';
+import type { RootState } from '../../store';
+import routes from '../../routes';
 
 function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetData): string {
   return `

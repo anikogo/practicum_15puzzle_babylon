@@ -13,7 +13,7 @@ import api from './routes';
 
 import NotFound from './errors/NotFound';
 
-import serverRenderMiddleware from './render-middleware';
+import serverRenderMiddleware from './middlewares/render-middleware';
 import errorHandler from './middlewares/errorHandler';
 import { requestLogger, errorLogger } from './middlewares/logger';
 
