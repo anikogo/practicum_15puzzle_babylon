@@ -4,7 +4,7 @@ import Tile from './Tile';
 import Stats from './Stats';
 
 export default class Game {
-  sideSize: number;
+  boardSize: number;
 
   tileWidth: number;
 
@@ -24,13 +24,19 @@ export default class Game {
 
   #isAnimate: boolean;
 
-  constructor(sideSize: number) {
-    this.sideSize = sideSize;
+  onPuzzleSolved: (score: number) => void;
+
+  constructor({ boardSize, onPuzzleSolved }: {
+    boardSize: number;
+    onPuzzleSolved: (score: number) => void;
+  }) {
+    this.boardSize = boardSize;
     this.tiles = [];
     this.numbers = [];
     this.tileWidth = Math.floor(globalThis.innerHeight / 8);
     this.state = 'stopped';
     this.#isAnimate = false;
+    this.onPuzzleSolved = onPuzzleSolved;
   }
 
   isSolvable() {
@@ -38,7 +44,7 @@ export default class Game {
     let row = 0;
     let blankRow = 0;
     for (let i = 0; i < this.numbers.length; i++) {
-      if (i % this.sideSize === 0) {
+      if (i % this.boardSize === 0) {
         row++;
       }
       if (this.numbers[i] === 0) {
@@ -53,7 +59,7 @@ export default class Game {
       }
     }
 
-    if (this.sideSize % 2 === 0) {
+    if (this.boardSize % 2 === 0) {
       if (blankRow % 2 === 0) {
         return parity % 2 === 0;
       }
@@ -63,7 +69,7 @@ export default class Game {
   }
 
   generateNumbers() {
-    this.numbers = shuffleArray(populateArray(this.sideSize * this.sideSize));
+    this.numbers = shuffleArray(populateArray(this.boardSize * this.boardSize));
 
     if (!this.isSolvable()) {
       this.generateNumbers();
@@ -101,7 +107,7 @@ export default class Game {
       this.ctx = canvas.getContext('2d');
 
       if (this.ctx) {
-        this.#field = new Field(this.sideSize, this.ctx);
+        this.#field = new Field(this.boardSize, this.ctx);
         this.#field.draw();
         this.#stats = new Stats(this.ctx, this.#field.width + 30, 40);
         this.#stats.draw();
@@ -132,9 +138,9 @@ export default class Game {
       const [zeroCol, zeroRow, zeroIdx] = this.getTilePos(0);
       const zeroTile = this.tiles[zeroIdx];
       const [col, row, ttmIdx] = this.getTilePos(+tile.content);
-      const canMove = (code === 'ArrowRight' && col < this.sideSize - 1)
+      const canMove = (code === 'ArrowRight' && col < this.boardSize - 1)
         || (code === 'ArrowLeft' && col > 0)
-        || (code === 'ArrowDown' && row < this.sideSize - 1)
+        || (code === 'ArrowDown' && row < this.boardSize - 1)
         || (code === 'ArrowUp' && row > 0)
         || (!code && (Math.abs(zeroCol - col) + Math.abs(zeroRow - row)) === 1);
 
@@ -191,10 +197,10 @@ export default class Game {
         tileToMove = this.tiles[zeroIdx + 1];
         break;
       case 'ArrowDown':
-        tileToMove = this.tiles[zeroIdx - this.sideSize];
+        tileToMove = this.tiles[zeroIdx - this.boardSize];
         break;
       case 'ArrowUp':
-        tileToMove = this.tiles[zeroIdx + this.sideSize];
+        tileToMove = this.tiles[zeroIdx + this.boardSize];
         break;
       default:
         break;
@@ -226,6 +232,7 @@ export default class Game {
     // eslint-disable-next-line no-alert
     this.#stats?.stopTimer();
     const score = this.calcScore();
+    this.onPuzzleSolved(score);
     alert(`Eeeah, you win! Your score is: ${score}`);
   }
 }

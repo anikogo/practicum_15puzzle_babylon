@@ -7,10 +7,24 @@ import {
 import Game from '../game/Game';
 import Content from '../components/Content';
 import withUser from '../hoc/withUser';
+import { useAddUserMutation } from '../store';
 
-function IndexPage() {
+function IndexPage({ user }: { user?: User }) {
   const [boardSize] = useState(4);
-  const game = useMemo(() => new Game(boardSize), [boardSize]);
+  const [postScore] = useAddUserMutation();
+  const game = useMemo(() => new Game({
+    boardSize,
+    onPuzzleSolved: (score) => {
+      postScore({
+        data: {
+          ...user,
+          score,
+        },
+        teamName: 'babylon',
+        ratingFieldName: 'score',
+      });
+    },
+  }), [boardSize]);
 
   const ref = useRef<HTMLCanvasElement>(null);
 
