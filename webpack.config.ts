@@ -82,10 +82,24 @@ const serverConfig: Configuration = {
     path: path.resolve('dist'),
     publicPath: '/',
   },
+  resolve: {
+    extensions: ['.ts', '.js'],
+  },
   optimization: {
     minimize: process.env.NODE_ENV === 'production',
     minimizer: [new TerserPlugin()],
   },
+  module: {
+    rules: [
+      {
+        test: /\.ts$/,
+        use: [
+          'ts-loader',
+        ],
+      },
+    ],
+  },
+  watch: process.env.NODE_ENV === 'development',
 };
 
 export default [cleintConfig, serverConfig];

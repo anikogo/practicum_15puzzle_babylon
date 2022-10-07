@@ -24,7 +24,10 @@
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
     "react/jsx-props-no-spreading": "off",
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "no-console": "off",
+    "@typescript-eslint/naming-convention": "off",
+    "@typescript-eslint/no-var-requires": 0
   },
   "parserOptions": {
       "ecmaVersion": "latest",
