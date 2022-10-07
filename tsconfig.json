@@ -24,14 +24,14 @@
       "*": ["./src/*"]
     },
     "typeRoots": [
-      "typings/**/*.d.ts",
+      "@types/*.d.ts",
       "node_modules/@types"
     ],
   },
   "include": [
     "src",
     "src/**/*",
-    "typings/**/*.d.ts",
+    "@types/*.d.ts",
     "./node_modules/@types",
     "./webpack.config.ts",
     "./**/*.ts"

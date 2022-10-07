@@ -1,10 +1,10 @@
-/* eslint-disable import/no-import-module-exports */
+import { Router } from 'express';
 import Urls from '../utils/constants';
 
 import { validateUserData } from '../utils/validator';
 import { updateUser } from '../controllers/user';
 
-const router = require('express').Router();
+const router = Router();
 
 router.patch(
   Urls.API.USERS.UPDATE,
@@ -12,4 +12,4 @@ router.patch(
   updateUser,
 );
 
-module.exports = router;
+export default router;

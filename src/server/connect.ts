@@ -1,11 +1,12 @@
+import { config as dotEnvConfig } from 'dotenv';
 import { Sequelize, SequelizeOptions } from 'sequelize-typescript';
 
-import User from './src/models/User';
-import Topic from './src/models/Topic';
-import Comment from './src/models/Comment';
-import Like from './src/models/Like';
+import User from './models/User';
+import Topic from './models/Topic';
+import Comment from './models/Comment';
+import Like from './models/Like';
 
-require('dotenv').config();
+dotEnvConfig();
 
 const sequelizeOptions: SequelizeOptions = {
   host: process.env.DB_HOST || 'localhost',
