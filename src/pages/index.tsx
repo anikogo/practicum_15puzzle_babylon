@@ -1,30 +1,14 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Game from '../game/Game';
 import Content from '../components/Content';
 import withUser from '../hoc/withUser';
 import { useAddUserMutation } from '../store';
 
+const game = new Game();
+
 function IndexPage({ user }: { user?: User }) {
   const [boardSize] = useState(4);
   const [postScore] = useAddUserMutation();
-  const game = useMemo(() => new Game({
-    boardSize,
-    onPuzzleSolved: (score) => {
-      postScore({
-        data: {
-          ...user,
-          score,
-        },
-        teamName: 'babylon',
-        ratingFieldName: 'score',
-      });
-    },
-  }), [boardSize]);
 
   const ref = useRef<HTMLCanvasElement>(null);
 
@@ -34,7 +18,21 @@ function IndexPage({ user }: { user?: User }) {
     const canvas = ref.current;
     if (!canvas) throw new Error('Error');
 
-    game.init(canvas);
+    game.init(canvas, {
+      boardSize,
+      fieldFillColors: '#374251',
+      tileFillColors: ['#22c55e', '#239354'],
+      onPuzzleSolved: (score) => {
+        postScore({
+          data: {
+            ...user,
+            score,
+          },
+          teamName: 'babylon',
+          ratingFieldName: 'score',
+        });
+      },
+    });
     game.start();
 
     return () => {
@@ -48,7 +46,7 @@ function IndexPage({ user }: { user?: User }) {
         ref={ref}
         width={fieldSize + 250}
         height={fieldSize}
-        className="m-auto p-6 rounded-2xl bg-emerald-800"
+        className="m-auto p-6 rounded-2xl bg-[#374251]"
       />
     </Content>
   );

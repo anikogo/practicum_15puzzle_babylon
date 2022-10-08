@@ -3,6 +3,13 @@ import { populateArray, shuffleArray } from '../utils';
 import Tile from './Tile';
 import Stats from './Stats';
 
+type GameOptions = {
+  boardSize: number;
+  fieldFillColors: string | string[];
+  tileFillColors: string | string[];
+  onPuzzleSolved: (score: number) => void;
+};
+
 export default class Game {
   boardSize: number;
 
@@ -18,6 +25,10 @@ export default class Game {
 
   numbers: number[];
 
+  #fieldFill: string | CanvasGradient;
+
+  #tileFill: string | CanvasGradient;
+
   #field?: Field;
 
   #stats?: Stats;
@@ -26,17 +37,16 @@ export default class Game {
 
   onPuzzleSolved: (score: number) => void;
 
-  constructor({ boardSize, onPuzzleSolved }: {
-    boardSize: number;
-    onPuzzleSolved: (score: number) => void;
-  }) {
-    this.boardSize = boardSize;
+  constructor() {
+    this.boardSize = 4;
+    this.#fieldFill = '';
+    this.#tileFill = '';
     this.tiles = [];
     this.numbers = [];
     this.tileWidth = Math.floor(globalThis.innerHeight / 8);
     this.state = 'stopped';
     this.#isAnimate = false;
-    this.onPuzzleSolved = onPuzzleSolved;
+    this.onPuzzleSolved = () => {};
   }
 
   isSolvable() {
@@ -93,6 +103,7 @@ export default class Game {
           row * this.tileWidth,
           this.tileWidth,
           this.numbers[i],
+          this.#tileFill,
           this.ctx,
         ));
       }
@@ -101,12 +112,38 @@ export default class Game {
     }
   }
 
-  init(canvas: HTMLCanvasElement) {
+  init(canvas: HTMLCanvasElement, {
+    boardSize,
+    fieldFillColors,
+    tileFillColors,
+    onPuzzleSolved,
+  }: GameOptions) {
+    this.boardSize = boardSize;
+    this.onPuzzleSolved = onPuzzleSolved;
     if (this.state === 'stopped') {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
       if (this.ctx) {
+        if (typeof tileFillColors !== 'string') {
+          this.#tileFill = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+          for (let i = 0; i < tileFillColors.length; i++) {
+            this.#tileFill.addColorStop(i / tileFillColors.length, tileFillColors[i]);
+          }
+        } else {
+          this.#tileFill = tileFillColors;
+        }
+
+        if (typeof fieldFillColors !== 'string') {
+          this.#fieldFill = this.ctx.createLinearGradient(0, 0, this.ctx.canvas.width, 0);
+          for (let i = 0; i < fieldFillColors.length; i++) {
+            this.#fieldFill
+              .addColorStop(i / fieldFillColors.length, fieldFillColors[i]);
+          }
+        } else {
+          this.#fieldFill = fieldFillColors;
+        }
+
         this.#field = new Field(this.boardSize, this.ctx);
         this.#field.draw();
         this.#stats = new Stats(this.ctx, this.#field.width + 30, 40);
@@ -214,7 +251,7 @@ export default class Game {
   calcScore() {
     if (this.#stats) {
       const { movesCount, time } = this.#stats;
-      return Math.round((movesCount / time) * 100);
+      return Math.round((time / movesCount) * 100);
     }
     return 0;
   }

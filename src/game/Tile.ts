@@ -11,47 +11,75 @@ export default class Tile {
 
   private fontSize: number;
 
+  private fill: string | CanvasGradient;
+
+  private radius: number;
+
   constructor(
     x: number,
     y: number,
     size: number,
     content: number | string,
+    fill: string | CanvasGradient,
     ctx: CanvasRenderingContext2D,
   ) {
     this.x = x;
     this.y = y;
     this.size = size;
+    this.radius = 15;
     this.fontSize = this.size / 3;
     this.content = content;
     this.ctx = ctx;
+    this.fill = fill;
   }
 
   public draw() {
-    this.ctx.fillStyle = 'lightgreen';
-    this.ctx.fillRect(this.x, this.y, this.size, this.size);
-    this.ctx.beginPath();
-    this.ctx.textAlign = 'center';
-    this.ctx.textBaseline = 'middle';
-    this.ctx.strokeStyle = 'lightgreen';
+    this.ctx.clearRect(this.x, this.y, this.size, this.size);
     if (this.content !== 0) {
-      this.ctx.fillStyle = 'lightyellow';
-      this.ctx.fillRect(this.x, this.y, this.size, this.size);
+      this.ctx.beginPath();
+      this.ctx.moveTo(this.x + this.radius, this.y);
+      this.ctx.lineTo(this.x + this.size - this.radius, this.y);
+      this.ctx.quadraticCurveTo(
+        this.x + this.size,
+        this.y,
+        this.x + this.size,
+        this.y + this.radius,
+      );
+      this.ctx.lineTo(this.x + this.size, this.y + this.size - this.radius);
+      this.ctx.quadraticCurveTo(
+        this.x + this.size,
+        this.y + this.size,
+        this.x + this.size - this.radius,
+        this.y + this.size,
+      );
+      this.ctx.lineTo(this.x + this.radius, this.y + this.size);
+      this.ctx.quadraticCurveTo(
+        this.x,
+        this.y + this.size,
+        this.x,
+        this.y + this.size - this.radius,
+      );
+      this.ctx.lineTo(this.x, this.y + this.radius);
+      this.ctx.quadraticCurveTo(this.x, this.y, this.x + this.radius, this.y);
+      this.ctx.closePath();
+      this.ctx.fillStyle = this.fill;
+      this.ctx.fill();
+      this.ctx.strokeStyle = '#374251';
+      this.ctx.lineWidth = 5;
+      this.ctx.stroke();
+      this.ctx.fillStyle = 'white';
       this.ctx.font = `${this.fontSize}px sans-serif`;
-      this.ctx.fillStyle = 'green';
+      this.ctx.textAlign = 'center';
       this.ctx.fillText(`${this.content}`, this.x + this.size / 2, this.y + this.size / 2);
-    } else {
-      this.ctx.fillStyle = 'lightgreen';
-      this.ctx.fillRect(this.x, this.y, this.size, this.size);
     }
-    this.ctx.strokeRect(this.x + 1, this.y + 1, this.size - 2, this.size - 2);
   }
 
   public move(x: number, y: number) {
     return new Promise((resolve) => {
       const xDiff = x - this.x;
       const yDiff = y - this.y;
-      const xStep = xDiff / 10;
-      const yStep = yDiff / 10;
+      const xStep = xDiff / 5;
+      const yStep = yDiff / 5;
 
       const animate = () => {
         const currentAbsDiffX = Math.abs(x - this.x);

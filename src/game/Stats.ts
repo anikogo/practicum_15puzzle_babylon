@@ -69,7 +69,7 @@ export default class Stats {
 
   draw() {
     this.ctx.clearRect(this.x, this.y - 30, 200, 100);
-    this.ctx.fillStyle = 'black';
+    this.ctx.fillStyle = 'white';
     this.ctx.font = '30px Arial';
     this.ctx.textBaseline = 'middle';
     this.ctx.textAlign = 'left';
