@@ -1,11 +1,14 @@
-// eslint-disable-next-line import/no-import-module-exports
-import { NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import Unauthorized from '../errors/Unauthorized';
 
 import DEV_JWT_SECRET from '../utils/devConfig';
 
-const auth = (req: Request | any, _res: Response, next: NextFunction) => {
+const authMiddleware = (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
@@ -27,7 +30,7 @@ const auth = (req: Request | any, _res: Response, next: NextFunction) => {
 
   req.user = payload;
 
-  next();
+  return next();
 };
 
-export default auth;
+export default authMiddleware;

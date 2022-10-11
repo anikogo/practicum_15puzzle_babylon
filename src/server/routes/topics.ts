@@ -1,4 +1,5 @@
-/* eslint-disable import/no-import-module-exports */
+import { Router } from 'express';
+
 import {
   addTopic,
   getTopics,
@@ -6,11 +7,10 @@ import {
   editTopic,
   deleteTopic,
 } from '../controllers/topics';
+import { validateTopicData } from '../utils/validator';
 import Urls from '../utils/constants';
 
-const router = require('express').Router();
-
-const { validateTopicData } = require('../utils/validator');
+const router = Router();
 
 router.post(
   Urls.API.TOPICS.ADD,
@@ -39,4 +39,4 @@ router.delete(
   deleteTopic,
 );
 
-module.exports = router;
+export default router;

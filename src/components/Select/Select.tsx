@@ -1,7 +1,9 @@
+import { Fragment } from 'react';
+
+import classnames from 'classnames';
+
 import { Listbox, Transition } from '@headlessui/react';
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
-import { Fragment } from 'react';
-import classnames from 'classnames';
 
 type OptionProps<T> = {
   label: string;

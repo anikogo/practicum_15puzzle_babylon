@@ -12,3 +12,9 @@ export const shuffleArray = (array: number[]) => {
 
   return result;
 };
+
+export const isServer = !(
+  typeof window !== 'undefined'
+  && window.document
+  && window.document.createElement
+);

@@ -1,4 +1,5 @@
-/* eslint-disable import/no-import-module-exports */
+import { Router } from 'express';
+
 import {
   addLike,
   getLikes,
@@ -6,7 +7,7 @@ import {
 } from '../controllers/likes';
 import Urls from '../utils/constants';
 
-const router = require('express').Router();
+const router = Router();
 
 router.post(
   Urls.API.LIKE.ADD,
@@ -23,4 +24,4 @@ router.delete(
   removeLike,
 );
 
-module.exports = router;
+export default router;

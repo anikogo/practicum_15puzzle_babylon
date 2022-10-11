@@ -1,7 +1,6 @@
 import type { PropsWithChildren } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { Link } from 'react-router-dom';
-import type { FallbackProps } from 'react-error-boundary';
 
 import Header from '../Header';
 import Button from '../Button';

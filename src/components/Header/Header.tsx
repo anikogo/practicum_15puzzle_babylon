@@ -1,5 +1,4 @@
-import { Fragment } from 'react';
-import type { MouseEventHandler } from 'react';
+import { Fragment, type MouseEventHandler } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import classnames from 'classnames';

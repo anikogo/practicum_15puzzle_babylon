@@ -10,30 +10,27 @@
     "moduleResolution": "node",
     "target": "es2016",
     "jsx": "react-jsx",
-    "importHelpers": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "esModuleInterop": true,
     "strict": true,
+    "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
     "declaration": false,
     "sourceMap": true,
-    "baseUrl": ".",
-    "outDir": "./dist",
+    "outDir": "dist",
     "paths": {
       "*": ["./src/*"]
     },
     "typeRoots": [
-      "typings/**/*.d.ts",
-      "node_modules/@types"
+      "@types/*.d.ts"
     ],
   },
   "include": [
     "src",
-    "typings/**/*.d.ts",
-    "./node_modules/@types",
+    "src/**/*",
+    "@types/*.d.ts",
     "./webpack.config.ts",
     "./**/*.ts"
   ],

@@ -1,4 +1,5 @@
-/* eslint-disable import/no-import-module-exports */
+import { Router } from 'express';
+
 import Urls from '../utils/constants';
 
 import { validateCommentData } from '../utils/validator';
@@ -9,7 +10,7 @@ import {
   getComment,
 } from '../controllers/comments';
 
-const router = require('express').Router();
+const router = Router();
 
 router.get(
   Urls.API.COMMENTS.GET,
@@ -34,4 +35,4 @@ router.delete(
   deleteComment,
 );
 
-module.exports = router;
+export default router;

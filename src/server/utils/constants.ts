@@ -1,6 +1,6 @@
 const Urls = {
   API: {
-    BASE: '/',
+    BASE: '/api',
     AUTH: {
       INDEX: '/api/auth',
       SIGNUP: '/api/auth/signup',
