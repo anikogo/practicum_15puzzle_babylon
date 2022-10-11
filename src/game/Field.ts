@@ -1,18 +1,22 @@
 export default class Field {
   width: number;
 
-  color: string;
-
   ctx: CanvasRenderingContext2D;
 
-  constructor(boardSize: number, ctx: CanvasRenderingContext2D) {
-    this.width = Math.floor(globalThis.innerHeight / 8) * boardSize;
-    this.color = 'lightgreen';
+  #fillColor: CanvasFillStrokeStyles['fillStyle'];
+
+  constructor(
+    width: number,
+    fillColor: CanvasFillStrokeStyles['fillStyle'],
+    ctx: CanvasRenderingContext2D,
+  ) {
+    this.width = width;
     this.ctx = ctx;
+    this.#fillColor = fillColor;
   }
 
   draw() {
-    this.ctx.fillStyle = this.color;
+    this.ctx.fillStyle = this.#fillColor;
     this.ctx.fillRect(0, 0, this.width, this.width);
   }
 }

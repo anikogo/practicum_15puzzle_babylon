@@ -1,5 +1,5 @@
 export const populateArray = (size: number, multiplier = 1) => [...Array(size)]
-  .map((_, i) => i * multiplier);
+  .map((_, i) => (i + 1) * multiplier);
 
 export const shuffleArray = (array: number[]) => {
   const result = [...array];

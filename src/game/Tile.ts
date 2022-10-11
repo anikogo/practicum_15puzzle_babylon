@@ -11,7 +11,7 @@ export default class Tile {
 
   private fontSize: number;
 
-  private fill: string | CanvasGradient;
+  private fill: CanvasFillStrokeStyles['fillStyle'];
 
   private radius: number;
 
@@ -20,7 +20,7 @@ export default class Tile {
     y: number,
     size: number,
     content: number | string,
-    fill: string | CanvasGradient,
+    fill: CanvasFillStrokeStyles['fillStyle'],
     ctx: CanvasRenderingContext2D,
   ) {
     this.x = x;
@@ -65,11 +65,12 @@ export default class Tile {
       this.ctx.fillStyle = this.fill;
       this.ctx.fill();
       this.ctx.strokeStyle = '#374251';
-      this.ctx.lineWidth = 5;
+      this.ctx.lineWidth = 8;
       this.ctx.stroke();
       this.ctx.fillStyle = 'white';
       this.ctx.font = `${this.fontSize}px sans-serif`;
       this.ctx.textAlign = 'center';
+      this.ctx.textBaseline = 'middle';
       this.ctx.fillText(`${this.content}`, this.x + this.size / 2, this.y + this.size / 2);
     }
   }

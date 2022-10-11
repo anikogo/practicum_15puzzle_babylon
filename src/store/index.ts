@@ -3,6 +3,7 @@ import { setupListeners } from '@reduxjs/toolkit/query/react';
 
 import { appApi, authApi } from './api';
 import userReducer from './slices/userSlice';
+import gameStatsReducer from './slices/gameStatsSlice';
 
 export * from './api/appApi/endpoints';
 export * from './api/authApi/endpoints';
@@ -12,6 +13,7 @@ const store = configureStore({
   reducer: {
     // Add the generated reducer as a specific top-level slice
     user: userReducer,
+    gameStats: gameStatsReducer,
     [appApi.reducerPath]: appApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
   },

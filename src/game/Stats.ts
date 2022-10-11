@@ -1,24 +1,17 @@
+import store from '../store';
+
 export default class Stats {
   #movesCount: number;
 
   #time: number;
 
-  ctx: CanvasRenderingContext2D;
-
-  x: number;
-
-  y: number;
-
   #state: string;
 
   #timer: NodeJS.Timer | null;
 
-  constructor(ctx: CanvasRenderingContext2D, x: number, y: number) {
+  constructor() {
     this.#movesCount = 0;
     this.#time = 0;
-    this.x = x;
-    this.y = y;
-    this.ctx = ctx;
     this.#state = 'stopped';
     this.#timer = null;
   }
@@ -33,7 +26,7 @@ export default class Stats {
 
   set movesCount(value: number) {
     this.#movesCount = value;
-    this.draw();
+    store.dispatch({ type: 'stats/setMovesCount', payload: this.#movesCount });
   }
 
   get time(): number {
@@ -42,7 +35,7 @@ export default class Stats {
 
   set time(value: number) {
     this.#time = value;
-    this.draw();
+    store.dispatch({ type: 'stats/setTime', payload: this.#time });
   }
 
   startTimer() {
@@ -59,21 +52,5 @@ export default class Stats {
     if (this.#timer) {
       clearInterval(this.#timer);
     }
-  }
-
-  formattedTime() {
-    const minutes = Math.floor(this.time / 60);
-    const seconds = this.time % 60;
-    return `${(minutes < 10) ? `0${minutes}` : minutes}:${(seconds < 10) ? `0${seconds}` : seconds}`;
-  }
-
-  draw() {
-    this.ctx.clearRect(this.x, this.y - 30, 200, 100);
-    this.ctx.fillStyle = 'white';
-    this.ctx.font = '30px Arial';
-    this.ctx.textBaseline = 'middle';
-    this.ctx.textAlign = 'left';
-    this.ctx.fillText(`Moves: ${this.#movesCount}`, this.x, this.y);
-    this.ctx.fillText(`Time: ${this.formattedTime()}`, this.x, this.y + 40);
   }
 }

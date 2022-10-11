@@ -43,7 +43,7 @@ export default class Game {
     this.#tileFill = '';
     this.tiles = [];
     this.numbers = [];
-    this.tileWidth = Math.floor(globalThis.innerHeight / 8);
+    this.tileWidth = 0;
     this.state = 'stopped';
     this.#isAnimate = false;
     this.onPuzzleSolved = () => {};
@@ -79,17 +79,19 @@ export default class Game {
   }
 
   generateNumbers() {
-    this.numbers = shuffleArray(populateArray(this.boardSize * this.boardSize));
+    this.numbers = shuffleArray(populateArray((this.boardSize * this.boardSize) - 1));
 
     if (!this.isSolvable()) {
       this.generateNumbers();
+    } else {
+      this.numbers.push(0);
     }
   }
 
   getTilePos = (content: number) => {
     const zeroIndex = this.numbers.indexOf(content);
-    const zeroCol = Math.floor(zeroIndex % 4);
-    const zeroRow = Math.floor(zeroIndex / 4);
+    const zeroCol = Math.floor(zeroIndex % this.boardSize);
+    const zeroRow = Math.floor(zeroIndex / this.boardSize);
     return [zeroCol, zeroRow, zeroIndex];
   };
 
@@ -123,8 +125,11 @@ export default class Game {
     if (this.state === 'stopped') {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
+      this.numbers = populateArray((this.boardSize * this.boardSize) - 1);
+      this.numbers.push(0);
 
       if (this.ctx) {
+        this.tileWidth = this.canvas.height / this.boardSize || 0;
         if (typeof tileFillColors !== 'string') {
           this.#tileFill = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
           for (let i = 0; i < tileFillColors.length; i++) {
@@ -144,10 +149,10 @@ export default class Game {
           this.#fieldFill = fieldFillColors;
         }
 
-        this.#field = new Field(this.boardSize, this.ctx);
+        this.#field = new Field(this.tileWidth * this.boardSize, this.#fieldFill, this.ctx);
         this.#field.draw();
-        this.#stats = new Stats(this.ctx, this.#field.width + 30, 40);
-        this.#stats.draw();
+        this.#stats = new Stats();
+        this.spawnTiles();
 
         document.addEventListener('keydown', this.onArrowKeyPress.bind(this));
         this.canvas.addEventListener('click', this.handleClick.bind(this));
@@ -157,6 +162,7 @@ export default class Game {
 
   start() {
     if (this.state !== 'started') {
+      this.tiles = [];
       this.generateNumbers();
       this.spawnTiles();
       this.state = 'started';
@@ -164,6 +170,11 @@ export default class Game {
   }
 
   stop() {
+    this.#stats?.stopTimer();
+    this.state = 'stopped';
+  }
+
+  destroy() {
     if (this.#field) {
       document.removeEventListener('keydown', this.onArrowKeyPress.bind(this));
       this.canvas?.removeEventListener('click', this.handleClick.bind(this));
