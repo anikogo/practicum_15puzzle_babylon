@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { useMemo } from 'react';
 import {
   useTable,
-  usePagination, useSortBy, useFlexLayout,
-} from 'react-table';
-
-import type {
-  Row,
-  Column,
-  CellProps,
-  TableInstance,
+  usePagination,
+  useSortBy,
+  useFlexLayout,
+  type Row,
+  type Column,
+  type CellProps,
+  type TableInstance,
 } from 'react-table';
 
 import {

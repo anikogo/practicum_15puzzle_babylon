@@ -8,11 +8,13 @@ import {
 
 declare module 'react-table' {
   // take this file as-is, or comment out the sections that don't apply to your plugin configuration
+  // @ts-ignore
   interface TableOptions<D extends Record<string, unknown>>
     extends UsePaginationOptions<D>,
     UseSortByOptions<D>,
     Record<string, unknown> {}
 
+  // @ts-ignore
   interface ColumnInstance<D extends Record<string, unknown> = Record<string, unknown>>
     extends UseSortByColumnProps<D> {
   }

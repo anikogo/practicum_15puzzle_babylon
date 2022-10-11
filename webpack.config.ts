@@ -1,33 +1,31 @@
 import path from 'path';
+import type { Configuration } from 'webpack';
+import { merge } from 'webpack-merge';
 import nodeExternals from 'webpack-node-externals';
-import TerserPlugin from 'terser-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-
-import type { Configuration as WebpackConfiguration } from 'webpack';
-import type { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server';
-
-interface Configuration extends WebpackConfiguration {
-  devServer?: WebpackDevServerConfiguration;
-}
+import ESLintPlugin from 'eslint-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import NodemonPlugin from 'nodemon-webpack-plugin';
 
 type Environment = 'development' | 'production' | 'none' | undefined;
 
-const cleintConfig: Configuration = {
-  mode: process.env.NODE_ENV as Environment ?? 'development',
-  entry: './src/index.tsx',
-  output: {
-    path: path.join(__dirname, '/dist'),
-    filename: 'bundle.js',
+const common = {
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+    modules: ['node_modules'],
   },
+  plugins: [
+    new ESLintPlugin({
+      extensions: ['js', 'jsx', 'ts', 'tsx'],
+    }),
+    new MiniCssExtractPlugin(),
+  ],
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'ts-loader',
-        },
+        test: /\.(svg|png|jpe?g|gif)$/i,
+        use: ['file-loader'],
       },
       {
         test: /\.css$/i,
@@ -38,68 +36,68 @@ const cleintConfig: Configuration = {
         ],
       },
       {
-        test: /\.(png|jp(e*)g|svg|gif)$/,
+        test: /\.tsx?$/,
         use: [
           {
-            loader: 'file-loader',
+            loader: 'ts-loader',
             options: {
-              name: 'images/[hash]-[name].[ext]',
+              configFile: 'tsconfig.json',
             },
           },
         ],
+        exclude: /(node_modules)/,
       },
     ],
   },
-  resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.svg'],
-  },
-  plugins: [
-    new MiniCssExtractPlugin(),
-    new HtmlWebpackPlugin({
-      template: './www/index.html',
-    }),
-  ],
-  devServer: {
-    static: {
-      directory: path.join(__dirname, '/public'),
-    },
-    watchFiles: ['src/**/*.tsx'],
-    compress: true,
-    hot: true,
-    open: true,
-    port: 3000,
-    historyApiFallback: true,
-  },
 };
 
-const serverConfig: Configuration = {
-  target: 'node',
-  externals: [nodeExternals()],
-  entry: './src/server/app.ts',
+const client = merge<Configuration>(common, {
+  name: 'client',
+  target: 'web',
   mode: process.env.NODE_ENV as Environment ?? 'development',
+  devtool: 'inline-source-map',
+  entry: ['./src/index.tsx'],
   output: {
-    filename: 'server.js',
-    path: path.resolve('dist'),
-    publicPath: '/',
-  },
-  resolve: {
-    extensions: ['.ts', '.js'],
+    filename: 'bundle.js',
+    path: path.join(__dirname, 'dist'),
   },
   optimization: {
     minimize: process.env.NODE_ENV === 'production',
     minimizer: [new TerserPlugin()],
   },
+});
+
+const server = merge<Configuration>(common, {
+  name: 'server',
+  target: 'node',
+  entry: ['./src/server/index.ts'],
+  mode: process.env.NODE_ENV as Environment ?? 'development',
+  externals: [
+    nodeExternals({ allowlist: [/\.(?!(?:tsx?|json)$).{1,5}$/i] }),
+  ],
+  plugins: [
+    new NodemonPlugin({
+      script: './dist/server',
+      watch: ['./dist'],
+      delay: 1000,
+      verbose: true,
+      env: {
+        NODE_ENV: 'development',
+      },
+    }),
+  ],
+  output: {
+    filename: 'server.js',
+    path: path.join(__dirname, 'dist'),
+  },
   module: {
     rules: [
       {
-        test: /\.ts$/,
-        use: [
-          'ts-loader',
-        ],
+        test: /\.css$/i,
+        use: ['null-loader'],
       },
     ],
   },
-  watch: process.env.NODE_ENV === 'development',
-};
+});
 
-export default [cleintConfig, serverConfig];
+export default [client, server];

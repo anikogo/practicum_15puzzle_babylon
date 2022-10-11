@@ -2,8 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '..';
 
-type AuthState = {
+export type AuthState = {
   data: User | null
+};
+
+export const initialState: AuthState = {
+  data: null,
 };
 
 const slice = createSlice({

@@ -9,3 +9,14 @@ type User = {
   avatar?: string;
   password?: string;
 };
+
+type Action<T> = {
+  type: string;
+  payload: T;
+};
+
+type Reducer<T> = (state: T, action: Action<T>) => T;
+
+type LeaderboardApiResponse = {
+  data: User & { score: number };
+}[];

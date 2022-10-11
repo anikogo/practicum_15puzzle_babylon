@@ -1,6 +1,12 @@
 import appApi from '..';
 
-const licenseUsersEndpoints = appApi
+type TeamUsersQueryParams = {
+  ratingFieldName: string;
+  cursor: number;
+  limit: number;
+};
+
+const leaderboardEndpoints = appApi
   .enhanceEndpoints({
     addTagTypes: ['Leaderboard'],
   })
@@ -13,19 +19,20 @@ const licenseUsersEndpoints = appApi
           data: body,
         }),
       }),
-      getAllUsers: builder.query({
+      getAllUsers: builder.query<User & { score: number; }, TeamUsersQueryParams>({
         query: (body) => ({
           url: '/leaderboard/all',
           method: 'POST',
           data: body,
         }),
       }),
-      getTeamUsers: builder.query({
-        query: ({ body, teamName }) => ({
-          url: `/leaderboard/${teamName}`,
+      getTeamUsers: builder.mutation<LeaderboardApiResponse, TeamUsersQueryParams>({
+        query: (data) => ({
+          url: '/leaderboard/babylon',
           method: 'POST',
-          data: body,
+          data,
         }),
+        invalidatesTags: ['Leaderboard'],
       }),
     }),
   });
@@ -33,5 +40,5 @@ const licenseUsersEndpoints = appApi
 export const {
   useAddUserMutation,
   useGetAllUsersQuery,
-  useGetTeamUsersQuery,
-} = licenseUsersEndpoints;
+  useGetTeamUsersMutation,
+} = leaderboardEndpoints;

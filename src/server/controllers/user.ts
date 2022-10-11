@@ -11,8 +11,8 @@ import DEV_JWT_SECRET from '../utils/devConfig';
 
 const signupUser = (req: Request, res: Response, next: NextFunction) => {
   const {
-    avatar_path,
-    display_name,
+    avatar_path: avatarPath,
+    display_name: displayName,
     email,
     password,
   }: Record<string, string> = req.body;
@@ -21,8 +21,8 @@ const signupUser = (req: Request, res: Response, next: NextFunction) => {
     .hash(password, 10)
     .then((hash: string) => {
       User.create({
-        avatar_path,
-        display_name,
+        avatar_path: avatarPath,
+        display_name: displayName,
         email,
         hash,
         external_id: 0,

@@ -1,4 +1,5 @@
-/* eslint-disable import/no-import-module-exports */
+import { Router } from 'express';
+
 import Urls from '../utils/constants';
 
 import { validateLoginData, validateRegistrData } from '../utils/validator';
@@ -9,7 +10,7 @@ import {
   getUser,
 } from '../controllers/user';
 
-const router = require('express').Router();
+const router = Router();
 
 router.post(
   Urls.API.AUTH.SIGNUP,
@@ -33,4 +34,4 @@ router.post(
   signinUser,
 );
 
-module.exports = router;
+export default router;

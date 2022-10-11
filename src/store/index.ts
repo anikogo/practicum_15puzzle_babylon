@@ -1,16 +1,31 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query/react';
+import { createReduxHistoryContext } from 'redux-first-history';
+import { createBrowserHistory, createMemoryHistory } from 'history';
 
 import { appApi, authApi } from './api';
 import userReducer from './slices/userSlice';
+import { isServer } from '../utils';
 import gameStatsReducer from './slices/gameStatsSlice';
 
 export * from './api/appApi/endpoints';
 export * from './api/authApi/endpoints';
 export * from './slices';
 
-const store = configureStore({
+// global redeclared types
+declare global {
+  interface Window {
+    __INITIAL_STATE__: RootState;
+  }
+}
+
+const { createReduxHistory, routerMiddleware, routerReducer } = createReduxHistoryContext({
+  history: !isServer ? createBrowserHistory() : createMemoryHistory(),
+});
+
+export const store = configureStore({
   reducer: {
+    router: routerReducer,
     // Add the generated reducer as a specific top-level slice
     user: userReducer,
     gameStats: gameStatsReducer,
@@ -20,10 +35,10 @@ const store = configureStore({
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
   middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-    .concat(appApi.middleware, authApi.middleware),
+    .concat(appApi.middleware, authApi.middleware, routerMiddleware),
 });
 
-export default store;
+export const history = createReduxHistory(store);
 
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors
 // see `setupListeners` docs - takes an optional callback as the 2nd arg for customization
