@@ -10,7 +10,7 @@ import { useGetTopicQuery } from '../store';
 
 function TopicPage() {
   const location = useLocation();
-  const topic = location.pathname.replace('/forum', '');
+  const topic = location.pathname.replace('/forum', '/topics');
   const handleError = useErrorHandler();
   const { data = [], error, isLoading } = useGetTopicQuery(topic);
 

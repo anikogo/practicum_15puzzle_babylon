@@ -7,14 +7,14 @@ import {
   editTopic,
   deleteTopic,
 } from '../controllers/topics';
-import { validateTopicData } from '../utils/validator';
+// import { validateTopicData } from '../utils/validator';
 import Urls from '../utils/constants';
 
 const router = Router();
 
 router.post(
   Urls.API.TOPICS.ADD,
-  validateTopicData,
+  // validateTopicData,
   addTopic,
 );
 
@@ -30,12 +30,12 @@ router.get(
 
 router.patch(
   Urls.API.TOPICS.EDIT,
-  validateTopicData,
+  // validateTopicData,
   editTopic,
 );
 
 router.delete(
-  Urls.API.TOPICS.EDIT,
+  Urls.API.TOPICS.DELETE,
   deleteTopic,
 );
 

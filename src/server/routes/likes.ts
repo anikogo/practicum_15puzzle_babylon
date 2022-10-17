@@ -15,7 +15,7 @@ router.post(
 );
 
 router.get(
-  Urls.API.LIKE.INDEX,
+  Urls.API.LIKE.GET,
   getLikes,
 );
 

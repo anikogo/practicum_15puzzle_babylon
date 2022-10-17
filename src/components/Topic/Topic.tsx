@@ -87,6 +87,7 @@ function Topic({ data } : any) {
 
   const handlerDelete = async () => {
     try {
+      console.log(topic.id)
       await deleteTopic(topic.id);
       navigate('/forum');
     } catch ({ status, data: { reason } }) {

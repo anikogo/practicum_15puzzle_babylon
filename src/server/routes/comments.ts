@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import Urls from '../utils/constants';
 
-import { validateCommentData } from '../utils/validator';
+// import { validateCommentData } from '../utils/validator';
 import {
   addComment,
   editComment,
@@ -14,19 +14,19 @@ const router = Router();
 
 router.get(
   Urls.API.COMMENTS.GET,
-  validateCommentData,
+  // validateCommentData,
   getComment,
 );
 
 router.post(
   Urls.API.COMMENTS.ADD,
-  validateCommentData,
+  // validateCommentData,
   addComment,
 );
 
 router.patch(
   Urls.API.COMMENTS.EDIT,
-  validateCommentData,
+  // validateCommentData,
   editComment,
 );
 

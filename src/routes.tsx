@@ -2,6 +2,7 @@ import { Dispatch } from 'react';
 import { PathMatch } from 'react-router';
 import IndexPage from './pages';
 import ForumPage from './pages/forum';
+import TopicPage from './pages/topic';
 import LeaderboardPage from './pages/leaderboard';
 import SignInPage from './pages/signin';
 import SignUpPage from './pages/signup';
@@ -32,12 +33,14 @@ export default [
   },
   {
     path: '/forum/:id',
-    element: <ForumPage />,
-    // async fetchData({ dispatch, match }: RouterFetchDataArgs<Thread[]>) {
-    //   if (match.params.id) {
-    //     dispatch(getThread(match.params.id));
-    //   }
-    // },
+    element: <TopicPage />,
+    fetchData({ dispatch, match }: RouterFetchDataArgs<(User & { data: ITopic; })>) {
+      console.log('===', match.params.id);
+      if (match.params.id) {
+        // dispatch(getThread(match.params.id));
+        dispatch(forumApi.endpoints.getTopic(match.params.id));
+      }
+    },
   },
   {
     path: '/leaderboard',

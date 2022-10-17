@@ -17,7 +17,7 @@ function ForumPage() {
 
   return (
     <Content className="bg-gray-100" heading="Forum">
-      { isLoading ? (<Preloader />) : (<Forum users={[]} />) }
+      { isLoading ? (<Preloader />) : (<Forum users={data ?? []} />) }
     </Content>
   );
 }

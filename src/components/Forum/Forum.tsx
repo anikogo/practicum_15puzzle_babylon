@@ -66,7 +66,7 @@ CellProps<User &
 
       <div className="ml-4">
         <div className="text-sm font-medium text-gray-900">
-          <Link to={`topics/${id}`}>{title}</Link>
+          <Link to={`${id}`}>{title}</Link>
         </div>
         <div className="text-sm text-gray-500">
           { content.length < 80 ? content : `${content.substring(0, 80)}...` }
