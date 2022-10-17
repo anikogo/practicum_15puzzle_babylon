@@ -18,7 +18,8 @@ import User from './User';
 interface TopicAttributes {
   id: number;
   title: string;
-  description: string;
+  category: string;
+  content: string;
   created_by: number;
 }
 export type TopicCreationAttributes = Optional<TopicAttributes, 'id'>;
@@ -40,7 +41,10 @@ export default class Topic extends Model<TopicAttributes, TopicCreationAttribute
     title!: string;
 
   @Column(DataType.STRING)
-    description!: string;
+    category!: string;
+
+  @Column(DataType.STRING)
+    content!: string;
 
   @ForeignKey(() => User)
   @AllowNull(false)
