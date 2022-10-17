@@ -12,7 +12,8 @@ import { useGetTeamUsersMutation } from '../store/api';
 
 function LeaderboardPage() {
   const handleError = useErrorHandler();
-  const [tableData, setTableData] = useState<(User & { score: number; })[]>();
+  const [getUsers, { data, error, isLoading }] = useGetTeamUsersMutation();
+  const [tableData, setTableData] = useState(data);
 
   const Urls = {
     AVATAR: {
@@ -21,25 +22,23 @@ function LeaderboardPage() {
     },
   };
 
-  const [getUsers, { data, error, isLoading }] = useGetTeamUsersMutation();
-
   useEffect(() => {
     if (!tableData) {
       getUsers({
         ratingFieldName: 'score',
         cursor: 0,
         limit: 20,
-      }).then(() => {
-        setTableData(data
-          ?.map((item) => ({
-            ...item.data,
-            avatar: item.data.avatar
+      }).then((scores: any) => {
+        setTableData(scores.data
+          ?.map((item: { data: User & { score: number } }) => ({
+            ...item?.data,
+            avatar: (item?.data.avatar && item?.data.avatar !== 'null')
               ? `${Urls.AVATAR.CUSTOM}${item.data?.avatar}`
               : Urls.AVATAR.DEFAULT,
           })));
       });
     }
-  }, [data]);
+  }, []);
 
   if (error) {
     handleError(error);

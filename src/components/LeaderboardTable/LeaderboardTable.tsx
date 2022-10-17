@@ -75,6 +75,8 @@ function SortIcon({ isSortedDesc }: SortIconProps) {
 }
 
 export default function LeaderboardTable({ users }: { users: (User & { score: number; })[] }) {
+  console.log(users);
+
   const data = useMemo(() => users, [users]);
   const columns = useMemo<Column<User & { score: number }>[]>(() => [
     {
