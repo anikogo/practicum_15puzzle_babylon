@@ -9,17 +9,17 @@ import Preloader from '../components/Preloader/index';
 
 function ForumPage() {
   const handleError = useErrorHandler();
-  const { data = [], error, isLoading } = useGetTopicsQuery({ });
-
+  const { data = [], error, isLoading } = useGetTopicsQuery({});
+  console.log('-', data);
   if (error) {
     handleError(error);
   }
 
   return (
     <Content className="bg-gray-100" heading="Forum">
-      { isLoading ? (<Preloader />) : (<Forum users={data} />) }
+      { isLoading ? (<Preloader />) : (<Forum users={[]} />) }
     </Content>
   );
 }
 
-export default withUser(ForumPage, false);
+export default withUser(ForumPage);

@@ -8,7 +8,8 @@ import SignUpPage from './pages/signup';
 import ProfilePage from './pages/profile';
 import Page404 from './pages/404';
 
-import { appApi } from './store/api';
+import { appApi, forumApi } from './store/api';
+import ITopic from './components/Topic/ITopic';
 
 export type RouterFetchDataArgs<T> = {
   dispatch: Dispatch<Action<T>>;
@@ -23,9 +24,11 @@ export default [
   {
     path: '/forum',
     element: <ForumPage />,
-    // async fetchData({ dispatch }: RouterFetchDataArgs<Thread[]>) {
-    //   dispatch(getThreads());
-    // },
+    fetchData({ dispatch }: RouterFetchDataArgs<(User & { data: ITopic; })[]>) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      dispatch(forumApi.endpoints.getTopics.initiate());
+    },
   },
   {
     path: '/forum/:id',

@@ -15,10 +15,10 @@ const licenseForumEndpoints = forumApi
         invalidatesTags: ['Forum'],
       }),
       getTopics: builder.query({
-        query: (body) => ({
+        query: () => ({
           url: '/topics',
           method: 'GET',
-          data: body,
+          // data: body,
         }),
         providesTags: ['Forum'],
       }),

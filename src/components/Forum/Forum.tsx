@@ -218,7 +218,6 @@ export default function Forum({ users }: { users:
       <PopupEditTopicModal
         openEditPopup={openEditPopup}
         handlerCloseEditPopup={handlerCloseEditPopup}
-        // handlerEdit={handlerAddTopic}
         handlerSubmit={handlerAddTopic}
         handleChange={handleChange}
         values={values}

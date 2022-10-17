@@ -22,12 +22,13 @@ function LeaderboardPage() {
   };
 
   const [getUsers, { data, error, isLoading }] = useGetTeamUsersMutation();
+
   useEffect(() => {
     if (!tableData) {
       getUsers({
         ratingFieldName: 'score',
         cursor: 0,
-        limit: 0,
+        limit: 20,
       }).then(() => {
         setTableData(data
           ?.map((item) => ({
