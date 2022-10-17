@@ -18,6 +18,7 @@ const leaderboardEndpoints = appApi
           method: 'POST',
           data: body,
         }),
+        invalidatesTags: ['Leaderboard'],
       }),
       getAllUsers: builder.query<User & { score: number; }, TeamUsersQueryParams>({
         query: (body) => ({

@@ -15,7 +15,7 @@ export default class Game {
 
   tileWidth: number;
 
-  state: string;
+  #state: string;
 
   tiles: Tile[];
 
@@ -31,7 +31,7 @@ export default class Game {
 
   #field?: Field;
 
-  #stats?: Stats;
+  #stats: Stats;
 
   #isAnimate: boolean;
 
@@ -44,9 +44,10 @@ export default class Game {
     this.tiles = [];
     this.numbers = [];
     this.tileWidth = 0;
-    this.state = 'stopped';
+    this.#state = 'stopped';
     this.#isAnimate = false;
     this.onPuzzleSolved = () => {};
+    this.#stats = new Stats();
   }
 
   isSolvable() {
@@ -100,14 +101,14 @@ export default class Game {
       for (let i = 0; i < this.numbers.length; i++) {
         const [col, row] = this.getTilePos(this.numbers[i]);
 
-        this.tiles.push(new Tile(
-          col * this.tileWidth,
-          row * this.tileWidth,
-          this.tileWidth,
-          this.numbers[i],
-          this.#tileFill,
-          this.ctx,
-        ));
+        this.tiles.push(new Tile(this.ctx, {
+          x: col * this.tileWidth,
+          y: row * this.tileWidth,
+          size: this.tileWidth,
+          content: this.numbers[i],
+          fill: this.#tileFill,
+          padding: 4,
+        }));
       }
 
       this.tiles.forEach((tile) => tile.draw());
@@ -151,11 +152,7 @@ export default class Game {
 
         this.#field = new Field(this.tileWidth * this.boardSize, this.#fieldFill, this.ctx);
         this.#field.draw();
-        this.#stats = new Stats();
         this.spawnTiles();
-
-        document.addEventListener('keydown', this.onArrowKeyPress.bind(this));
-        this.canvas.addEventListener('click', this.handleClick.bind(this));
       }
     }
   }
@@ -165,13 +162,25 @@ export default class Game {
       this.tiles = [];
       this.generateNumbers();
       this.spawnTiles();
-      this.state = 'started';
+      this.#stats.movesCount = 0;
+      this.#stats.time = 0;
+      this.#state = 'started';
+      document.addEventListener('keydown', this.onArrowKeyPress.bind(this));
+      this.canvas?.addEventListener('click', this.handleClick.bind(this));
     }
   }
 
   stop() {
+    console.log('stop');
+    this.numbers = populateArray((this.boardSize * this.boardSize) - 1);
+    this.numbers.push(0);
+
+    this.spawnTiles();
     this.#stats?.stopTimer();
-    this.state = 'stopped';
+    this.#state = 'stopped';
+
+    document.removeEventListener('keydown', this.onArrowKeyPress.bind(this));
+    this.canvas?.removeEventListener('click', this.handleClick.bind(this));
   }
 
   destroy() {
@@ -267,6 +276,19 @@ export default class Game {
     return 0;
   }
 
+  winAnimation() {
+    while (this.tiles.length) {
+      const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)];
+      if (tile) {
+        tile.move(tile.x + Math.random() * 100 - 50, tile.y + Math.random() * 100 - 50);
+        if (tile.x > this.ctx!.canvas.width || (tile.x + tile.size + tile.padding * 2) < 0
+          || tile.y > this.ctx!.canvas.height || (tile.y + tile.size + tile.padding * 2) < 0) {
+          this.tiles.splice(this.tiles.indexOf(tile), 1);
+        }
+      }
+    }
+  }
+
   isVictory() {
     const etalon: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
 
@@ -280,7 +302,12 @@ export default class Game {
     // eslint-disable-next-line no-alert
     this.#stats?.stopTimer();
     const score = this.calcScore();
+    // this.winAnimation();
     this.onPuzzleSolved(score);
-    alert(`Eeeah, you win! Your score is: ${score}`);
+    this.stop();
+  }
+
+  get state() {
+    return this.#state;
   }
 }

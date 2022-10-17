@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 
 import Content from '../components/Content';
@@ -12,33 +12,25 @@ import { useGetTeamUsersMutation } from '../store/api';
 
 function LeaderboardPage() {
   const handleError = useErrorHandler();
-  const [tableData, setTableData] = useState<(User & { score: number; })[]>();
-
-  const Urls = {
-    AVATAR: {
-      DEFAULT: 'https://robohash.org/corporissitanimi.png?size=50x50&set=set1',
-      CUSTOM: 'https://ya-praktikum.tech/api/v2/resources/',
-    },
-  };
+  //
+  // const Urls = {
+  //   AVATAR: {
+  //     DEFAULT: 'https://robohash.org/corporissitanimi.png?size=50x50&set=set1',
+  //     CUSTOM: 'https://ya-praktikum.tech/api/v2/resources/',
+  //   },
+  // };
 
   const [getUsers, { data, error, isLoading }] = useGetTeamUsersMutation();
+
   useEffect(() => {
-    if (!tableData) {
+    if (!data) {
       getUsers({
         ratingFieldName: 'score',
         cursor: 0,
-        limit: 0,
-      }).then(() => {
-        setTableData(data
-          ?.map((item) => ({
-            ...item.data,
-            avatar: item.data.avatar
-              ? `${Urls.AVATAR.CUSTOM}${item.data?.avatar}`
-              : Urls.AVATAR.DEFAULT,
-          })));
+        limit: 100,
       });
     }
-  }, [data]);
+  }, [error, isLoading]);
 
   if (error) {
     handleError(error);
@@ -51,7 +43,7 @@ function LeaderboardPage() {
         description="Game leaderboard with user stats"
       />
       <Content className="bg-gray-100" heading="Leaderboard">
-        { isLoading ? (<Preloader />) : (<LeaderboardTable users={tableData ?? []} />) }
+        { isLoading ? (<Preloader />) : (<LeaderboardTable users={data ?? []} />) }
       </Content>
     </>
   );

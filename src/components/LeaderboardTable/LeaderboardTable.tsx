@@ -74,8 +74,8 @@ function SortIcon({ isSortedDesc }: SortIconProps) {
     : <SortAscendingIcon className="w-4 h-4 ml-4" />;
 }
 
-export default function LeaderboardTable({ users }: { users: (User & { score: number })[] }) {
-  const data = useMemo(() => users, [users]);
+export default function LeaderboardTable({ users: res }: { users: LeaderboardApiResponse }) {
+  const users = useMemo(() => res.map(({ data }) => data), [res]);
   const columns = useMemo<Column<User & { score: number }>[]>(() => [
     {
       accessor: 'first_name',
@@ -106,7 +106,7 @@ export default function LeaderboardTable({ users }: { users: (User & { score: nu
   } = useTable<User & { score: number }>(
     {
       columns,
-      data,
+      data: users,
     },
     useFlexLayout,
     useSortBy,

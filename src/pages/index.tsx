@@ -21,6 +21,7 @@ function formattedTime(time: number) {
 
 function IndexPage({ user }: { user?: User }) {
   const [boardSize] = useState(4);
+  const [gameScore, setGameScore] = useState(0);
   const [postScore] = useAddUserMutation();
   const { moves, time } = useSelector(statsSelector);
 
@@ -38,12 +39,12 @@ function IndexPage({ user }: { user?: User }) {
         postScore({
           data: {
             ...user,
-            id: undefined,
             score,
           },
           teamName: 'babylon',
           ratingFieldName: 'score',
         });
+        setGameScore(score);
       },
     });
 
@@ -52,13 +53,13 @@ function IndexPage({ user }: { user?: User }) {
 
   return (
     <Content heading="Game" className="flex w-full h-[calc(100vh_-_128px)]">
-      <div className="flex gap-5 m-auto p-6 w-[750px] h-[530px] rounded-2xl bg-[#374251]">
+      <div className="flex gap-5 m-auto p-6 w-[750px] h-[530px] rounded-2xl bg-[#374251] relative">
         <canvas
           ref={ref}
           width={480}
           height={480}
         />
-        <div className="text-white text-3xl">
+        <div className="text-white text-3xl w-full">
           <p className="my-3">
             Moves:&nbsp;
             {moves}
@@ -67,12 +68,26 @@ function IndexPage({ user }: { user?: User }) {
             Time:&nbsp;
             {formattedTime(time)}
           </p>
+          {gameScore > 0 && (
+            <p className="my-3">
+              Score:&nbsp;
+              {gameScore}
+            </p>
+          )}
           <Button
+            className="w-full"
             variant="filled"
             color="green"
             as={Link}
             to="/"
-            onClick={() => (game.state === 'stopped' ? game.start() : game.stop())}
+            onClick={() => {
+              if (game.state === 'stopped') {
+                game.start();
+              } else {
+                game.stop();
+                setGameScore(0);
+              }
+            }}
           >
             {game.state === 'stopped' ? 'Start' : 'Stop'}
           </Button>

@@ -78,6 +78,8 @@ const listen = () => {
 };
 
 (async () => {
-  await dbConnect();
+  if (process.env.NODE_ENV !== 'development') {
+    await dbConnect();
+  }
   listen();
 })();

@@ -1,9 +1,18 @@
+type TileParams = {
+  x: number;
+  y: number;
+  size: number;
+  content: number | string;
+  fill: CanvasFillStrokeStyles['fillStyle'];
+  padding: number;
+};
+
 export default class Tile {
   x: number;
 
   y: number;
 
-  private readonly size: number;
+  size: number;
 
   readonly content: number | string;
 
@@ -15,17 +24,20 @@ export default class Tile {
 
   private radius: number;
 
-  constructor(
-    x: number,
-    y: number,
-    size: number,
-    content: number | string,
-    fill: CanvasFillStrokeStyles['fillStyle'],
-    ctx: CanvasRenderingContext2D,
-  ) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
+  padding: number;
+
+  constructor(ctx: CanvasRenderingContext2D, {
+    x,
+    y,
+    size,
+    padding,
+    content,
+    fill,
+  }: TileParams) {
+    this.x = x + padding;
+    this.y = y + padding;
+    this.size = size - padding * 2;
+    this.padding = padding;
     this.radius = 15;
     this.fontSize = this.size / 3;
     this.content = content;
@@ -34,7 +46,12 @@ export default class Tile {
   }
 
   public draw() {
-    this.ctx.clearRect(this.x, this.y, this.size, this.size);
+    this.ctx.clearRect(
+      this.x - this.padding,
+      this.y - this.padding,
+      this.size + this.padding * 2,
+      this.size + this.padding * 2,
+    );
     if (this.content !== 0) {
       this.ctx.beginPath();
       this.ctx.moveTo(this.x + this.radius, this.y);
@@ -64,9 +81,9 @@ export default class Tile {
       this.ctx.closePath();
       this.ctx.fillStyle = this.fill;
       this.ctx.fill();
-      this.ctx.strokeStyle = '#374251';
-      this.ctx.lineWidth = 8;
-      this.ctx.stroke();
+      // this.ctx.strokeStyle = '#374251';
+      // this.ctx.lineWidth = 8;
+      // this.ctx.stroke();
       this.ctx.fillStyle = 'white';
       this.ctx.font = `${this.fontSize}px sans-serif`;
       this.ctx.textAlign = 'center';
@@ -79,8 +96,8 @@ export default class Tile {
     return new Promise((resolve) => {
       const xDiff = x - this.x;
       const yDiff = y - this.y;
-      const xStep = xDiff / 5;
-      const yStep = yDiff / 5;
+      const xStep = xDiff / 10;
+      const yStep = yDiff / 10;
 
       const animate = () => {
         const currentAbsDiffX = Math.abs(x - this.x);
