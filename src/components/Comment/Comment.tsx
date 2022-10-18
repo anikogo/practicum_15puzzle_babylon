@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable react/button-has-type */
@@ -24,12 +25,11 @@ import {
 import useFormWithValidation from '../../hook/useValidator';
 
 import ITopic from '../Topic/ITopic';
-import ITopicComment from './ITopicComment';
-import IComment from '../Topic/IComment';
+import IComment from './IComment';
 import ILike from './ILike';
 
 function TopicComment({ comment, setTopic, topic }:
-{ comment: ITopicComment, topic: ITopic, setTopic: any }) {
+{ comment: IComment, topic: ITopic, setTopic: any }) {
   const {
     id,
     content,
@@ -45,14 +45,18 @@ function TopicComment({ comment, setTopic, topic }:
 
   const { data } = useGetLikesQuery({ comment_id: id });
   const user = useGetUsersInfoQuery(userId);
+
   const [addLike] = usePostLikeMutation();
   const [deleteLike] = useDeleteLikeMutation();
   const [deleteComment] = useDeleteCommentMutation();
   const [editComment] = usePatchCommentMutation();
   const errorHandler = useErrorHandler();
-  const { values, handleChange }: any = useFormWithValidation();
   const currentUser = useSelector(selectCurrentUser);
   const [addComment] = usePostCommentMutation();
+
+  const { values, handleChange }:
+  { values: Record<string, string>, handleChange:
+  (event: React.ChangeEvent<HTMLInputElement>) => void } = useFormWithValidation();
 
   const handlerAdd = async (e: FormEvent) => {
     e.preventDefault();
@@ -68,6 +72,7 @@ function TopicComment({ comment, setTopic, topic }:
       const comments = [...topic.comments];
       comments.push((result as { data: IComment })?.data);
       setTopic({ ...topic, comments });
+      setOpenAddPopup(false);
     } catch ({ status, data: { reason } }) {
       errorHandler(new Error(`${status}: ${reason}`));
     }
@@ -76,8 +81,8 @@ function TopicComment({ comment, setTopic, topic }:
   useEffect(() => {
     setTopic({
       ...topic,
-      comments: topic.comments.map((x: ITopicComment) => (x.id === id
-        ? { ...x, likes: data } : x)),
+      comments: topic.comments
+        .map((x: IComment) => (x.id === id ? { ...x, likes: data } : x)),
     });
   }, [data]);
 
@@ -88,8 +93,8 @@ function TopicComment({ comment, setTopic, topic }:
 
     setTopic({
       ...topic,
-      comments: topic.comments.map((x: ITopicComment) => (x.id === id
-        ? { ...x, content: (result as { data: ITopicComment }).data.content } : x)),
+      comments: topic.comments.map((x: IComment) => (x.id === id
+        ? { ...x, content: (result as { data: IComment }).data.content } : x)),
     });
 
     setOpenEditPopup(false);
@@ -99,7 +104,10 @@ function TopicComment({ comment, setTopic, topic }:
     try {
       await deleteComment(id);
 
-      setTopic({ ...topic, comments: topic.comments.filter((x: ITopicComment) => x.id !== id) });
+      setTopic({
+        ...topic,
+        comments: topic.comments.filter((x: IComment) => x.id !== id),
+      });
       setOpenDeletePopup(false);
     } catch ({ status, data: { reason } }) {
       errorHandler(new Error(`${status}: ${reason}`));
@@ -110,52 +118,38 @@ function TopicComment({ comment, setTopic, topic }:
     setOpenAddPopup(true);
   };
 
-  const handlerCloseAddPopup = () => {
-    setOpenAddPopup(false);
-  };
-
   const handlerOpenEditPopup = () => {
     setOpenEditPopup(true);
-  };
-
-  const handlerCloseEditPopup = () => {
-    setOpenEditPopup(false);
   };
 
   const handlerOpenDeletePopup = () => {
     setOpenDeletePopup(true);
   };
 
-  const handlerCloseDeletePopup = () => {
+  const handlerClosePopup = () => {
+    setOpenAddPopup(false);
+    setOpenEditPopup(false);
     setOpenDeletePopup(false);
   };
 
   const handlerToggleLike = async () => {
     const user_id = currentUser?.id;
-    const like = likes.filter((x: any) => x.user_id === user_id && x.comment_id === id) as ILike[];
+    const like = likes.filter((x: ILike) => x.user_id === user_id && x.comment_id === id);
 
-    if (likes.some((x: any) => x.user_id === user_id && x.comment_id === id)) {
+    if (likes.some((x: ILike) => x.user_id === user_id && x.comment_id === id)) {
       await deleteLike(like[0].id);
       setTopic({
         ...topic,
-        comments: topic.comments.map((x: ITopicComment) => {
-          if (x.id === id) {
-            return { ...x, likes: x.likes.filter((l) => l.id !== like[0].id) };
-          }
-          return x;
-        }),
+        comments: topic.comments
+          // eslint-disable-next-line max-len
+          .map((x: IComment) => (x.id === id ? { ...x, likes: x.likes.filter((l) => l.id !== like[0].id) } : x)),
       });
     } else {
       const res = await addLike({ comment_id: id, user_id });
-
       setTopic({
         ...topic,
-        comments: topic.comments.map((x: ITopicComment) => {
-          if (x.id === id) {
-            return { ...x, likes: [...x.likes, res] };
-          }
-          return x;
-        }),
+        comments: topic.comments
+          .map((x: IComment) => (x.id === id ? { ...x, likes: [...x.likes, res] } : x)),
       });
     }
   };
@@ -238,20 +232,34 @@ function TopicComment({ comment, setTopic, topic }:
                 onClick={handlerOpenAddPopup}
                 className="w-[100px] btn hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
               >
-                Add1
+                Add
               </button>
             </nav>
           </div>
         </div>
+        <div>
+          {
+            topic.comments
+              .filter((x: IComment) => x.parentId === id)
+              .map((com: IComment) => (
+                <TopicComment
+                  key={com.id}
+                  comment={com}
+                  setTopic={setTopic}
+                  topic={topic}
+                />
+              ))
+          }
+        </div>
       </div>
       <PopupModal
         openDeletePopup={openDeletePopup}
-        handlerCloseDeletePopup={handlerCloseDeletePopup}
+        handlerCloseDeletePopup={handlerClosePopup}
         handlerDelete={handlerDelete}
       />
       <PopupEditCommentModal
         openEditPopup={openEditPopup}
-        handlerCloseEditPopup={handlerCloseEditPopup}
+        handlerCloseEditPopup={handlerClosePopup}
         handleChange={handleChange}
         values={values}
         handlerEdit={handlerEdit}
@@ -259,7 +267,7 @@ function TopicComment({ comment, setTopic, topic }:
       />
       <PopupEditCommentModal
         openEditPopup={openAddPopup}
-        handlerCloseEditPopup={handlerCloseAddPopup}
+        handlerCloseEditPopup={handlerClosePopup}
         handleChange={handleChange}
         handlerEdit={handlerAdd}
         values={values}

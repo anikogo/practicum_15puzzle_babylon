@@ -3,10 +3,12 @@ import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useErrorHandler } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
-import ITopicComment from 'components/TopicComment/ITopicComment';
+
+import IComment from '../Comment/IComment';
+import ITopic from './ITopic';
 import { selectCurrentUser } from '../../store/slices/userSlice';
 
-import TopicComment from '../TopicComment';
+import TopicComment from '../Comment';
 import Avatar from '../Avatar/index';
 import PopupModal from '../PopupModal';
 import PopupEditTopicModal from '../PopupEditTopicModal';
@@ -21,11 +23,8 @@ import {
 } from '../../store';
 import useFormWithValidation from '../../hook/useValidator';
 
-import ITopic from './ITopic';
-
-function Topic({ data } : any) {
+function Topic({ data } : { data: ITopic }) {
   const [topic, setTopic] = useState(data);
-
   const [openEditPopup, setOpenEditPopup] = useState(false);
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
 
@@ -35,9 +34,12 @@ function Topic({ data } : any) {
 
   const navigate = useNavigate();
   const errorHandler = useErrorHandler();
-  const { values, handleChange }: any = useFormWithValidation();
   const currentUser = useSelector(selectCurrentUser);
   const user = useGetUsersInfoQuery(topic.created_by);
+
+  const { values, handleChange }:
+  { values: Record<string, string>, handleChange:
+  (event: React.ChangeEvent<HTMLInputElement>) => void } = useFormWithValidation();
 
   const handlerAddComment = async (e: FormEvent) => {
     e.preventDefault();
@@ -52,10 +54,8 @@ function Topic({ data } : any) {
         });
 
         const comments = [...topic.comments];
-        comments.push((result as { data: ITopicComment })?.data);
-        setTopic({
-          ...topic, comments,
-        });
+        comments.push((result as { data: IComment })?.data);
+        setTopic({ ...topic, comments });
 
         values.comment = '';
       } catch ({ status, data: { reason } }) {
@@ -83,7 +83,6 @@ function Topic({ data } : any) {
         category,
         content,
       });
-
       setOpenEditPopup(false);
     } catch ({ status, data: { reason } }) {
       errorHandler(new Error(`${status}: ${reason}`));
@@ -105,15 +104,12 @@ function Topic({ data } : any) {
     setOpenEditPopup(true);
   };
 
-  const handlerCloseEditPopup = () => {
-    setOpenEditPopup(false);
-  };
-
   const handlerOpenDeletePopup = () => {
     setOpenDeletePopup(true);
   };
 
-  const handlerCloseDeletePopup = () => {
+  const handlerClosePopup = () => {
+    setOpenEditPopup(false);
     setOpenDeletePopup(false);
   };
 
@@ -180,8 +176,8 @@ function Topic({ data } : any) {
       <h2 className="py-3">Comments</h2>
       <div>
         {topic.comments
-          .filter((x: ITopicComment) => x.parentId === null)
-          .map((comment: ITopicComment) => (
+          .filter((x: IComment) => x.parentId === null)
+          .map((comment: IComment) => (
             <TopicComment
               key={comment.id}
               comment={comment}
@@ -218,12 +214,12 @@ function Topic({ data } : any) {
       </div>
       <PopupModal
         openDeletePopup={openDeletePopup}
-        handlerCloseDeletePopup={handlerCloseDeletePopup}
+        handlerCloseDeletePopup={handlerClosePopup}
         handlerDelete={handlerDelete}
       />
       <PopupEditTopicModal
         openEditPopup={openEditPopup}
-        handlerCloseEditPopup={handlerCloseEditPopup}
+        handlerCloseEditPopup={handlerClosePopup}
         handlerSubmit={handlerAddComment}
         handleChange={handleChange}
         values={values}
@@ -231,7 +227,7 @@ function Topic({ data } : any) {
       />
       <PopupEditTopicModal
         openEditPopup={openEditPopup}
-        handlerCloseEditPopup={handlerCloseEditPopup}
+        handlerCloseEditPopup={handlerClosePopup}
         handlerSubmit={handlerEdit}
         handleChange={handleChange}
         values={values}

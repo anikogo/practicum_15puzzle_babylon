@@ -1,3 +1,5 @@
+import IComment from '../Comment/IComment';
+
 export default interface ITopic {
   id: number,
   title: string,
@@ -5,6 +7,6 @@ export default interface ITopic {
   content: string,
   createdAt: string,
   created_by: string,
-  comments: any, // Array<Record<string, string | number>>,
+  comments: Array<IComment>,
   avatar: string,
 }

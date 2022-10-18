@@ -1,6 +1,6 @@
 import ILike from './ILike';
 
-export default interface ITopicComment {
+export default interface IComment {
   id: number,
   content: string,
   createdAt: Date,
@@ -9,5 +9,5 @@ export default interface ITopicComment {
   avatar: string,
   topicId: number,
   parentId: number,
-  comments: ITopicComment[],
+  comments: Array<IComment>,
 }
