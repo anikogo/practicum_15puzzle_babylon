@@ -1,27 +1,26 @@
 /* eslint-disable no-param-reassign */
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useErrorHandler } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
-
-import IComment from '../Comment/IComment';
-import ITopic from './ITopic';
-import { selectCurrentUser } from '../../store/slices/userSlice';
 
 import TopicComment from '../Comment';
 import Avatar from '../Avatar/index';
 import PopupModal from '../PopupModal';
 import PopupEditTopicModal from '../PopupEditTopicModal';
-
 import dateTimeFormat from '../../utils/dateTimeFormat';
 
+import { selectCurrentUser } from '../../store/slices/userSlice';
+import useFormWithValidation from '../../hook/useValidator';
 import {
   useDeleteTopicMutation,
   usePatchTopicMutation,
   usePostCommentMutation,
   useGetUsersInfoQuery,
 } from '../../store';
-import useFormWithValidation from '../../hook/useValidator';
+
+import IComment from '../Comment/IComment';
+import ITopic from './ITopic';
 
 function Topic({ data } : { data: ITopic }) {
   const [topic, setTopic] = useState(data);
@@ -44,7 +43,7 @@ function Topic({ data } : { data: ITopic }) {
   const handlerAddComment = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (values.comment !== '') {
+    if (values.comment && values.comment !== '') {
       try {
         const result: unknown = await addComment({
           content: values.comment,
@@ -57,7 +56,9 @@ function Topic({ data } : { data: ITopic }) {
         comments.push((result as { data: IComment })?.data);
         setTopic({ ...topic, comments });
 
-        values.comment = '';
+        values.title = '';
+        values.category = '';
+        values.content = '';
       } catch ({ status, data: { reason } }) {
         errorHandler(new Error(`${status}: ${reason}`));
       }
@@ -67,25 +68,28 @@ function Topic({ data } : { data: ITopic }) {
   const handlerEdit = async (e: FormEvent) => {
     e.preventDefault();
 
-    try {
-      const result: unknown = await editTopic({
+    if (values.title && values.title !== '' && values.category && values.content) {
+      await editTopic({
         id: topic.id,
         title: values.title,
         category: values.category,
         content: values.content,
-      });
+      }) as unknown as ITopic;
 
-      const { title, category, content } = (result as { data: ITopic }).data;
-
-      setTopic({
-        ...topic,
-        title,
-        category,
-        content,
-      });
-      setOpenEditPopup(false);
-    } catch ({ status, data: { reason } }) {
-      errorHandler(new Error(`${status}: ${reason}`));
+      try {
+        setTopic({
+          ...topic,
+          title: values.title,
+          category: values.category,
+          content: values.content,
+        });
+        setOpenEditPopup(false);
+        values.title = '';
+        values.category = '';
+        values.content = '';
+      } catch ({ status, data: { reason } }) {
+        errorHandler(new Error(`${status}: ${reason}`));
+      }
     }
   };
 
@@ -100,18 +104,19 @@ function Topic({ data } : { data: ITopic }) {
     setOpenDeletePopup(false);
   };
 
-  const handlerOpenEditPopup = () => {
-    setOpenEditPopup(true);
+  const handlerToggleEditPopup = () => {
+    setOpenEditPopup(!openEditPopup);
   };
 
-  const handlerOpenDeletePopup = () => {
-    setOpenDeletePopup(true);
+  const handlerToggleDeletePopup = () => {
+    setOpenDeletePopup(!openDeletePopup);
   };
 
-  const handlerClosePopup = () => {
-    setOpenEditPopup(false);
-    setOpenDeletePopup(false);
-  };
+  useEffect(() => {
+    values.title = topic.title || '';
+    values.category = topic.category || '';
+    values.content = topic.content || '';
+  }, []);
 
   return (
     <div className="flex flex-col w-full">
@@ -140,14 +145,14 @@ function Topic({ data } : { data: ITopic }) {
         <div className="mt-4 inline-flex rounded-md shadow-sm" role="group">
           <button
             type="button"
-            onClick={handlerOpenEditPopup}
+            onClick={handlerToggleEditPopup}
             className="py-2 px-4 text-sm font-medium text-gray-900 bg-white rounded-l-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
           >
             Edit
           </button>
           <button
             type="button"
-            onClick={handlerOpenDeletePopup}
+            onClick={handlerToggleDeletePopup}
             className="py-2 px-4 text-sm font-medium text-gray-900 bg-white rounded-r-md border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
           >
             Delete
@@ -214,24 +219,22 @@ function Topic({ data } : { data: ITopic }) {
       </div>
       <PopupModal
         openDeletePopup={openDeletePopup}
-        handlerCloseDeletePopup={handlerClosePopup}
+        handlerCloseDeletePopup={handlerToggleDeletePopup}
         handlerDelete={handlerDelete}
       />
       <PopupEditTopicModal
         openEditPopup={openEditPopup}
-        handlerCloseEditPopup={handlerClosePopup}
+        handlerCloseEditPopup={handlerToggleEditPopup}
         handlerSubmit={handlerAddComment}
         handleChange={handleChange}
         values={values}
-        topic={topic}
       />
       <PopupEditTopicModal
         openEditPopup={openEditPopup}
-        handlerCloseEditPopup={handlerClosePopup}
+        handlerCloseEditPopup={handlerToggleEditPopup}
         handlerSubmit={handlerEdit}
         handleChange={handleChange}
         values={values}
-        topic={topic}
       />
     </div>
   );

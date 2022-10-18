@@ -5,7 +5,7 @@ export default interface ITopic {
   title: string,
   category: string,
   content: string,
-  createdAt: string,
+  createdAt: Date,
   created_by: string,
   comments: Array<IComment>,
   avatar: string,

@@ -149,12 +149,8 @@ export default function Forum({ users }: { users:
     }
   };
 
-  const handlerOpenAddPopup = () => {
-    setOpenEditPopup(true);
-  };
-
-  const handlerCloseEditPopup = () => {
-    setOpenEditPopup(false);
+  const handlerTogglePopup = () => {
+    setOpenEditPopup(!openEditPopup);
   };
 
   return (
@@ -166,7 +162,7 @@ export default function Forum({ users }: { users:
               <button
                 className="btn hover:text-gray-500 bg-green-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
                 type="button"
-                onClick={handlerOpenAddPopup}
+                onClick={handlerTogglePopup}
               >
                 Add topic
               </button>
@@ -223,7 +219,7 @@ export default function Forum({ users }: { users:
       <Pagination {...paginationProps} />
       <PopupEditTopicModal
         openEditPopup={openEditPopup}
-        handlerCloseEditPopup={handlerCloseEditPopup}
+        handlerCloseEditPopup={handlerTogglePopup}
         handlerSubmit={handlerAddTopic}
         handleChange={handleChange}
         values={values}

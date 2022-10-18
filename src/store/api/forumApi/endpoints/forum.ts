@@ -40,7 +40,8 @@ const licenseForumEndpoints = forumApi
           method: 'PATCH',
           data: body,
         }),
-        invalidatesTags: (_result, _error, arg) => [{ type: 'Forum', id: arg.id }],
+        invalidatesTags: ['Forum'],
+        // invalidatesTags: (_result, _error, arg) => [{ type: 'Forum', id: arg.id }],
       }),
       patchComment: builder.mutation({
         query: (body) => ({

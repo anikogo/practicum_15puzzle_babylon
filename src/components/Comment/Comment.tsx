@@ -73,6 +73,7 @@ function TopicComment({ comment, setTopic, topic }:
       comments.push((result as { data: IComment })?.data);
       setTopic({ ...topic, comments });
       setOpenAddPopup(false);
+      values.content = '';
     } catch ({ status, data: { reason } }) {
       errorHandler(new Error(`${status}: ${reason}`));
     }
@@ -98,6 +99,7 @@ function TopicComment({ comment, setTopic, topic }:
     });
 
     setOpenEditPopup(false);
+    values.content = '';
   };
 
   const handlerDelete = async () => {
@@ -114,22 +116,16 @@ function TopicComment({ comment, setTopic, topic }:
     }
   };
 
-  const handlerOpenAddPopup = () => {
-    setOpenAddPopup(true);
+  const handlerToggleAddPopup = () => {
+    setOpenAddPopup(!openAddPopup);
   };
 
-  const handlerOpenEditPopup = () => {
-    setOpenEditPopup(true);
+  const handlerToggleEditPopup = () => {
+    setOpenEditPopup(!openEditPopup);
   };
 
-  const handlerOpenDeletePopup = () => {
-    setOpenDeletePopup(true);
-  };
-
-  const handlerClosePopup = () => {
-    setOpenAddPopup(false);
-    setOpenEditPopup(false);
-    setOpenDeletePopup(false);
+  const handlerToggleDeletePopup = () => {
+    setOpenDeletePopup(!openDeletePopup);
   };
 
   const handlerToggleLike = async () => {
@@ -215,21 +211,21 @@ function TopicComment({ comment, setTopic, topic }:
             <nav className="relative z-0 inline-flex rounded-md -space-x-px gap-x-2">
               <button
                 type="button"
-                onClick={handlerOpenDeletePopup}
+                onClick={handlerToggleDeletePopup}
                 className="w-[100px] btn hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
               >
                 Delete
               </button>
               <button
                 type="button"
-                onClick={handlerOpenEditPopup}
+                onClick={handlerToggleEditPopup}
                 className="w-[100px] btn hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
               >
                 Edit
               </button>
               <button
                 type="submit"
-                onClick={handlerOpenAddPopup}
+                onClick={handlerToggleAddPopup}
                 className="w-[100px] btn hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
               >
                 Add
@@ -254,12 +250,12 @@ function TopicComment({ comment, setTopic, topic }:
       </div>
       <PopupModal
         openDeletePopup={openDeletePopup}
-        handlerCloseDeletePopup={handlerClosePopup}
+        handlerCloseDeletePopup={handlerToggleDeletePopup}
         handlerDelete={handlerDelete}
       />
       <PopupEditCommentModal
         openEditPopup={openEditPopup}
-        handlerCloseEditPopup={handlerClosePopup}
+        handlerCloseEditPopup={handlerToggleEditPopup}
         handleChange={handleChange}
         values={values}
         handlerEdit={handlerEdit}
@@ -267,7 +263,7 @@ function TopicComment({ comment, setTopic, topic }:
       />
       <PopupEditCommentModal
         openEditPopup={openAddPopup}
-        handlerCloseEditPopup={handlerClosePopup}
+        handlerCloseEditPopup={handlerToggleAddPopup}
         handleChange={handleChange}
         handlerEdit={handlerAdd}
         values={values}
