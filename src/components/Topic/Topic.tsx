@@ -38,24 +38,28 @@ function Topic({ data } : any) {
   const currentUser = useSelector(selectCurrentUser);
   const user = useGetUsersInfoQuery(topic.created_by);
 
-  const handlerAdd = async (e: FormEvent) => {
+  const handlerAddComment = async (e: FormEvent) => {
     e.preventDefault();
 
-    try {
-      const result: unknown = await addComment({
-        content: values.comment,
-        topicId: topic.id,
-        parentId: null,
-        userId: currentUser?.id,
-      });
+    if (values.comment !== '') {
+      try {
+        const result: unknown = await addComment({
+          content: values.comment,
+          topicId: topic.id,
+          parentId: null,
+          userId: currentUser?.id,
+        });
 
-      const comments = [...topic.comments];
-      comments.push((result as { data: IComment })?.data);
-      setTopic({
-        ...topic, comments,
-      });
-    } catch ({ status, data: { reason } }) {
-      errorHandler(new Error(`${status}: ${reason}`));
+        const comments = [...topic.comments];
+        comments.push((result as { data: IComment })?.data);
+        setTopic({
+          ...topic, comments,
+        });
+
+        values.comment = '';
+      } catch ({ status, data: { reason } }) {
+        errorHandler(new Error(`${status}: ${reason}`));
+      }
     }
   };
 
@@ -87,7 +91,6 @@ function Topic({ data } : any) {
 
   const handlerDelete = async () => {
     try {
-      console.log(topic.id)
       await deleteTopic(topic.id);
       navigate('/forum');
     } catch ({ status, data: { reason } }) {
@@ -187,7 +190,7 @@ function Topic({ data } : any) {
       <div className="py-3 hidden sm:flex sm:items-center w-full">
         <form
           className="flex w-full gap-x-2 justify-between items-center"
-          onSubmit={handlerAdd}
+          onSubmit={handlerAddComment}
         >
           <div className="w-full">
             <div className="relative w-full z-0 inline-flex rounded-md shadow-sm -space-x-px pb-0">
@@ -218,7 +221,7 @@ function Topic({ data } : any) {
       <PopupEditTopicModal
         openEditPopup={openEditPopup}
         handlerCloseEditPopup={handlerCloseEditPopup}
-        handlerSubmit={handlerAdd}
+        handlerSubmit={handlerAddComment}
         handleChange={handleChange}
         values={values}
         topic={topic}

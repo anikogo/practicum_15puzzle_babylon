@@ -35,9 +35,9 @@ export default [
     path: '/forum/:id',
     element: <TopicPage />,
     fetchData({ dispatch, match }: RouterFetchDataArgs<(User & { data: ITopic; })>) {
-      console.log('===', match.params.id);
       if (match.params.id) {
-        // dispatch(getThread(match.params.id));
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         dispatch(forumApi.endpoints.getTopic(match.params.id));
       }
     },

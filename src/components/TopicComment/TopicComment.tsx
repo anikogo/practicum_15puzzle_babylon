@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable react/button-has-type */
 import { FormEvent, useState, useEffect } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
-import ITopicComment from './ITopicComment';
-import ILike from './ILike';
 
 import Avatar from '../Avatar';
 import PopupModal from '../PopupModal';
@@ -25,7 +24,9 @@ import {
 import useFormWithValidation from '../../hook/useValidator';
 
 import ITopic from '../Topic/ITopic';
+import ITopicComment from './ITopicComment';
 import IComment from '../Topic/IComment';
+import ILike from './ILike';
 
 function TopicComment({ comment, setTopic, topic }:
 { comment: ITopicComment, topic: ITopic, setTopic: any }) {
@@ -66,9 +67,7 @@ function TopicComment({ comment, setTopic, topic }:
 
       const comments = [...topic.comments];
       comments.push((result as { data: IComment })?.data);
-      setTopic({
-        ...topic, comments,
-      });
+      setTopic({ ...topic, comments });
     } catch ({ status, data: { reason } }) {
       errorHandler(new Error(`${status}: ${reason}`));
     }
@@ -134,7 +133,6 @@ function TopicComment({ comment, setTopic, topic }:
   const handlerToggleLike = async () => {
     const user_id = currentUser?.id;
     const like = likes.filter((x: any) => x.user_id === user_id && x.comment_id === id) as ILike[];
-    console.log('->', like);
 
     if (likes.some((x: any) => x.user_id === user_id && x.comment_id === id)) {
       await deleteLike(like[0].id);

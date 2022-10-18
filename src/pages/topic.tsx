@@ -1,5 +1,6 @@
 import { useErrorHandler } from 'react-error-boundary';
 import { useLocation } from 'react-router-dom';
+
 import Content from '../components/Content';
 import withUser from '../hoc/withUser';
 

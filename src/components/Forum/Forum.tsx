@@ -128,18 +128,24 @@ export default function Forum({ users }: { users:
     e.preventDefault();
 
     const { title, category, content } = values;
-    const body = {
-      title,
-      category,
-      content,
-      created_by: currentUser?.id,
-    };
 
-    try {
-      await addTopic(body);
-      setOpenEditPopup(false);
-    } catch ({ status, data: { reason } }: any) {
-      errorHandler(new Error(`${status}: ${reason}`));
+    if (title && title !== '' && category && category !== '' && content && content !== '') {
+      const body = {
+        title,
+        category,
+        content,
+        created_by: currentUser?.id,
+      };
+
+      try {
+        await addTopic(body);
+        setOpenEditPopup(false);
+        values.title = '';
+        values.category = '';
+        values.content = '';
+      } catch ({ status, data: { reason } }: any) {
+        errorHandler(new Error(`${status}: ${reason}`));
+      }
     }
   };
 

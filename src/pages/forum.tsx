@@ -10,7 +10,7 @@ import Preloader from '../components/Preloader/index';
 function ForumPage() {
   const handleError = useErrorHandler();
   const { data = [], error, isLoading } = useGetTopicsQuery({});
-  console.log('-', data);
+
   if (error) {
     handleError(error);
   }

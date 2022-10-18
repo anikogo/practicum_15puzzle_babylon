@@ -16,7 +16,6 @@ const authMiddleware = (
   }
 
   const token = authorization.replace('Bearer ', '');
-
   let payload;
 
   try {

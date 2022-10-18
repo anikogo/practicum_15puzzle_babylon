@@ -18,7 +18,6 @@ const licenseForumEndpoints = forumApi
         query: () => ({
           url: '/topics',
           method: 'GET',
-          // data: body,
         }),
         providesTags: ['Forum'],
       }),

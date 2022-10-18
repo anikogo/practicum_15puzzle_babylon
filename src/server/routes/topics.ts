@@ -12,31 +12,10 @@ import Urls from '../utils/constants';
 
 const router = Router();
 
-router.post(
-  Urls.API.TOPICS.ADD,
-  // validateTopicData,
-  addTopic,
-);
-
-router.get(
-  Urls.API.TOPICS.INDEX,
-  getTopics,
-);
-
-router.get(
-  Urls.API.TOPICS.GET,
-  getTopic,
-);
-
-router.patch(
-  Urls.API.TOPICS.EDIT,
-  // validateTopicData,
-  editTopic,
-);
-
-router.delete(
-  Urls.API.TOPICS.DELETE,
-  deleteTopic,
-);
+router.post(Urls.API.TOPICS.ADD, addTopic);
+router.get(Urls.API.TOPICS.GET, getTopic);
+router.get(Urls.API.TOPICS.INDEX, getTopics);
+router.patch(Urls.API.TOPICS.EDIT, editTopic);
+router.delete(Urls.API.TOPICS.DELETE, deleteTopic);
 
 export default router;
