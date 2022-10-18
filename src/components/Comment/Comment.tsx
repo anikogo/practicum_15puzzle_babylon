@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { FormEvent, useState, useEffect } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
@@ -46,9 +47,9 @@ function TopicComment({ comment, setTopic, topic }:
   const [deleteLike] = useDeleteLikeMutation();
   const [deleteComment] = useDeleteCommentMutation();
   const [editComment] = usePatchCommentMutation();
+  const [addComment] = usePostCommentMutation();
   const errorHandler = useErrorHandler();
   const currentUser = useSelector(selectCurrentUser);
-  const [addComment] = usePostCommentMutation();
 
   const { values, handleChange }:
   { values: Record<string, string>, handleChange:
@@ -65,6 +66,8 @@ function TopicComment({ comment, setTopic, topic }:
         userId: currentUser?.id,
       });
 
+      console.log(result);
+
       const comments = [...topic.comments];
       comments.push((result as { data: IComment })?.data);
       setTopic({ ...topic, comments });
@@ -76,6 +79,8 @@ function TopicComment({ comment, setTopic, topic }:
   };
 
   useEffect(() => {
+    values.content = comment.content || '';
+
     setTopic({
       ...topic,
       comments: topic.comments
@@ -255,7 +260,6 @@ function TopicComment({ comment, setTopic, topic }:
         handleChange={handleChange}
         values={values}
         handlerEdit={handlerEdit}
-        comment={comment}
       />
       <PopupEditCommentModal
         openEditPopup={openAddPopup}
@@ -263,7 +267,6 @@ function TopicComment({ comment, setTopic, topic }:
         handleChange={handleChange}
         handlerEdit={handlerAdd}
         values={values}
-        comment={comment}
       />
     </div>
   );

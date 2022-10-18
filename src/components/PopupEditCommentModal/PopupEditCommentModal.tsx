@@ -5,7 +5,6 @@ export default function PopupEditCommentModal(data: any) {
     handlerEdit,
     handleChange,
     values,
-    comment,
   } = data;
 
   return (
@@ -48,7 +47,7 @@ export default function PopupEditCommentModal(data: any) {
             </label>
             <textarea
               name="content"
-              value={values.content ? values.content : comment.content || ''}
+              value={values.content || ''}
               onChange={handleChange}
               id="message"
               className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
