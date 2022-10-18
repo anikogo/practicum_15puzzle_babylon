@@ -1,7 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable import/no-named-as-default */
-/* eslint-disable react/button-has-type */
 import { FormEvent, useState, useEffect } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useSelector } from 'react-redux';

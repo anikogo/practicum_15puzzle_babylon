@@ -56,9 +56,7 @@ function Topic({ data } : { data: ITopic }) {
         comments.push((result as { data: IComment })?.data);
         setTopic({ ...topic, comments });
 
-        values.title = '';
-        values.category = '';
-        values.content = '';
+        values.comment = '';
       } catch ({ status, data: { reason } }) {
         errorHandler(new Error(`${status}: ${reason}`));
       }
