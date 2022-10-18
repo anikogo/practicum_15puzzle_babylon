@@ -1,7 +1,9 @@
+/* eslint-disable no-param-reassign */
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useErrorHandler } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
+import ITopicComment from 'components/TopicComment/ITopicComment';
 import { selectCurrentUser } from '../../store/slices/userSlice';
 
 import TopicComment from '../TopicComment';
@@ -20,7 +22,6 @@ import {
 import useFormWithValidation from '../../hook/useValidator';
 
 import ITopic from './ITopic';
-import IComment from './IComment';
 
 function Topic({ data } : any) {
   const [topic, setTopic] = useState(data);
@@ -51,7 +52,7 @@ function Topic({ data } : any) {
         });
 
         const comments = [...topic.comments];
-        comments.push((result as { data: IComment })?.data);
+        comments.push((result as { data: ITopicComment })?.data);
         setTopic({
           ...topic, comments,
         });
@@ -178,14 +179,16 @@ function Topic({ data } : any) {
       </div>
       <h2 className="py-3">Comments</h2>
       <div>
-        {topic.comments.map((comment: any) => (
-          <TopicComment
-            key={comment.id}
-            comment={comment}
-            setTopic={setTopic}
-            topic={topic}
-          />
-        ))}
+        {topic.comments
+          .filter((x: ITopicComment) => x.parentId === null)
+          .map((comment: ITopicComment) => (
+            <TopicComment
+              key={comment.id}
+              comment={comment}
+              setTopic={setTopic}
+              topic={topic}
+            />
+          ))}
       </div>
       <div className="py-3 hidden sm:flex sm:items-center w-full">
         <form

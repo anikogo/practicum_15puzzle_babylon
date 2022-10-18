@@ -7,4 +7,7 @@ export default interface ITopicComment {
   likes: Array<ILike>,
   userId: number,
   avatar: string,
+  topicId: number,
+  parentId: number,
+  comments: ITopicComment[],
 }

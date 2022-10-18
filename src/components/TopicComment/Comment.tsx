@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable react/button-has-type */
@@ -40,9 +39,6 @@ function TopicComment({ comment, setTopic, topic }:
     avatar = 'https://robohash.org/velitautemid.png?size=50x50&set=set1',
   } = comment;
 
-  // console.log(comment);
-  console.log(topic);
-
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
   const [openEditPopup, setOpenEditPopup] = useState(false);
   const [openAddPopup, setOpenAddPopup] = useState(false);
@@ -72,7 +68,6 @@ function TopicComment({ comment, setTopic, topic }:
       const comments = [...topic.comments];
       comments.push((result as { data: IComment })?.data);
       setTopic({ ...topic, comments });
-      setOpenAddPopup(false);
     } catch ({ status, data: { reason } }) {
       errorHandler(new Error(`${status}: ${reason}`));
     }
@@ -243,24 +238,10 @@ function TopicComment({ comment, setTopic, topic }:
                 onClick={handlerOpenAddPopup}
                 className="w-[100px] btn hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
               >
-                Add
+                Add1
               </button>
             </nav>
           </div>
-        </div>
-        <div>
-          {
-          topic.comments
-            .filter((x: ITopicComment) => x.parentId === id)
-            .map((com: ITopicComment) => (
-              <TopicComment
-                key={com.id}
-                comment={com}
-                setTopic={setTopic}
-                topic={topic}
-              />
-            ))
-          }
         </div>
       </div>
       <PopupModal
