@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -11,8 +12,8 @@ import DEV_JWT_SECRET from '../utils/devConfig';
 
 const signupUser = (req: Request, res: Response, next: NextFunction) => {
   const {
-    avatar_path: avatarPath,
-    display_name: displayName,
+    avatar_path,
+    display_name,
     email,
     password,
   }: Record<string, string> = req.body;
@@ -21,8 +22,8 @@ const signupUser = (req: Request, res: Response, next: NextFunction) => {
     .hash(password, 10)
     .then((hash: string) => {
       User.create({
-        avatar_path: avatarPath,
-        display_name: displayName,
+        avatar_path,
+        display_name,
         email,
         hash,
         external_id: 0,

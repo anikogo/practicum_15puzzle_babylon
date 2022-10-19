@@ -1,22 +1,30 @@
-import { useMemo } from 'react';
+/* eslint-disable react/button-has-type */
+/* eslint-disable @typescript-eslint/naming-convention */
+import { useMemo, useState, FormEvent } from 'react';
 import {
   useTable,
-  usePagination,
-  useSortBy,
-  useFlexLayout,
-  type Row,
-  type Column,
-  type CellProps,
-  type TableInstance,
+  usePagination, useSortBy, useFlexLayout,
 } from 'react-table';
 
-import {
-  SortAscendingIcon,
-  SortDescendingIcon,
-} from '@heroicons/react/solid';
+import { Link } from 'react-router-dom';
+import { useErrorHandler } from 'react-error-boundary';
+import { useSelector } from 'react-redux';
+
+import type {
+  Row,
+  Column,
+  CellProps,
+  TableInstance,
+} from 'react-table';
+
+import { SortAscendingIcon, SortDescendingIcon } from '@heroicons/react/solid';
+import { selectCurrentUser } from '../../store/slices/userSlice';
 
 import Pagination from '../Pagination';
-import Avatar from '../Avatar';
+import PopupEditTopicModal from '../PopupEditTopicModal';
+
+import { usePostTopicMutation } from '../../store';
+import useFormWithValidation from '../../hook/useValidator';
 
 // Required workaround for missing TypesScript definitions.
 // Will be fixed in react-table v8
@@ -38,27 +46,31 @@ type TableTypeWorkaround<T extends Object> = TableInstance<T> & {
   }
 };
 
-function NameCell({ row }: CellProps<User & { score: number }>) {
+function NameCell({ row }:
+CellProps<User &
+{ title: string, category: string, content: string }>) { // date: Date,
   const {
     original: {
-      avatar,
-      display_name: displayName,
-      first_name: firstName,
-      second_name: secondName,
-      email,
+      id,
+      title,
+      content,
+      category,
     },
   } = row;
+
   return (
     <div className="flex items-center">
-      <Avatar
-        src={avatar}
-        firstName={firstName}
-        secondName={secondName}
-        className="flex-shrink-0 h-10 w-10"
-      />
+      <div className="flex items-center h-10 w-20">
+        <div className="text-sm font-medium text-gray-900">{category}</div>
+      </div>
+
       <div className="ml-4">
-        <div className="text-sm font-medium text-gray-900">{displayName ?? `${firstName} ${secondName}`}</div>
-        <div className="text-sm text-gray-500">{email}</div>
+        <div className="text-sm font-medium text-gray-900">
+          <Link to={`${id}`}>{title}</Link>
+        </div>
+        <div className="text-sm text-gray-500">
+          { content.length < 80 ? content : `${content.substring(0, 80)}...` }
+        </div>
       </div>
     </div>
   );
@@ -73,26 +85,23 @@ function SortIcon({ isSortedDesc }: SortIconProps) {
     ? <SortDescendingIcon className="w-4 h-4 ml-4" />
     : <SortAscendingIcon className="w-4 h-4 ml-4" />;
 }
-// { users: (User & { score: number; })[]
-export default function LeaderboardTable({ users }: any) {
+
+export default function Forum({ users }: { users:
+(User & { title: string, category: string, content: string })[] }) {
   const data = useMemo(() => users, [users]);
-  const columns = useMemo<Column<User & { score: number }>[]>(() => [
+  const [openEditPopup, setOpenEditPopup] = useState(false);
+  const [addTopic] = usePostTopicMutation();
+  const errorHandler = useErrorHandler();
+  const { values, handleChange }: any = useFormWithValidation(); // IValid
+  const currentUser = useSelector(selectCurrentUser);
+  const columns = useMemo<Column<User &
+  { title: string, category: string, content: string }>[]>(() => [
     {
-      accessor: 'first_name',
-      Header: 'Name',
+      accessor: 'title',
+      Header: 'Topics',
       Cell: NameCell,
       disableSortBy: true,
-      width: 350,
-    },
-    {
-      Header: 'Login',
-      accessor: 'login',
-      width: 350,
-    },
-    {
-      Header: 'Score',
-      accessor: 'score',
-      width: 150,
+      width: 800,
     },
   ], []);
 
@@ -103,7 +112,8 @@ export default function LeaderboardTable({ users }: any) {
     page,
     prepareRow,
     ...paginationProps
-  } = useTable<User & { score: number }>(
+  } = useTable<User &
+  { title: string, category: string, content: string }>( // date: Date,
     {
       columns,
       data,
@@ -111,11 +121,54 @@ export default function LeaderboardTable({ users }: any) {
     useFlexLayout,
     useSortBy,
     usePagination,
-  ) as TableTypeWorkaround<User & { score: number }>;
+  ) as TableTypeWorkaround<User &
+  { title: string, category: string, content: string }>; // date: Date,
+
+  const handlerAddTopic = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const { title, category, content } = values;
+
+    if (title && title !== '' && category && category !== '' && content && content !== '') {
+      const body = {
+        title,
+        category,
+        content,
+        created_by: currentUser?.id,
+      };
+
+      try {
+        await addTopic(body);
+        setOpenEditPopup(false);
+        values.title = '';
+        values.category = '';
+        values.content = '';
+      } catch ({ status, data: { reason } }: any) {
+        errorHandler(new Error(`${status}: ${reason}`));
+      }
+    }
+  };
+
+  const handlerTogglePopup = () => {
+    setOpenEditPopup(!openEditPopup);
+  };
 
   return (
     <>
       <div className="flex flex-col">
+        <div className="py-3 hidden sm:flex sm:items-center w-full">
+          <div className="flex w-full gap-x-2 justify-between items-center">
+            <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+              <button
+                className="btn hover:text-gray-500 bg-green-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
+                type="button"
+                onClick={handlerTogglePopup}
+              >
+                Add topic
+              </button>
+            </nav>
+          </div>
+        </div>
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
@@ -162,7 +215,16 @@ export default function LeaderboardTable({ users }: any) {
           </div>
         </div>
       </div>
+
       <Pagination {...paginationProps} />
+      <PopupEditTopicModal
+        openEditPopup={openEditPopup}
+        handlerCloseEditPopup={handlerTogglePopup}
+        handlerSubmit={handlerAddTopic}
+        handleChange={handleChange}
+        values={values}
+        topic={{}}
+      />
     </>
   );
 }
