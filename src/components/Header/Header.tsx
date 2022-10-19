@@ -11,6 +11,7 @@ import { ChevronDownIcon } from '@heroicons/react/solid';
 import Tab from '../Tab';
 import Logo from '../Logo';
 import Button from '../Button';
+// import ToggleButton from '../ToggleButton';
 
 import useUser from '../../hook/useUser';
 import { useSignOutMutation } from '../../store';
@@ -68,6 +69,8 @@ export default function Header({ disabled }: HeaderProps) {
                   >
                     About
                   </Button>
+
+                  {/* <ToggleButton /> */}
                 </nav>
               </>
             )}

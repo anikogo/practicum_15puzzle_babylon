@@ -5,6 +5,7 @@ import users from './users';
 import likes from './likes';
 import topics from './topics';
 import comments from './comments';
+import themes from './themes';
 // import authMiddleware from '../middlewares/auth';
 
 const router = Router();
@@ -15,5 +16,6 @@ router.use(Urls.API.BASE, users);
 router.use(Urls.API.BASE, topics);
 router.use(Urls.API.BASE, comments);
 router.use(Urls.API.BASE, likes);
+router.use(Urls.API.BASE, themes);
 
 export default router;
