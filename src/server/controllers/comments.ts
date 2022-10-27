@@ -48,10 +48,10 @@ const deleteComment = (req: Request, res: Response, next: NextFunction) => {
       if (comment) {
         comment.destroy();
 
-        return res.send({ message: 'topic was deleted' });
+        return res.send({ message: 'comment was deleted' });
       }
 
-      return res.status(404).send({ message: 'topic was not deleted' });
+      return res.status(404).send({ message: 'comment was not deleted' });
     })
     .catch(next);
 };
