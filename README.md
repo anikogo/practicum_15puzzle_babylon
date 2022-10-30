@@ -26,6 +26,7 @@ Yandex Practicum Middle Frontend Developer | Module 2 | Game 15puzzle
 ![Git](https://img.shields.io/badge/-Git-black?style=flat-square&logo=git)
 ![Eslint](https://img.shields.io/badge/-Eslint-black?style=flat-square&logo=eslint)
 
+
 ### MEMORYLEAKS
 
 ### .env
