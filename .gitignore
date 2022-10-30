@@ -1,8 +1,10 @@
 .idea
 dist/
 node_modules/
+docker/
 .husky
 .env
+help-doc-list.md
 error.log
 request.log
 postgresdata
