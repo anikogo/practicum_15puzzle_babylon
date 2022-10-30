@@ -5,11 +5,13 @@ Yandex Practicum Middle Frontend Developer | Module 2 | Game 15puzzle
 
 - #### rkkmkkfx
     - Sergey Baranov
-    [GitHub](https://github.com/rkkmkkfx)
+    
+    - [GitHub](https://github.com/rkkmkkfx)
 
 - #### bmazurme
     - Bogdan Mazur
-    [GitHub](https://github.com/bmazurme)
+    
+    - [GitHub](https://github.com/bmazurme)
 
 ### Tech Stack
 
