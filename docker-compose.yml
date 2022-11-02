@@ -2,6 +2,8 @@ version: "3"
 
 services:
   my-app:
+    image: cr.yandex/crp11e63ns0rgi2120do/myapp:latest
+    platform: linux/amd64
     build:
       context: .
     depends_on:
@@ -51,9 +53,24 @@ services:
     networks:
       - awesome
 
+  # nginx:
+  #   image: nginx
+  #   restart: always
+  #   #container_name: nginx
+  #   volumes:
+  #     - ./docker/nginx/certs:/etc/nginx/certs
+  #     - ./docker/nginx/core:/etc/nginx/conf.d
+  #     - ./docker/nginx/logs/:/var/log/nginx/
+  #   depends_on:
+  #     - postgres
+  #   ports:
+  #     - "443:443"
+  #   networks:
+  #     - awesome
+
 volumes:
-    pgadmin-data:
+  pgadmin-data:
 
 networks:
-    awesome:
-        driver: bridge
+  awesome:
+    driver: bridge
