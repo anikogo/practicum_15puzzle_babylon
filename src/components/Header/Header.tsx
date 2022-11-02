@@ -1,4 +1,5 @@
 import { Fragment, type MouseEventHandler } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import classnames from 'classnames';
@@ -12,9 +13,10 @@ import Tab from '../Tab';
 import Logo from '../Logo';
 import Button from '../Button';
 // import ToggleButton from '../ToggleButton';
+import Avatar from '../Avatar';
 
 import useUser from '../../hook/useUser';
-import { useSignOutMutation } from '../../store';
+import { setCredentials, useSignOutMutation } from '../../store';
 
 type HeaderProps = {
   disabled?: boolean;
@@ -23,6 +25,7 @@ type HeaderProps = {
 export default function Header({ disabled }: HeaderProps) {
   const { pathname } = useLocation();
   const user = useUser();
+  const dispatch = useDispatch();
 
   const [signOut] = useSignOutMutation();
 
@@ -30,6 +33,7 @@ export default function Header({ disabled }: HeaderProps) {
     event.preventDefault();
     signOut().then(() => {
       close();
+      dispatch(setCredentials(null));
       localStorage.removeItem('userAuth');
     });
   };
@@ -83,15 +87,23 @@ export default function Header({ disabled }: HeaderProps) {
           </div>
           <nav>
             {user ? (
-              <Popover className="relative">
+              <Popover className="relative flex gap-4">
                 {({ open, close }) => (
                   <>
+                    <Avatar
+                      className="max-h-12 w-auto"
+                      firstName={user.first_name}
+                      secondName={user.second_name}
+                      src={user.avatar}
+                    />
                     <Tab
                       as={Popover.Button}
                       className="flex items-center"
                       active={open || pathname === '/profile'}
                     >
-                      <span>{user.display_name ?? `${user.first_name} ${user.second_name}`}</span>
+                      <span>
+                        {user.display_name ?? `${user.first_name} ${user.second_name}`}
+                      </span>
                       <ChevronDownIcon
                         className={classnames('ml-2 h-5 w-5', {
                           'text-gray-600': open,

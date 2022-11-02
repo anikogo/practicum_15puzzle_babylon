@@ -22,7 +22,7 @@ export default function Avatar({
       )}
     >
       {src
-        ? <img crossOrigin="anonymous" src={src} alt={`${firstName} ${secondName}`} className="m-0" />
+        ? <img crossOrigin="anonymous" src={src} alt={`${firstName} ${secondName}`} className="m-0 object-cover h-full w-full" />
         : <span className="uppercase">{initials}</span>}
     </div>
   );
