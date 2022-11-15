@@ -7,6 +7,7 @@ import LeaderboardPage from './pages/leaderboard';
 import SignInPage from './pages/signin';
 import SignUpPage from './pages/signup';
 import ProfilePage from './pages/profile';
+import AboutPage from './pages/about';
 import Page404 from './pages/404';
 
 import { appApi, forumApi } from './store/api';
@@ -62,6 +63,10 @@ export default [
   {
     path: '/profile',
     element: <ProfilePage />,
+  },
+  {
+    path: '/about',
+    element: <AboutPage />,
   },
   {
     path: '*',

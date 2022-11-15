@@ -1,5 +1,6 @@
 import path from 'path';
 import express from 'express';
+
 import livereload from 'livereload';
 import connectLivereload from 'connect-livereload';
 
@@ -26,7 +27,9 @@ const helmetConfig = {
   contentSecurityPolicy: {
     useDefaults: true,
     directives: {
-      'default-src': ['self', 'https://ya-praktikum.tech/api/v2/'],
+      'img-src': ["'self'", "'unsafe-inline'", "'data:'", 'robohash.org'],
+      'connect-src': ["'self'", 'https://ya-praktikum.tech/api/v2/', 'robohash.org'],
+      'default-src': ["'self'", 'https://ya-praktikum.tech/api/v2/', 'robohash.org'],
     },
   },
 };
@@ -59,7 +62,7 @@ app
   .use(express.static(path.resolve(__dirname)));
 
 app.get('/service-worker.js', (_req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'service-worker', 'service-worker.js'));
+  res.sendFile(path.resolve(__dirname, '..', 'dist', 'service-worker', 'service-worker.js'));
 });
 app.get('/*', serverRenderMiddleware);
 

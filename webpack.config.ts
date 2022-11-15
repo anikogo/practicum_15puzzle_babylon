@@ -100,4 +100,20 @@ const server = merge<Configuration>(common, {
   },
 });
 
-export default [client, server];
+const sw = merge<Configuration>(common, {
+  name: 'sw',
+  target: 'web',
+  mode: process.env.NODE_ENV as Environment ?? 'development',
+  devtool: 'inline-source-map',
+  entry: ['./src/service-worker/service-worker.js'],
+  output: {
+    filename: 'service-worker/service-worker.js',
+    path: path.join(__dirname, 'dist'),
+  },
+  optimization: {
+    minimize: process.env.NODE_ENV === 'production',
+    minimizer: [new TerserPlugin()],
+  },
+});
+
+export default [client, server, sw];

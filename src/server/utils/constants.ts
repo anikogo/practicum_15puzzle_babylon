@@ -32,6 +32,9 @@ const Urls = {
       ADD: '/api/likes/add',
       DELETE: '/api/likes/:id',
     },
+    THEMES: {
+      INDEX: '/api/themes',
+    },
   },
 };
 
