@@ -5,12 +5,12 @@ Yandex Practicum Middle Frontend Developer | Module 2 | Game 15puzzle
 
 - #### rkkmkkfx
     - Sergey Baranov
-    
+
     - [GitHub](https://github.com/rkkmkkfx)
 
 - #### bmazurme
     - Bogdan Mazur
-    
+
     - [GitHub](https://github.com/bmazurme)
 
 ### Tech Stack
@@ -27,6 +27,16 @@ Yandex Practicum Middle Frontend Developer | Module 2 | Game 15puzzle
 ![NPM](https://img.shields.io/badge/-NPM-black?style=flat-square&logo=npm)
 ![Git](https://img.shields.io/badge/-Git-black?style=flat-square&logo=git)
 ![Eslint](https://img.shields.io/badge/-Eslint-black?style=flat-square&logo=eslint)
+
+### Installation
+
+Clone the repository on your computer: `git clone ...`
+
+Install dependencies: `npm install`
+
+Launch: `npm start`, dev `npm run dev`
+
+Test: `npm run test`
 
 
 ### MEMORYLEAKS
