@@ -21,7 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     value,
   } = props;
   return (
-    <div className={classnames('grid pb-6 relative')}>
+    <div className={classnames('grid relative')}>
       {label && <label htmlFor={id} className={classnames('text-gray-400 mb-1')}>{label}</label>}
       <input
         ref={ref}
@@ -30,7 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         value={value}
         className={classnames(
           className,
-          'rounded border border-[#E1E1E1] w-auto pb-2 pt-2 pl-[24px] pr-[40px]',
+          'rounded border border-[#E1E1E1] w-auto py-2 px-4',
           { 'border-error': errorText },
         )}
       />

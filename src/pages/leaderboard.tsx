@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 
 import Content from '../components/Content';
@@ -12,25 +12,33 @@ import { useGetTeamUsersMutation } from '../store/api';
 
 function LeaderboardPage() {
   const handleError = useErrorHandler();
-  //
-  // const Urls = {
-  //   AVATAR: {
-  //     DEFAULT: 'https://robohash.org/corporissitanimi.png?size=50x50&set=set1',
-  //     CUSTOM: 'https://ya-praktikum.tech/api/v2/resources/',
-  //   },
-  // };
-
   const [getUsers, { data, error, isLoading }] = useGetTeamUsersMutation();
+  const [tableData, setTableData] = useState(data);
+
+  const Urls = {
+    AVATAR: {
+      DEFAULT: 'https://robohash.org/corporissitanimi.png?size=50x50&set=set1',
+      CUSTOM: 'https://ya-praktikum.tech/api/v2/resources/',
+    },
+  };
 
   useEffect(() => {
-    if (!data) {
+    if (!tableData) {
       getUsers({
         ratingFieldName: 'score',
         cursor: 0,
-        limit: 100,
+        limit: 20,
+      }).then((scores: any) => {
+        setTableData(scores.data
+          ?.map((item: { data: User & { score: number } }) => ({
+            ...item?.data,
+            avatar: (item?.data.avatar && item?.data.avatar !== 'null')
+              ? `${Urls.AVATAR.CUSTOM}${item.data?.avatar}`
+              : Urls.AVATAR.DEFAULT,
+          })));
       });
     }
-  }, [error, isLoading]);
+  }, []);
 
   if (error) {
     handleError(error);
@@ -43,7 +51,7 @@ function LeaderboardPage() {
         description="Game leaderboard with user stats"
       />
       <Content className="bg-gray-100" heading="Leaderboard">
-        { isLoading ? (<Preloader />) : (<LeaderboardTable users={data ?? []} />) }
+        { isLoading ? (<Preloader />) : (<LeaderboardTable users={tableData ?? []} />) }
       </Content>
     </>
   );

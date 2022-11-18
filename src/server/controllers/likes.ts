@@ -11,9 +11,9 @@ const addLike = (req: Request, res: Response, next: NextFunction) => Like
   .then((result: unknown) => res.status(201).send(result))
   .catch(next);
 
-const getLikes = (_req: Request, res: Response, next: NextFunction) => Like
-  .findAll()
-  .then((result: Array<Like>) => res.send(result))
+const getLikes = (req: Request, res: Response, next: NextFunction) => Like
+  .findAll({ where: { comment_id: req.params.id } })
+  .then((result: Array<Like> | null) => res.send(result))
   .catch(next);
 
 const removeLike = (req: Request, res: Response, next: NextFunction) => Like
@@ -21,4 +21,4 @@ const removeLike = (req: Request, res: Response, next: NextFunction) => Like
   .then(() => res.send({ message: 'like was deleted' }))
   .catch(next);
 
-export { addLike, removeLike, getLikes };
+export { addLike, getLikes, removeLike };

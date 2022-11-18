@@ -5,6 +5,8 @@ import User from './models/User';
 import Topic from './models/Topic';
 import Comment from './models/Comment';
 import Like from './models/Like';
+import SiteTheme from './models/SiteTheme';
+import UserTheme from './models/UserTheme';
 
 dotEnvConfig();
 
@@ -19,7 +21,7 @@ const sequelizeOptions: SequelizeOptions = {
 
 const sequelize = new Sequelize(sequelizeOptions);
 
-sequelize.addModels([User, Topic, Comment, Like]);
+sequelize.addModels([User, Topic, Comment, Like, SiteTheme, UserTheme]);
 
 const dbConnect = async () => {
   try {

@@ -1,6 +1,6 @@
 const Urls = {
   API: {
-    BASE: '/api',
+    BASE: '/',
     AUTH: {
       INDEX: '/api/auth',
       SIGNUP: '/api/auth/signup',
@@ -10,14 +10,14 @@ const Urls = {
       INDEX: '/api/topics',
       ADD: '/api/topics/add',
       GET: '/api/topics/:id',
-      EDIT: '/api/topics/edit/:id',
+      EDIT: '/api/topics/edit',
       DELETE: '/api/topics/:id',
     },
     COMMENTS: {
       INDEX: '/api/comments',
       ADD: '/api/comments/add',
       GET: '/api/commentS/:id',
-      EDIT: '/api/comments/edit/:id',
+      EDIT: '/api/comments/edit',
       DELETE: '/api/comments/:id',
     },
     USERS: {
@@ -28,8 +28,12 @@ const Urls = {
     },
     LIKE: {
       INDEX: '/api/likes',
+      GET: '/api/likes/:id',
       ADD: '/api/likes/add',
-      DELETE: '/api/likes/remove/:id',
+      DELETE: '/api/likes/:id',
+    },
+    THEMES: {
+      INDEX: '/api/themes',
     },
   },
 };

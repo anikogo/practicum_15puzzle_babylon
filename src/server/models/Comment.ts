@@ -52,8 +52,8 @@ CommentCreationAttributes
   @Column(DataType.INTEGER)
     parentId!: number;
 
-  @BelongsTo(() => Comment)
-    parent!: Comment;
+  // @BelongsTo(() => Comment)
+  //   parent!: Comment;
 
   @ForeignKey(() => Topic)
   @AllowNull(false)

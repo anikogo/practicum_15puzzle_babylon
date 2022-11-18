@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`tab 1`] = `
+<button
+  className="text-base font-medium border-b-2 py-2 hover:border-indigo-500 hover:text-gray-900 text-gray-500 border-transparent"
+  role="tab"
+/>
+`;

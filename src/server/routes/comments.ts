@@ -1,8 +1,7 @@
 import { Router } from 'express';
 
 import Urls from '../utils/constants';
-
-import { validateCommentData } from '../utils/validator';
+// import { validateCommentData } from '../utils/validator';
 import {
   addComment,
   editComment,
@@ -12,27 +11,9 @@ import {
 
 const router = Router();
 
-router.get(
-  Urls.API.COMMENTS.GET,
-  validateCommentData,
-  getComment,
-);
-
-router.post(
-  Urls.API.COMMENTS.ADD,
-  validateCommentData,
-  addComment,
-);
-
-router.patch(
-  Urls.API.COMMENTS.EDIT,
-  validateCommentData,
-  editComment,
-);
-
-router.delete(
-  Urls.API.COMMENTS.DELETE,
-  deleteComment,
-);
+router.get(Urls.API.COMMENTS.GET, getComment);
+router.post(Urls.API.COMMENTS.ADD, addComment);
+router.patch(Urls.API.COMMENTS.EDIT, editComment);
+router.delete(Urls.API.COMMENTS.DELETE, deleteComment);
 
 export default router;

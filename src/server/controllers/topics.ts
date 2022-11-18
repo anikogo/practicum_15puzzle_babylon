@@ -7,8 +7,9 @@ const addTopic = (req: Request, res: Response, next: NextFunction) => {
     .create(
       {
         title: req.body.title,
-        description: req.body.description,
-        created_by: 1,
+        category: req.body.category,
+        content: req.body.content,
+        created_by: req.body.created_by,
       },
       {
         include: [Comment],
@@ -20,8 +21,8 @@ const addTopic = (req: Request, res: Response, next: NextFunction) => {
 
 const getTopics = (_req: Request, res: Response, next: NextFunction) => Topic
   .findAll({
-    attributes: ['id', 'title', 'description', 'created_by'],
-    include: [Comment],
+    attributes: ['id', 'title', 'category', 'content', 'created_by'],
+    // include: [Comment],
   })
   .then((result: Array<Topic>) => res.send(result))
   .catch(next);
@@ -32,17 +33,17 @@ const getTopic = (req: Request, res: Response, next: NextFunction) => Topic
   .catch(next);
 
 const editTopic = (req: Request, res: Response, next: NextFunction) => Topic
-  .findOne({
-    where: { id: req.body.id },
-  })
-  .then((topic: Topic | null) => {
-    if (topic) {
-      // eslint-disable-next-line no-param-reassign
-      topic = req.body as Topic;
-    }
-
-    return res.send(topic);
-  })
+  .update(
+    {
+      title: req.body.title,
+      category: req.body.category,
+      content: req.body.content,
+    },
+    {
+      where: { id: req.body.id },
+    },
+  )
+  .then(() => res.send(req.body))
   .catch(next);
 
 const deleteTopic = (req: Request, res: Response, next: NextFunction) => {

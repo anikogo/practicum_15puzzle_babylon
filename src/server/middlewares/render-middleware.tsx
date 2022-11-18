@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Request, Response } from 'express';
 
 import { renderToString } from 'react-dom/server';
@@ -15,26 +16,27 @@ import routes from '../../routes';
 
 function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetData): string {
   return `
-    <!DOCTYPE html>
-    <html lang="en">
+  <!DOCTYPE html>
+  <html lang="en">
     <head>
-        ${helmetData.title.toString()}
-        ${helmetData.meta.toString()}
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="shortcut icon" type="image/png" href="/images/favicon.jpg">
-        <link href="/main.css" rel="stylesheet">
+      ${helmetData.title.toString()}
+      ${helmetData.meta.toString()}
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      
+      <link rel="shortcut icon" type="image/png" href="/images/favicon.jpg">
+      <link href="/main.css" rel="stylesheet">
     </head>
     <body>
-        <div id="app">${reactHtml}</div>
-        <script>
-          window.__INITIAL_STATE__ = ${JSON.stringify(reduxState)}
-        </script>
-        <script src="/bundle.js"></script>
+      <div id="app">${reactHtml}</div>
+      <script>
+        window.__INITIAL_STATE__ = ${JSON.stringify(reduxState)}
+      </script>
+      <script src="/bundle.js"></script>
     </body>
-    </html>
-    `;
+  </html>
+  `;
 }
 
 export default (req: Request, res: Response) => {

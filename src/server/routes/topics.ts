@@ -7,36 +7,15 @@ import {
   editTopic,
   deleteTopic,
 } from '../controllers/topics';
-import { validateTopicData } from '../utils/validator';
+// import { validateTopicData } from '../utils/validator';
 import Urls from '../utils/constants';
 
 const router = Router();
 
-router.post(
-  Urls.API.TOPICS.ADD,
-  validateTopicData,
-  addTopic,
-);
-
-router.get(
-  Urls.API.TOPICS.INDEX,
-  getTopics,
-);
-
-router.get(
-  Urls.API.TOPICS.GET,
-  getTopic,
-);
-
-router.patch(
-  Urls.API.TOPICS.EDIT,
-  validateTopicData,
-  editTopic,
-);
-
-router.delete(
-  Urls.API.TOPICS.EDIT,
-  deleteTopic,
-);
+router.post(Urls.API.TOPICS.ADD, addTopic);
+router.get(Urls.API.TOPICS.GET, getTopic);
+router.get(Urls.API.TOPICS.INDEX, getTopics);
+router.patch(Urls.API.TOPICS.EDIT, editTopic);
+router.delete(Urls.API.TOPICS.DELETE, deleteTopic);
 
 export default router;

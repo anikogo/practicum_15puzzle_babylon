@@ -3,13 +3,20 @@ import { setupListeners } from '@reduxjs/toolkit/query/react';
 import { createReduxHistoryContext } from 'redux-first-history';
 import { createBrowserHistory, createMemoryHistory } from 'history';
 
-import { appApi, authApi } from './api';
+import {
+  appApi,
+  authApi,
+  forumApi,
+  usersApi,
+} from './api';
 import userReducer from './slices/userSlice';
 import { isServer } from '../utils';
 import gameStatsReducer from './slices/gameStatsSlice';
 
 export * from './api/appApi/endpoints';
 export * from './api/authApi/endpoints';
+export * from './api/forumApi/endpoints';
+export * from './api/usersApi/endpoints';
 export * from './slices';
 
 // global redeclared types
@@ -31,11 +38,19 @@ export const store = configureStore({
     gameStats: gameStatsReducer,
     [appApi.reducerPath]: appApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    [forumApi.reducerPath]: forumApi.reducer,
+    [usersApi.reducerPath]: usersApi.reducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
   middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-    .concat(appApi.middleware, authApi.middleware, routerMiddleware),
+    .concat(
+      appApi.middleware,
+      authApi.middleware,
+      forumApi.middleware,
+      usersApi.middleware,
+      routerMiddleware,
+    ),
 });
 
 export const history = createReduxHistory(store);
