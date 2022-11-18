@@ -2,15 +2,15 @@ import createApi from '../../createApi';
 
 import { getBaseQuery } from '../../baseQuery';
 
-const baseQuery = getBaseQuery('http://localhost:3000/api');
+const baseQuery = getBaseQuery('https://ya-praktikum.tech/api/v2/oauth/yandex/');
 
-const forumApi = createApi({
-  reducerPath: 'forumApi',
+const oauthApi = createApi({
+  reducerPath: 'oauthApi',
   baseQuery,
-  tagTypes: ['Forum'],
+  tagTypes: ['Users'],
   keepUnusedDataFor: 5 * 60,
   refetchOnMountOrArgChange: 30 * 60,
   endpoints: () => ({}),
 });
 
-export default forumApi;
+export default oauthApi;

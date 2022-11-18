@@ -19,6 +19,9 @@ const authApiEndpoints = authApi
           url: '/signin',
           method: 'POST',
           data,
+          async onSuccess() {
+            console.log(document.cookie);
+          },
         }),
       }),
       getUser: builder.mutation<User | null, void>({

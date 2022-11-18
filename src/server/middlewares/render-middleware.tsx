@@ -11,6 +11,15 @@ import type { HelmetData } from 'react-helmet';
 import App from '../../App';
 import { store } from '../../store';
 import type { RootState } from '../../store';
+
+import {
+  appApi,
+  authApi,
+  forumApi,
+  usersApi,
+  oauthApi,
+} from '../../store/api';
+
 import routes from '../../routes';
 
 function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetData): string {
@@ -23,7 +32,7 @@ function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetDat
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        
+
         <link rel="shortcut icon" type="image/png" href="/images/favicon.jpg">
         <link href="/main.css" rel="stylesheet">
     </head>
@@ -38,7 +47,13 @@ function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetDat
     `;
 }
 
-export default (req: Request, res: Response) => {
+export default async (req: Request, res: Response) => {
+  console.log(req.cookies);
+  await Promise.all(appApi.util.getRunningOperationPromises());
+  await Promise.all(authApi.util.getRunningOperationPromises());
+  await Promise.all(forumApi.util.getRunningOperationPromises());
+  await Promise.all(usersApi.util.getRunningOperationPromises());
+  await Promise.all(oauthApi.util.getRunningOperationPromises());
   const location = req.url;
   const initialState = store.getState();
   const helmetData = Helmet.renderStatic();

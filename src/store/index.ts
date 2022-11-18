@@ -8,6 +8,7 @@ import {
   authApi,
   forumApi,
   usersApi,
+  oauthApi,
 } from './api';
 import userReducer from './slices/userSlice';
 import { isServer } from '../utils';
@@ -16,6 +17,7 @@ export * from './api/appApi/endpoints';
 export * from './api/authApi/endpoints';
 export * from './api/forumApi/endpoints';
 export * from './api/usersApi/endpoints';
+export * from './api/oauthApi/endpoints';
 export * from './slices';
 
 // global redeclared types
@@ -38,6 +40,7 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [forumApi.reducerPath]: forumApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
+    [oauthApi.reducerPath]: oauthApi.reducer,
   },
   // Adding the api middleware enables caching, invalidation, polling,
   // and other useful features of `rtk-query`.
@@ -47,6 +50,7 @@ export const store = configureStore({
       authApi.middleware,
       forumApi.middleware,
       usersApi.middleware,
+      oauthApi.middleware,
       routerMiddleware,
     ),
 });

@@ -1,6 +1,6 @@
 import { Fragment, type MouseEventHandler } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import classnames from 'classnames';
 
@@ -26,6 +26,7 @@ export default function Header({ disabled }: HeaderProps) {
   const { pathname } = useLocation();
   const user = useUser();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [signOut] = useSignOutMutation();
 
@@ -35,6 +36,7 @@ export default function Header({ disabled }: HeaderProps) {
       close();
       dispatch(setCredentials(null));
       localStorage.removeItem('userAuth');
+      navigate('/signin');
     });
   };
 

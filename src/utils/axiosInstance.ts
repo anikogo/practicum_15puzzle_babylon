@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 
+axios.defaults.withCredentials = true;
 const axiosInstance: AxiosInstance = axios.create({
   withCredentials: true,
 });

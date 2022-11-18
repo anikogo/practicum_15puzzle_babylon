@@ -1,12 +1,12 @@
 import { useEffect, type ComponentType } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { useErrorHandler } from 'react-error-boundary';
 import type { AxiosError } from 'axios';
 
 import Preloader from '../components/Preloader';
 
 import useUser from '../hook/useUser';
-import { useGetUserMutation } from '../store';
+import { useGetUserMutation, useSendCodeMutation } from '../store';
 
 export default function withUser<P extends Record<string, unknown>>(
   Page: ComponentType<P>,
@@ -14,6 +14,8 @@ export default function withUser<P extends Record<string, unknown>>(
 ) {
   return function WithUser(pageProps: P & { user?: User }) {
     const handleErrors = useErrorHandler();
+    const [searchParams] = useSearchParams();
+    const code = searchParams.get('code');
     let userData: User | null = useUser();
     const [getUser, {
       isUninitialized,
@@ -23,8 +25,18 @@ export default function withUser<P extends Record<string, unknown>>(
       data,
     }] = useGetUserMutation();
 
+    const [sendCode, result] = useSendCodeMutation();
+
+    useEffect(() => {
+      if (code && !userData) {
+        sendCode({ code, redirect_uri: window.location.origin })
+          .then(() => getUser());
+      }
+    }, [sendCode, code, result]);
+
     useEffect(() => {
       if (isUninitialized && !userData) {
+        console.log(document.cookie);
         getUser().then(() => { if (data && !isError) userData = data; });
       }
     }, [getUser, isError, isLoading, isUninitialized, userData]);
@@ -44,6 +56,10 @@ export default function withUser<P extends Record<string, unknown>>(
       return <div>Something went wrong</div>;
     }
 
-    return <Navigate to="/signin" />;
+    if (!code || !result.isUninitialized) {
+      return <Navigate to="/signin" />;
+    }
+
+    return <Preloader />;
   };
 }

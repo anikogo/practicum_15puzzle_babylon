@@ -1,4 +1,4 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import createApi from '../../createApi';
 
 import { getBaseQuery } from '../../baseQuery';
 

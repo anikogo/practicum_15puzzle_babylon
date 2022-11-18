@@ -7,6 +7,7 @@ import connectLivereload from 'connect-livereload';
 import { errors } from 'celebrate';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 import dbConnect from './connect';
 
@@ -27,7 +28,7 @@ const helmetConfig = {
   contentSecurityPolicy: {
     useDefaults: true,
     directives: {
-      'img-src': ["'self'", "'unsafe-inline'", "'data:'", 'robohash.org'],
+      'img-src': ["'self'", "'unsafe-inline'", "'data:'", 'robohash.org', 'https://ya-praktikum.tech/api/v2/'],
       'connect-src': ["'self'", 'https://ya-praktikum.tech/api/v2/', 'robohash.org'],
       'default-src': ["'self'", 'https://ya-praktikum.tech/api/v2/', 'robohash.org'],
     },
@@ -36,6 +37,7 @@ const helmetConfig = {
 
 const app = express();
 
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
