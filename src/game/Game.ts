@@ -288,7 +288,6 @@ export default class Game {
     // eslint-disable-next-line no-alert
     this.#stats?.stopTimer();
     const score = this.calcScore();
-    // this.winAnimation();
     this.onPuzzleSolved(score);
     this.stop();
   }
