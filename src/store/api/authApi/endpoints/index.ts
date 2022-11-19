@@ -36,6 +36,7 @@ const authApiEndpoints = authApi
           url: '/logout',
           method: 'POST',
           async onSuccess(dispatch) {
+            console.log('signOut');
             await dispatch(setCredentials(null));
           },
         }),

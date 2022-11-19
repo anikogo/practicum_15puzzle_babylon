@@ -171,7 +171,6 @@ export default class Game {
   }
 
   stop() {
-    console.log('stop');
     this.numbers = populateArray((this.boardSize * this.boardSize) - 1);
     this.numbers.push(0);
 
@@ -271,22 +270,9 @@ export default class Game {
   calcScore() {
     if (this.#stats) {
       const { movesCount, time } = this.#stats;
-      return Math.round((time / movesCount) * 100);
+      return Math.round((1 / Math.sqrt(time) + 2 / (movesCount ** 2)) * 1000);
     }
     return 0;
-  }
-
-  winAnimation() {
-    while (this.tiles.length) {
-      const tile = this.tiles[Math.floor(Math.random() * this.tiles.length)];
-      if (tile) {
-        tile.move(tile.x + Math.random() * 100 - 50, tile.y + Math.random() * 100 - 50);
-        if (tile.x > this.ctx!.canvas.width || (tile.x + tile.size + tile.padding * 2) < 0
-          || tile.y > this.ctx!.canvas.height || (tile.y + tile.size + tile.padding * 2) < 0) {
-          this.tiles.splice(this.tiles.indexOf(tile), 1);
-        }
-      }
-    }
   }
 
   isVictory() {

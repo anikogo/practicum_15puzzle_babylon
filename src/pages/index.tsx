@@ -22,6 +22,7 @@ function formattedTime(time: number) {
 function IndexPage({ user }: { user?: User }) {
   const [boardSize] = useState(4);
   const [gameScore, setGameScore] = useState(0);
+  const [gameState, setGameState] = useState(game.state);
   const [postScore] = useAddUserMutation();
   const { moves, time } = useSelector(statsSelector);
 
@@ -68,10 +69,14 @@ function IndexPage({ user }: { user?: User }) {
             Time:&nbsp;
             {formattedTime(time)}
           </p>
-          {gameScore > 0 && (
+          {gameScore > 0 ? (
             <p className="my-3">
               Score:&nbsp;
               {gameScore}
+            </p>
+          ) : (
+            <p className="my-3">
+              &nbsp;
             </p>
           )}
           <Button
@@ -81,12 +86,13 @@ function IndexPage({ user }: { user?: User }) {
             as={Link}
             to="/"
             onClick={() => {
-              if (game.state === 'stopped') {
+              if (gameState === 'stopped') {
                 game.start();
               } else {
                 game.stop();
                 setGameScore(0);
               }
+              setGameState(game.state);
             }}
           >
             {game.state === 'stopped' ? 'Start' : 'Stop'}
