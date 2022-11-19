@@ -1,5 +1,5 @@
 import { Fragment, type MouseEventHandler } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import classnames from 'classnames';
 
@@ -23,7 +23,6 @@ type HeaderProps = {
 
 export default function Header({ disabled }: HeaderProps) {
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const user = useUser();
 
   const [signOut] = useSignOutMutation();
@@ -32,7 +31,6 @@ export default function Header({ disabled }: HeaderProps) {
     event.preventDefault();
     await signOut();
     close();
-    navigate('/signin');
   };
 
   return (
