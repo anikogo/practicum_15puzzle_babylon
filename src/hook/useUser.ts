@@ -5,5 +5,6 @@ import makeDataSelector from '../store/makeDataSelector';
 const userSelector = makeDataSelector('user');
 
 export default function useUser() {
-  return useSelector(userSelector);
+  const { data } = useSelector(userSelector);
+  return data;
 }

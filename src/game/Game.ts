@@ -3,12 +3,19 @@ import { populateArray, shuffleArray } from '../utils';
 import Tile from './Tile';
 import Stats from './Stats';
 
+type GameOptions = {
+  boardSize: number;
+  fieldFillColors: string | string[];
+  tileFillColors: string | string[];
+  onPuzzleSolved: (score: number) => void;
+};
+
 export default class Game {
-  sideSize: number;
+  boardSize: number;
 
   tileWidth: number;
 
-  state: string;
+  #state: string;
 
   tiles: Tile[];
 
@@ -18,19 +25,29 @@ export default class Game {
 
   numbers: number[];
 
+  #fieldFill: string | CanvasGradient;
+
+  #tileFill: string | CanvasGradient;
+
   #field?: Field;
 
-  #stats?: Stats;
+  #stats: Stats;
 
   #isAnimate: boolean;
 
-  constructor(sideSize: number) {
-    this.sideSize = sideSize;
+  onPuzzleSolved: (score: number) => void;
+
+  constructor() {
+    this.boardSize = 4;
+    this.#fieldFill = '';
+    this.#tileFill = '';
     this.tiles = [];
     this.numbers = [];
-    this.tileWidth = Math.floor(globalThis.innerHeight / 8);
-    this.state = 'stopped';
+    this.tileWidth = 0;
+    this.#state = 'stopped';
     this.#isAnimate = false;
+    this.onPuzzleSolved = () => {};
+    this.#stats = new Stats();
   }
 
   isSolvable() {
@@ -38,7 +55,7 @@ export default class Game {
     let row = 0;
     let blankRow = 0;
     for (let i = 0; i < this.numbers.length; i++) {
-      if (i % this.sideSize === 0) {
+      if (i % this.boardSize === 0) {
         row++;
       }
       if (this.numbers[i] === 0) {
@@ -53,7 +70,7 @@ export default class Game {
       }
     }
 
-    if (this.sideSize % 2 === 0) {
+    if (this.boardSize % 2 === 0) {
       if (blankRow % 2 === 0) {
         return parity % 2 === 0;
       }
@@ -63,17 +80,19 @@ export default class Game {
   }
 
   generateNumbers() {
-    this.numbers = shuffleArray(populateArray(this.sideSize * this.sideSize));
+    this.numbers = shuffleArray(populateArray((this.boardSize * this.boardSize) - 1));
 
     if (!this.isSolvable()) {
       this.generateNumbers();
+    } else {
+      this.numbers.push(0);
     }
   }
 
   getTilePos = (content: number) => {
     const zeroIndex = this.numbers.indexOf(content);
-    const zeroCol = Math.floor(zeroIndex % 4);
-    const zeroRow = Math.floor(zeroIndex / 4);
+    const zeroCol = Math.floor(zeroIndex % this.boardSize);
+    const zeroRow = Math.floor(zeroIndex / this.boardSize);
     return [zeroCol, zeroRow, zeroIndex];
   };
 
@@ -82,48 +101,91 @@ export default class Game {
       for (let i = 0; i < this.numbers.length; i++) {
         const [col, row] = this.getTilePos(this.numbers[i]);
 
-        this.tiles.push(new Tile(
-          col * this.tileWidth,
-          row * this.tileWidth,
-          this.tileWidth,
-          this.numbers[i],
-          this.ctx,
-        ));
+        this.tiles.push(new Tile(this.ctx, {
+          x: col * this.tileWidth,
+          y: row * this.tileWidth,
+          size: this.tileWidth,
+          content: this.numbers[i],
+          fill: this.#tileFill,
+          padding: 4,
+        }));
       }
 
       this.tiles.forEach((tile) => tile.draw());
     }
   }
 
-  init(canvas: HTMLCanvasElement) {
+  init(canvas: HTMLCanvasElement, {
+    boardSize,
+    fieldFillColors,
+    tileFillColors,
+    onPuzzleSolved,
+  }: GameOptions) {
+    this.boardSize = boardSize;
+    this.onPuzzleSolved = onPuzzleSolved;
     if (this.state === 'stopped') {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
+      this.numbers = populateArray((this.boardSize * this.boardSize) - 1);
+      this.numbers.push(0);
 
       if (this.ctx) {
-        this.#field = new Field(this.sideSize, this.ctx);
-        this.#field.draw();
-        this.#stats = new Stats(this.ctx, this.#field.width + 30, 40);
-        this.#stats.draw();
+        this.tileWidth = this.canvas.height / this.boardSize || 0;
+        if (typeof tileFillColors !== 'string') {
+          this.#tileFill = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+          for (let i = 0; i < tileFillColors.length; i++) {
+            this.#tileFill.addColorStop(i / tileFillColors.length, tileFillColors[i]);
+          }
+        } else {
+          this.#tileFill = tileFillColors;
+        }
 
-        document.addEventListener('keydown', this.onArrowKeyPress.bind(this));
-        this.canvas.addEventListener('click', this.handleClick.bind(this));
+        if (typeof fieldFillColors !== 'string') {
+          this.#fieldFill = this.ctx.createLinearGradient(0, 0, this.ctx.canvas.width, 0);
+          for (let i = 0; i < fieldFillColors.length; i++) {
+            this.#fieldFill
+              .addColorStop(i / fieldFillColors.length, fieldFillColors[i]);
+          }
+        } else {
+          this.#fieldFill = fieldFillColors;
+        }
+
+        this.#field = new Field(this.tileWidth * this.boardSize, this.#fieldFill, this.ctx);
+        this.#field.draw();
+        this.spawnTiles();
       }
     }
   }
 
   start() {
     if (this.state !== 'started') {
+      this.tiles = [];
       this.generateNumbers();
       this.spawnTiles();
-      this.state = 'started';
+      this.#stats.movesCount = 0;
+      this.#stats.time = 0;
+      this.#state = 'started';
+      document.addEventListener('keydown', this.onArrowKeyPress);
+      this.canvas?.addEventListener('click', this.handleClick);
     }
   }
 
   stop() {
+    this.numbers = populateArray((this.boardSize * this.boardSize) - 1);
+    this.numbers.push(0);
+
+    this.spawnTiles();
+    this.#stats?.stopTimer();
+    this.#state = 'stopped';
+
+    document.removeEventListener('keydown', this.onArrowKeyPress);
+    this.canvas?.removeEventListener('click', this.handleClick);
+  }
+
+  destroy() {
     if (this.#field) {
-      document.removeEventListener('keydown', this.onArrowKeyPress.bind(this));
-      this.canvas?.removeEventListener('click', this.handleClick.bind(this));
+      document.removeEventListener('keydown', this.onArrowKeyPress);
+      this.canvas?.removeEventListener('click', this.handleClick);
     }
   }
 
@@ -132,9 +194,9 @@ export default class Game {
       const [zeroCol, zeroRow, zeroIdx] = this.getTilePos(0);
       const zeroTile = this.tiles[zeroIdx];
       const [col, row, ttmIdx] = this.getTilePos(+tile.content);
-      const canMove = (code === 'ArrowRight' && col < this.sideSize - 1)
+      const canMove = (code === 'ArrowRight' && col < this.boardSize - 1)
         || (code === 'ArrowLeft' && col > 0)
-        || (code === 'ArrowDown' && row < this.sideSize - 1)
+        || (code === 'ArrowDown' && row < this.boardSize - 1)
         || (code === 'ArrowUp' && row > 0)
         || (!code && (Math.abs(zeroCol - col) + Math.abs(zeroRow - row)) === 1);
 
@@ -172,15 +234,15 @@ export default class Game {
     return [x, y];
   }
 
-  handleClick({ x, y }: MouseEvent) {
+  handleClick = ({ x, y }: MouseEvent) => {
     const [cursorX, cursorY] = this.getCursorPosition(x, y);
     const tileToMove = this.tiles.find((tile) => tile.isMouseOver(cursorX, cursorY));
     if (tileToMove) {
       this.moveTile(tileToMove, '');
     }
-  }
+  };
 
-  onArrowKeyPress({ code }: KeyboardEvent) {
+  onArrowKeyPress = ({ code }: KeyboardEvent) => {
     const [, , zeroIdx] = this.getTilePos(0);
     let tileToMove: Tile | undefined;
     switch (code) {
@@ -191,10 +253,10 @@ export default class Game {
         tileToMove = this.tiles[zeroIdx + 1];
         break;
       case 'ArrowDown':
-        tileToMove = this.tiles[zeroIdx - this.sideSize];
+        tileToMove = this.tiles[zeroIdx - this.boardSize];
         break;
       case 'ArrowUp':
-        tileToMove = this.tiles[zeroIdx + this.sideSize];
+        tileToMove = this.tiles[zeroIdx + this.boardSize];
         break;
       default:
         break;
@@ -203,6 +265,14 @@ export default class Game {
     if (tileToMove) {
       this.moveTile(tileToMove, code);
     }
+  };
+
+  calcScore() {
+    if (this.#stats) {
+      const { movesCount, time } = this.#stats;
+      return Math.round((1 / Math.sqrt(time) + 2 / (movesCount ** 2)) * 1000);
+    }
+    return 0;
   }
 
   isVictory() {
@@ -217,6 +287,12 @@ export default class Game {
 
     // eslint-disable-next-line no-alert
     this.#stats?.stopTimer();
-    alert('Eeeah');
+    const score = this.calcScore();
+    this.onPuzzleSolved(score);
+    this.stop();
+  }
+
+  get state() {
+    return this.#state;
   }
 }

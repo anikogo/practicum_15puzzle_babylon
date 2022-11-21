@@ -1,5 +1,4 @@
 import { Fragment, type MouseEventHandler } from 'react';
-import { useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 
 import classnames from 'classnames';
@@ -16,7 +15,7 @@ import Button from '../Button';
 import Avatar from '../Avatar';
 
 import useUser from '../../hook/useUser';
-import { setCredentials, useSignOutMutation } from '../../store';
+import { useSignOutMutation } from '../../store';
 
 type HeaderProps = {
   disabled?: boolean;
@@ -25,17 +24,13 @@ type HeaderProps = {
 export default function Header({ disabled }: HeaderProps) {
   const { pathname } = useLocation();
   const user = useUser();
-  const dispatch = useDispatch();
 
   const [signOut] = useSignOutMutation();
 
-  const signOutHandler = (close: () => void): MouseEventHandler => (event) => {
+  const signOutHandler = (close: () => void): MouseEventHandler => async (event) => {
     event.preventDefault();
-    signOut().then(() => {
-      close();
-      dispatch(setCredentials(null));
-      localStorage.removeItem('userAuth');
-    });
+    await signOut();
+    close();
   };
 
   return (

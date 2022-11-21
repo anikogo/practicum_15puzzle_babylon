@@ -23,7 +23,7 @@ const slice = createSlice({
         ...data,
         avatar: data?.avatar ? `https://ya-praktikum.tech/api/v2/resources${data.avatar}` : undefined,
       },
-    } : undefined),
+    } : { ...state, data: null }),
   },
 });
 
