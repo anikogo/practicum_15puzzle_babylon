@@ -165,8 +165,8 @@ export default class Game {
       this.#stats.movesCount = 0;
       this.#stats.time = 0;
       this.#state = 'started';
-      document.addEventListener('keydown', this.onArrowKeyPress.bind(this));
-      this.canvas?.addEventListener('click', this.handleClick.bind(this));
+      document.addEventListener('keydown', this.onArrowKeyPress);
+      this.canvas?.addEventListener('click', this.handleClick);
     }
   }
 
@@ -178,14 +178,14 @@ export default class Game {
     this.#stats?.stopTimer();
     this.#state = 'stopped';
 
-    document.removeEventListener('keydown', this.onArrowKeyPress.bind(this));
-    this.canvas?.removeEventListener('click', this.handleClick.bind(this));
+    document.removeEventListener('keydown', this.onArrowKeyPress);
+    this.canvas?.removeEventListener('click', this.handleClick);
   }
 
   destroy() {
     if (this.#field) {
-      document.removeEventListener('keydown', this.onArrowKeyPress.bind(this));
-      this.canvas?.removeEventListener('click', this.handleClick.bind(this));
+      document.removeEventListener('keydown', this.onArrowKeyPress);
+      this.canvas?.removeEventListener('click', this.handleClick);
     }
   }
 
@@ -234,15 +234,15 @@ export default class Game {
     return [x, y];
   }
 
-  handleClick({ x, y }: MouseEvent) {
+  handleClick = ({ x, y }: MouseEvent) => {
     const [cursorX, cursorY] = this.getCursorPosition(x, y);
     const tileToMove = this.tiles.find((tile) => tile.isMouseOver(cursorX, cursorY));
     if (tileToMove) {
       this.moveTile(tileToMove, '');
     }
-  }
+  };
 
-  onArrowKeyPress({ code }: KeyboardEvent) {
+  onArrowKeyPress = ({ code }: KeyboardEvent) => {
     const [, , zeroIdx] = this.getTilePos(0);
     let tileToMove: Tile | undefined;
     switch (code) {
@@ -265,7 +265,7 @@ export default class Game {
     if (tileToMove) {
       this.moveTile(tileToMove, code);
     }
-  }
+  };
 
   calcScore() {
     if (this.#stats) {
