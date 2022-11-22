@@ -23,14 +23,13 @@ import Urls from './utils/constants';
 const { PORT = 3000 } = process.env;
 
 const helmetConfig = {
-  hidePoweredBy: false,
-  contentSecurityPolicy: {
-    useDefaults: true,
-    directives: {
-      'img-src': ["'self'", "'unsafe-inline'", "'data:'", 'robohash.org'],
-      'connect-src': ["'self'", 'https://ya-praktikum.tech/api/v2/', 'robohash.org'],
-      'default-src': ["'self'", 'https://ya-praktikum.tech/api/v2/', 'robohash.org'],
-    },
+  useDefaults: true,
+  directives: {
+    defaultSrc: ["'self'", 'https://ya-praktikum.tech/api/v2/'],
+    scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+    connectSrc: ["'self'", 'https://ya-praktikum.tech/api/v2/'],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    imgSrc: ["'self'", 'https://robohash.org/'],
   },
 };
 
@@ -42,7 +41,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(helmet(helmetConfig));
+  app.use(helmet.hidePoweredBy());
+  app.use(helmet.contentSecurityPolicy(helmetConfig));
 }
 
 app.use(Urls.API.BASE, api);
