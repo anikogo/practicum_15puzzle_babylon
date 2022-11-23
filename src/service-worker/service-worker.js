@@ -2,13 +2,13 @@ const STATIC_CACHE_NAME = 'static-data-v1';
 const DYNAMIC_CACHE_NAME = 'dynamic-data-v1';
 
 const URLS = [
-  'http://localhost:3000/',
-  'http://localhost:3000/leaderboard',
-  'http://localhost:3000/forum',
-  'http://localhost:3000/about',
-  'http://localhost:3000/signin',
-  'http://localhost:3000/signup',
-  'http://localhost:3000/profile',
+  '/',
+  '/leaderboard',
+  '/forum',
+  '/about',
+  '/signin',
+  '/signup',
+  '/profile',
   '/images/favicon.jpg',
   '/main.css',
   '/bundle.js',
@@ -23,24 +23,24 @@ self.addEventListener('install', (event) => {
         console.log('Opened cache');
         return cache.addAll(URLS);
       })
-      .catch(err => { 
+      .catch(err => {
         console.log(err);
         throw err;
       })
   );
 });
 
-this.addEventListener('activate', (event) => {
-  event.waitUntil( 
-    caches.keys().then(cacheNames => { 
-      return Promise.all( 
-        cacheNames 
-          .filter(name => true)
-          .map(name => caches.delete(name))  
-      ) 
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames
+          .filter(() => true)
+          .map((name) => caches.delete(name))
+      )
     })
-  ); 
-}); 
+  );
+});
 
 self.addEventListener('fetch', async (event) => {
   const { request } = event;
