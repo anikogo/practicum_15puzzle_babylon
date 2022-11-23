@@ -1,6 +1,8 @@
 const STATIC_CACHE_NAME = 'static-data-v1';
 const DYNAMIC_CACHE_NAME = 'dynamic-data-v1';
 
+const CACHE_CONTAINING_ERROR_MESSAGES = 'any';
+
 const URLS = [
   '/',
   '/leaderboard',
@@ -42,25 +44,32 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-self.addEventListener('fetch', async (event) => {
-  const { request } = event;
-  event.respondWith(cacheData(request));
-});
-
-async function cacheData(request) {
-  const cashedRequest = await caches.match(request);
-  return cashedRequest ?? networkFirst(request);
-}
-
-async function networkFirst(request) {
-  const cache = await caches.open(DYNAMIC_CACHE_NAME);
-
-  try {
-    const response = await fetch(request);
-    cache.put(request, response.clone());
-
-    return response;
-  } catch (error) {
-    return await cache.match(request);
+addEventListener('fetch', function(event) {
+  if(!event.request.url.startsWith('http')) {
+    //skip request
+  } else {
+    event.respondWith(
+      caches.match(event.request)
+        .then(function(response) {
+          if (response) {
+            return response;     // if valid response is found in cache return it
+          } else {
+            return fetch(event.request)     //fetch from internet
+              .then(function(res) {
+                return caches.open(DYNAMIC_CACHE_NAME)
+                  .then(function(cache) {
+                    cache.put(event.request.url, res.clone());    //save the response for future
+                    return res;   // return the fetched data
+                  })
+              })
+              .catch(function(err) {       // fallback mechanism
+                return caches.open(CACHE_CONTAINING_ERROR_MESSAGES)
+                  .then(function(cache) {
+                    return cache.match('/offline.html');
+                  });
+              });
+          }
+        })
+    );
   }
-}
+});  

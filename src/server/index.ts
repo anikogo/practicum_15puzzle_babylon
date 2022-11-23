@@ -25,9 +25,9 @@ const { PORT = 3000 } = process.env;
 const helmetConfig = {
   useDefaults: true,
   directives: {
-    defaultSrc: ["'self'", 'https://ya-praktikum.tech/api/v2/'],
+    defaultSrc: ["'self'", 'https://ya-praktikum.tech/api/v2/', 'https://robohash.org/'],
     scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-    connectSrc: ["'self'", 'https://ya-praktikum.tech/api/v2/'],
+    connectSrc: ["'self'", 'https://ya-praktikum.tech/api/v2/', 'https://robohash.org/'],
     styleSrc: ["'self'", "'unsafe-inline'"],
     imgSrc: ["'self'", 'https://robohash.org/', 'https://ya-praktikum.tech/api/v2/resources/'],
   },
