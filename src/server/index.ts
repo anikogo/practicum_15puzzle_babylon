@@ -61,9 +61,10 @@ app
   // .use(compression())
   .use(express.static(path.resolve(__dirname)));
 
-// app.get('/service-worker.js', (_req, res) => {
-//   res.sendFile(path.resolve(__dirname, '..', 'dist', 'service-worker', 'service-worker.js'));
-// });
+app.get('/service-worker.js', (_req, res) => {
+  res.sendFile(path.resolve(__dirname, '..', 'dist', 'service-worker', 'service-worker.js'));
+});
+
 app.get('/*', serverRenderMiddleware);
 
 app.use('*', () => {
