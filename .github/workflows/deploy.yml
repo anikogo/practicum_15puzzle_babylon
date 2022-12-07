@@ -16,7 +16,6 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy:
-    needs: build-and-push-image
     runs-on: ubuntu-latest
     steps:
 
@@ -38,6 +37,7 @@ jobs:
           POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
           NODE_ENV: ${{ env.NODE_ENV }}
+          PORT: ${{ env.PORT }}
         run: |
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
@@ -56,6 +56,7 @@ jobs:
           POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
           NODE_ENV: ${{ env.NODE_ENV }}
+          PORT: ${{ env.PORT }}
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           folder-id: ${{ secrets.YC_FOLDER_ID }}
