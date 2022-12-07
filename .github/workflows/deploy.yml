@@ -30,6 +30,8 @@ jobs:
 
       - name: Build, tag, and push image to Yandex Cloud Container Registry
         env:
+          CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
+          CR_REPOSITORY: ${{ secrets.CR_REPO }}
           IMAGE_TAG: ${{ github.sha }}
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
@@ -39,8 +41,8 @@ jobs:
           NODE_ENV: ${{ env.NODE_ENV }}
           PORT: ${{ env.PORT }}
         run: |
-          docker build -t $IMAGE_NAME .
-          docker push $IMAGE_NAME
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
 
       - name: Deploy COI VM
         id: deploy-coi
