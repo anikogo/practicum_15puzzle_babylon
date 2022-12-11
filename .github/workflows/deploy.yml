@@ -48,6 +48,8 @@ jobs:
         id: deploy-coi
         uses: yc-actions/yc-coi-deploy@v1
         env:
+          YC_VM_USERNAME: ${{ secrets.YC_VM_USERNAME }}
+          YC_VM_SSH: ${{ secrets.YC_VM_SSH }}
           CR_REGISTRY: ${{ secrets.CR_REGISTRY }}
           CR_REPOSITORY: ${{ secrets.CR_REPO }}
           IMAGE_TAG: ${{ github.sha }}
@@ -64,4 +66,5 @@ jobs:
           folder-id: ${{ secrets.YC_FOLDER_ID }}
           VM-name: ${{ secrets.YC_VM_NAME }}
           vm-subnet-id: ${{ secrets.YC_VM_SUBNET_ID }}
+          user-data-path: '.yc/user-data.yml'
           docker-compose-path: './.yc/docker-compose.yml'
