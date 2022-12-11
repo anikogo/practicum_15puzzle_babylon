@@ -64,7 +64,8 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           folder-id: ${{ secrets.YC_FOLDER_ID }}
-          VM-name: ${{ secrets.YC_VM_NAME }}
+          vm-name: ${{ secrets.YC_VM_NAME }}
+          vm-service-account-name: ${{ secrets.YC_VM_USERNAME }}
           vm-subnet-id: ${{ secrets.YC_VM_SUBNET_ID }}
           user-data-path: '.yc/user-data.yml'
           docker-compose-path: './.yc/docker-compose.yml'
