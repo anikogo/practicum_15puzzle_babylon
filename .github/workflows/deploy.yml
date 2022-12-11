@@ -5,12 +5,13 @@ name: Deploy
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  push
+  push:
+    branches: [ main ]
 
 env:
   NODE_ENV: production
   PORT: 3000
-  IMAGE_NAME: cr.yandex/${{ secrets.CR_REGISTRY }}/${{ secrets.CR_REPO }}:${{ github.sha }}
+  IMAGE_NAME: cr.yandex/${{ secrets.CR_REGISTRY }}/${{ secrets.CR_REPO }}:latest
 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -41,8 +42,8 @@ jobs:
           NODE_ENV: ${{ env.NODE_ENV }}
           PORT: ${{ env.PORT }}
         run: |
-          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
-          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG
+          docker build -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:latest .
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:latest
 
       - name: Deploy COI VM
         id: deploy-coi
