@@ -67,5 +67,11 @@ jobs:
           vm-name: ${{ secrets.YC_VM_NAME }}
           vm-service-account-name: ${{ secrets.YC_VM_USERNAME }}
           vm-subnet-id: ${{ secrets.YC_VM_SUBNET_ID }}
-          user-data-path: '.yc/user-data.yml'
-          docker-compose-path: './.yc/docker-compose.yml'
+          vm-cores: 2
+          vm-memory: 2GB
+          vm-core-fraction: 50
+          vm-disk-size: 10GB
+          vm-zone-id: ru-central1-b
+          vm-platform-id: standard-v3
+          user-data-path: .yc/user-data.yml
+          docker-compose-path: ./.yc/docker-compose.yml
