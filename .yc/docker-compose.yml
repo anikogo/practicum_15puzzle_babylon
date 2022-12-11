@@ -3,7 +3,6 @@ version: "3.7"
 services:
   my-app:
     image: {{ env.IMAGE_NAME }}
-    platform: linux/amd64
     build:
       context: .
     depends_on:
