@@ -8,6 +8,7 @@ LABEL version="1.0"
 LABEL description="15puzzle"
 
 FROM base AS dev-deps
+ENV NODE_ENV development
 COPY package*.json ./
 RUN npm install
 
