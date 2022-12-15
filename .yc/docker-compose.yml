@@ -1,21 +1,18 @@
-version: "3"
+version: "3.7"
 
 services:
   my-app:
-    image: cr.yandex/crp11e63ns0rgi2120do/myapp:latest
-    platform: linux/amd64
+    image: {{ env.IMAGE_NAME }}
     build:
       context: .
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: postgres://postgres:newPassword@postgres:5432/my-db-name
-      NODE_ENV: ${NODE_ENV:-production}
-      PORT: ${PORT:-3000}
-      env_file:
-        .env
+      DATABASE_URL: postgres://{{ env.POSTGRES_USER }}:{{ env.POSTGRES_PASSWORD }}@{{ env.POSTGRES_HOST }}:5432/{{ env.POSTGRES_DB }}
+      NODE_ENV: {{ env.NODE_ENV }}
+      PORT: {{ env.PORT }}
     ports:
-      - "${PORT:-3000}:3000"
+      - "{{ env.PORT }}:3000"
     restart: always
     networks:
       - awesome
@@ -29,11 +26,9 @@ services:
       - ./src/migrations/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: newPassword
-      POSTGRES_DB: my-db-name
-      env_file:
-        .env
+      POSTGRES_USER: {{ env.POSTGRES_USER }}
+      POSTGRES_PASSWORD: {{ env.POSTGRES_PASSWORD }}
+      POSTGRES_DB: {{ env.POSTGRES_DB }}
     networks:
       - awesome
 

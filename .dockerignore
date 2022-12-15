@@ -1,0 +1,11 @@
+.github
+.husky
+.yc
+configs
+dist
+node_modules
+postgresdata
+.env
+docker-compose.yml
+Dockerfile
+error.log

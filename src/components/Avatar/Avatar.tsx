@@ -13,7 +13,8 @@ export default function Avatar({
   firstName,
   secondName,
 }: OwnProps) {
-  const initials = firstName[0] + secondName[0];
+  const initials = firstName ? firstName[0] + secondName[0] : '';
+
   return (
     <div
       className={classnames(
