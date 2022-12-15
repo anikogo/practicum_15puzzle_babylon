@@ -74,6 +74,8 @@ DB_NAME= #
 
 [https://cloud.yandex.ru/docs/container-registry/tutorials/run-docker-on-vm#before-begin](https://cloud.yandex.ru/docs/container-registry/tutorials/run-docker-on-vm#before-begin)
 
+`docker exec -it container_ID_or_name /bin/bash`
+
 ```
 # on an M1 mac…
 

@@ -1,66 +1,84 @@
-const STATIC_CACHE_NAME = 'static-data-v1';
-const DYNAMIC_CACHE_NAME = 'dynamic-data-v1';
+// const deleteCache = async (key) => {
+//   await caches.delete(key);
+// };
 
-const URLS = [
-  'http://localhost:3000/',
-  'http://localhost:3000/leaderboard',
-  'http://localhost:3000/forum',
-  'http://localhost:3000/about',
-  'http://localhost:3000/signin',
-  'http://localhost:3000/signup',
-  'http://localhost:3000/profile',
-  '/images/favicon.jpg',
-  '/main.css',
-  '/bundle.js',
-  '/server.js',
-];
+// const deleteOldCaches = async () => {
+//   const cacheKeepList = ['v1'];
+//   const keyList = await caches.keys();
+//   const cachesToDelete = keyList.filter((key) => !cacheKeepList.includes(key));
+
+//   await Promise.all(cachesToDelete.map(deleteCache));
+// };
+
+const addResourcesToCache = async (resources) => {
+  const cache = await caches.open('v1');
+  await cache.addAll(resources);
+};
+
+const putInCache = async (request, response) => {
+  const cache = await caches.open('v1');
+
+  if ((request.url.indexOf('http') === 0)) { 
+
+    await cache.put(request, response);
+  }
+};
+
+const networkFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
+  try {
+    const responseFromNetwork = await fetch(request);
+    putInCache(request, responseFromNetwork.clone());
+    return responseFromNetwork;
+  } catch (error) {
+    const responseFromCache = await caches.match(request);
+
+    if (responseFromCache) {
+      return responseFromCache;
+    }
+  
+    const preloadResponse = await preloadResponsePromise;
+    
+    if (preloadResponse) {
+      console.info('using preload response', preloadResponse);
+      putInCache(request, preloadResponse.clone());
+      return preloadResponse;
+    }
+    
+    const fallbackResponse = await caches.match(fallbackUrl);
+
+    if (fallbackResponse) {
+      return fallbackResponse;
+    }
+
+    return new Response('Network error happened', {
+      status: 408,
+      headers: { 'Content-Type': 'text/plain' },
+    });
+  }
+};
+
+const enableNavigationPreload = async () => {
+  if (self.registration.navigationPreload) {
+    await self.registration.navigationPreload.enable();
+  }
+};
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(enableNavigationPreload());
+});
 
 self.addEventListener('install', (event) => {
-  console.log('install');
-    event.waitUntil(
-      caches.open(STATIC_CACHE_NAME)
-      .then(cache => {
-        console.log('Opened cache');
-        return cache.addAll(URLS);
-      })
-      .catch(err => { 
-        console.log(err);
-        throw err;
-      })
+  event.waitUntil(
+    addResourcesToCache(['/', '/images/favicon.jpg', '/main.css'])
   );
 });
 
-this.addEventListener('activate', (event) => {
-  event.waitUntil( 
-    caches.keys().then(cacheNames => { 
-      return Promise.all( 
-        cacheNames 
-          .filter(name => true)
-          .map(name => caches.delete(name))  
-      ) 
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    networkFirst({
+      request: event.request,
+      preloadResponsePromise: event.preloadResponse,
+      fallbackUrl: '/about',
     })
-  ); 
-}); 
-
-self.addEventListener('fetch', async (event) => {
-  const { request } = event;
-  event.respondWith(cacheData(request));
+  );
 });
-
-async function cacheData(request) {
-  const cashedRequest = await caches.match(request);
-  return cashedRequest ?? networkFirst(request);
-}
-
-async function networkFirst(request) {
-  const cache = await caches.open(DYNAMIC_CACHE_NAME);
-
-  try {
-    const response = await fetch(request);
-    cache.put(request, response.clone());
-
-    return response;
-  } catch (error) {
-    return await cache.match(request);
-  }
-}
