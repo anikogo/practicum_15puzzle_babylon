@@ -11,11 +11,11 @@ import UserTheme from './models/UserTheme';
 dotEnvConfig();
 
 const sequelizeOptions: SequelizeOptions = {
-  host: 'localhost',
-  port: 5432,
-  username: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'newPassword',
-  database: process.env.DB_NAME || 'my-db-name',
+  host: process.env.POSGRES_HOST ?? 'localhost',
+  port: +(process.env.POSTGRES_PORT ?? 5432),
+  username: process.env.POSTGRES_USER ?? 'postgres',
+  password: process.env.POSTGRES_PASSWORD ?? 'newPassword',
+  database: process.env.POSTGRES_DB ?? 'my-db-name',
   dialect: 'postgres',
 };
 

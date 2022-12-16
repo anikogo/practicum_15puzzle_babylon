@@ -50,7 +50,7 @@ function LeaderboardPage() {
         title="Leaderboard"
         description="Game leaderboard with user stats"
       />
-      <Content className="bg-gray-100" heading="Leaderboard">
+      <Content className="bg-gray-100 h-[calc(100vh_-_128px)]" heading="Leaderboard">
         { isLoading ? (<Preloader />) : (<LeaderboardTable users={tableData ?? []} />) }
       </Content>
     </>

@@ -11,6 +11,8 @@ import App from './App';
 
 import './styles.css';
 
+let fullScreen = false;
+
 ReactDOM.hydrate(
   <ThemeContext.Provider value="light">
     <StrictMode>
@@ -23,3 +25,29 @@ ReactDOM.hydrate(
   </ThemeContext.Provider>,
   document.getElementById('app'),
 );
+
+function startServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js').then((registration) => {
+        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }).catch((error: string) => {
+        console.log('ServiceWorker registration failed: ', error);
+      });
+    });
+  }
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.code === 'KeyF') {
+    fullScreen = !fullScreen;
+  }
+
+  if (fullScreen) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+});
+
+startServiceWorker();

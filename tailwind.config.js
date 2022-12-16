@@ -2,7 +2,8 @@ module.exports = {
   content: [
     './src/**/*.tsx',
   ],
-  darkMode: 'media',
+  darkMode: 'class',
+  // darkMode: 'media',
   theme: {
     linearBorderGradients: {
       colors: {

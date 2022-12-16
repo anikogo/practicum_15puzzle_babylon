@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-
 import ErrorBoundaryWrapper from './components/ErrorBoundaryWrapper';
 
 import routes from './routes';

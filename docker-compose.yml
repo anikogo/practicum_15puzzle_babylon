@@ -2,13 +2,15 @@ version: "3"
 
 services:
   my-app:
+    image: cr.yandex/crp11e63ns0rgi2120do/myapp:latest
+    platform: linux/amd64
     build:
       context: .
     depends_on:
       - postgres
     environment:
       DATABASE_URL: postgres://postgres:newPassword@postgres:5432/my-db-name
-      NODE_ENV: ${NODE_ENV:-development}
+      NODE_ENV: ${NODE_ENV:-production}
       PORT: ${PORT:-3000}
       env_file:
         .env
@@ -52,8 +54,8 @@ services:
       - awesome
 
 volumes:
-    pgadmin-data:
+  pgadmin-data:
 
 networks:
-    awesome:
-        driver: bridge
+  awesome:
+    driver: bridge

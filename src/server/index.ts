@@ -1,5 +1,6 @@
 import path from 'path';
 import express from 'express';
+
 import livereload from 'livereload';
 import connectLivereload from 'connect-livereload';
 
@@ -22,12 +23,13 @@ import Urls from './utils/constants';
 const { PORT = 3000 } = process.env;
 
 const helmetConfig = {
-  hidePoweredBy: false,
-  contentSecurityPolicy: {
-    useDefaults: true,
-    directives: {
-      'default-src': ['self', 'https://ya-praktikum.tech/api/v2/'],
-    },
+  useDefaults: true,
+  directives: {
+    defaultSrc: ["'self'", 'https://ya-praktikum.tech/api/v2/', 'https://robohash.org/'],
+    scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+    connectSrc: ["'self'", 'https://ya-praktikum.tech/api/v2/', 'https://robohash.org/'],
+    styleSrc: ["'self'", "'unsafe-inline'"],
+    imgSrc: ["'self'", 'https://robohash.org/', 'https://ya-praktikum.tech/api/v2/resources/'],
   },
 };
 
@@ -39,7 +41,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(helmet(helmetConfig));
+  app.use(helmet.hidePoweredBy());
+  app.use(helmet.contentSecurityPolicy(helmetConfig));
 }
 
 app.use(Urls.API.BASE, api);
@@ -59,8 +62,9 @@ app
   .use(express.static(path.resolve(__dirname)));
 
 app.get('/service-worker.js', (_req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'service-worker', 'service-worker.js'));
+  res.sendFile(path.resolve(__dirname, '..', 'dist', 'service-worker', 'service-worker.js'));
 });
+
 app.get('/*', serverRenderMiddleware);
 
 app.use('*', () => {
@@ -78,6 +82,8 @@ const listen = () => {
 };
 
 (async () => {
-  await dbConnect();
+  if (process.env.NODE_ENV !== 'development') {
+    await dbConnect();
+  }
   listen();
 })();
