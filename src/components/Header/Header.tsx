@@ -1,10 +1,13 @@
-import { Fragment, type MouseEventHandler } from 'react';
+import {
+  Fragment,
+  type MouseEventHandler,
+  useEffect,
+  useState,
+} from 'react';
+
 import { Link, useLocation } from 'react-router-dom';
-
 import classnames from 'classnames';
-
 import { Popover, Transition } from '@headlessui/react';
-
 import { MenuIcon } from '@heroicons/react/outline';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 
@@ -12,10 +15,12 @@ import Tab from '../Tab';
 import Logo from '../Logo';
 import Button from '../Button';
 import ToggleButton from '../ToggleButton';
+import Range from '../Range';
 import Avatar from '../Avatar';
 
 import useUser from '../../hook/useUser';
 import { useSignOutMutation } from '../../store';
+import playSound from '../../utils/playSound';
 
 type HeaderProps = {
   disabled?: boolean;
@@ -24,6 +29,10 @@ type HeaderProps = {
 export default function Header({ disabled }: HeaderProps) {
   const { pathname } = useLocation();
   const user = useUser();
+  const html = document.querySelector('html');
+  const [theme, setTheme] = useState<boolean>(false);
+  const [sound, setSound] = useState<boolean>(false);
+  const [volume, setVolume] = useState<string>('0.1');
 
   const [signOut] = useSignOutMutation();
 
@@ -32,6 +41,47 @@ export default function Header({ disabled }: HeaderProps) {
     await signOut();
     close();
   };
+
+  useEffect(() => {
+    if (sound) {
+      playSound();
+    }
+  }, [sound]);
+
+  const setSelector = () => {
+    if (theme && html) {
+      html.classList.add('dark');
+    } else if (html) {
+      html.classList.remove('dark');
+    }
+  };
+
+  const toggleTheme = () => {
+    setTheme(!theme);
+    localStorage.setItem('theme', !theme ? 'dark' : 'light');
+  };
+
+  const toggleSound = () => {
+    setSound(!sound);
+    localStorage.setItem('sound', !sound ? 'on' : 'off');
+  };
+
+  const setVolumeVal = (volumeValue: string) => {
+    localStorage.setItem('volume', volumeValue);
+    setVolume(volumeValue);
+  };
+
+  useEffect(() => {
+    const userTheme = localStorage.getItem('theme');
+    const userSound = localStorage.getItem('sound');
+    const userVolume = localStorage.getItem('volume');
+
+    setTheme(userTheme === 'dark');
+    setSound(userSound === 'on');
+    setVolume(userVolume ?? '0');
+
+    setSelector();
+  }, [theme, sound, volume]);
 
   return (
     <Popover as="header" className="bg-gray-700 fixed w-full top-0 z-10 border-b-2 border-gray-800">
@@ -68,7 +118,6 @@ export default function Header({ disabled }: HeaderProps) {
                   >
                     About
                   </Button>
-                  <ToggleButton />
                 </nav>
               </>
             )}
@@ -84,6 +133,12 @@ export default function Header({ disabled }: HeaderProps) {
               <Popover className="relative flex gap-4">
                 {({ open, close }) => (
                   <>
+                    <div className="md:flex items-center gap-4">
+                      <Range label="Volume" value={volume} rangeSlide={setVolumeVal} />
+                      <ToggleButton label="Sound" value={sound} toggleAction={toggleSound} />
+                      <ToggleButton label="Dark theme" value={theme} toggleAction={toggleTheme} />
+                    </div>
+
                     <Avatar
                       className="max-h-12 w-auto"
                       firstName={user.first_name}

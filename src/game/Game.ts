@@ -2,6 +2,7 @@ import Field from './Field';
 import { populateArray, shuffleArray } from '../utils';
 import Tile from './Tile';
 import Stats from './Stats';
+import playSound from '../utils/playSound';
 
 type GameOptions = {
   boardSize: number;
@@ -222,6 +223,10 @@ export default class Game {
             this.#isAnimate = false;
             this.isVictory();
           });
+
+        if (localStorage.getItem('sound') === 'on') {
+          playSound();
+        }
       }
     }
   }
