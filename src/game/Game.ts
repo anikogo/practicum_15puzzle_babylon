@@ -7,9 +7,36 @@ type GameOptions = {
   boardSize: number;
   fieldFillColors: string | string[];
   tileFillColors: string | string[];
+  image?: HTMLImageElement;
   onPuzzleSolved: (score: number) => void;
 };
 
+type DrawImageParams = [
+  HTMLImageElement,
+  number, number, number, number, number, number, number, number,
+];
+
+/**
+ * gets start and end coordinates, width and height of the cropped image
+ * @param {HTMLImageElement} image - The image to crop
+ * @returns {[number, number, number, number]} - The start and end coordinates,
+ *  width and height of the cropped image
+ */
+function getResizedDimensions(image: HTMLImageElement): [number, number, number, number] {
+  const { width, height } = image;
+  const ratio = width / height;
+  if (ratio > 1) {
+    const horizontalOffset = (width - height) / 2;
+    return [horizontalOffset, 0, height, height];
+  }
+  const verticalOffset = (height - width) / 2;
+  return [0, verticalOffset, width, width];
+}
+
+/**
+ * Game class, handles the game logic
+ * @class
+ */
 export default class Game {
   boardSize: number;
 
@@ -25,9 +52,15 @@ export default class Game {
 
   numbers: number[];
 
+  successPattern: number[];
+
   #fieldFill: string | CanvasGradient;
 
   #tileFill: string | CanvasGradient;
+
+  #imageLoaded = false;
+
+  #slices: ImageData[];
 
   #field?: Field;
 
@@ -43,6 +76,8 @@ export default class Game {
     this.#tileFill = '';
     this.tiles = [];
     this.numbers = [];
+    this.#slices = [];
+    this.successPattern = [];
     this.tileWidth = 0;
     this.#state = 'stopped';
     this.#isAnimate = false;
@@ -50,6 +85,10 @@ export default class Game {
     this.#stats = new Stats();
   }
 
+  /**
+   * Checks if the puzzle is solvable
+   * @returns {boolean}
+   */
   isSolvable() {
     let parity = 0;
     let row = 0;
@@ -79,6 +118,9 @@ export default class Game {
     return parity % 2 === 0;
   }
 
+  /**
+   * Generates a random array of numbers
+   */
   generateNumbers() {
     this.numbers = shuffleArray(populateArray((this.boardSize * this.boardSize) - 1));
 
@@ -89,6 +131,11 @@ export default class Game {
     }
   }
 
+  /**
+   * Gets the tile position by its number
+   * @param {number} content - The tile number
+   * @returns {[number, number, number]} - The tile position
+   */
   getTilePos = (content: number) => {
     const zeroIndex = this.numbers.indexOf(content);
     const zeroCol = Math.floor(zeroIndex % this.boardSize);
@@ -96,6 +143,9 @@ export default class Game {
     return [zeroCol, zeroRow, zeroIndex];
   };
 
+  /**
+   * Spawns tiles on the field
+   */
   spawnTiles() {
     if (this.ctx) {
       for (let i = 0; i < this.numbers.length; i++) {
@@ -107,7 +157,8 @@ export default class Game {
           size: this.tileWidth,
           content: this.numbers[i],
           fill: this.#tileFill,
-          padding: 4,
+          imageData: this.#imageLoaded ? this.#slices[this.numbers[i] - 1] : undefined,
+          padding: this.#imageLoaded ? 0 : 4,
         }));
       }
 
@@ -115,10 +166,39 @@ export default class Game {
     }
   }
 
+  /**
+   * Gets the parameters for the drawImage method
+   * @param {HTMLImageElement} image - The image to crop
+   * @returns {DrawImageParams} - The parameters for the drawImage method
+   */
+  getDrawImageParams(image: HTMLImageElement): DrawImageParams {
+    if (this.canvas) {
+      const [sx, sy, sw, sh] = getResizedDimensions(image);
+      const [dx, dy, dw, dh] = [
+        0, 0,
+        this.canvas.width, this.canvas.height,
+      ];
+      return [image, sx, sy, sw, sh, dx, dy, dw, dh];
+    }
+    return [image, 0, 0, 0, 0, 0, 0, 0, 0];
+  }
+
+  /**
+   * Initializes the game
+   * @param {HTMLCanvasElement} canvas - The canvas element
+   * @param {GameOptions} options - The game options
+   * @param {number} options.boardSize - The board size
+   * @param {string | string[]} options.fieldFillColors - The field fill colors
+   * @param {string | string[]} options.tileFillColors - The tile fill colors
+   * @param {HTMLImageElement} options.image - The image to use
+   * @param {boolean} options.onPuzzleSolved - The callback function to call
+   *  when the puzzle is solved
+   */
   init(canvas: HTMLCanvasElement, {
     boardSize,
     fieldFillColors,
     tileFillColors,
+    image,
     onPuzzleSolved,
   }: GameOptions) {
     this.boardSize = boardSize;
@@ -126,11 +206,33 @@ export default class Game {
     if (this.state === 'stopped') {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
+      if (image) {
+        this.#imageLoaded = true;
+        this.ctx?.drawImage(...this.getDrawImageParams(image));
+      } else {
+        this.#imageLoaded = false;
+        this.#slices = [];
+      }
       this.numbers = populateArray((this.boardSize * this.boardSize) - 1);
+      this.successPattern = [...this.numbers];
       this.numbers.push(0);
 
       if (this.ctx) {
         this.tileWidth = this.canvas.height / this.boardSize || 0;
+        this.#slices = [];
+        if (this.#imageLoaded) {
+          for (let i = 0; i < this.numbers.length; i++) {
+            const col = i % this.boardSize;
+            const row = Math.floor(i / this.boardSize);
+            const slice = this.ctx.getImageData(
+              col * this.tileWidth,
+              row * this.tileWidth,
+              this.tileWidth,
+              this.tileWidth,
+            );
+            this.#slices.push(slice);
+          }
+        }
         if (typeof tileFillColors !== 'string') {
           this.#tileFill = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
           for (let i = 0; i < tileFillColors.length; i++) {
@@ -151,12 +253,15 @@ export default class Game {
         }
 
         this.#field = new Field(this.tileWidth * this.boardSize, this.#fieldFill, this.ctx);
-        this.#field.draw();
+        // this.#field.draw();
         this.spawnTiles();
       }
     }
   }
 
+  /**
+   * Starts the game
+   */
   start() {
     if (this.state !== 'started') {
       this.tiles = [];
@@ -170,8 +275,12 @@ export default class Game {
     }
   }
 
+  /**
+   * Stops the game
+   */
   stop() {
     this.numbers = populateArray((this.boardSize * this.boardSize) - 1);
+    this.successPattern = [...this.numbers];
     this.numbers.push(0);
 
     this.spawnTiles();
@@ -182,6 +291,9 @@ export default class Game {
     this.canvas?.removeEventListener('click', this.handleClick);
   }
 
+  /**
+   * Resets the game
+   */
   destroy() {
     if (this.#field) {
       document.removeEventListener('keydown', this.onArrowKeyPress);
@@ -189,6 +301,11 @@ export default class Game {
     }
   }
 
+  /**
+   * Moves the tile to the empty space
+   * @param {Tile} tile - The tile to move
+   * @param {string} code - The key code
+   */
   moveTile(tile: Tile, code?: string) {
     if (!this.#isAnimate) {
       const [zeroCol, zeroRow, zeroIdx] = this.getTilePos(0);
@@ -226,6 +343,12 @@ export default class Game {
     }
   }
 
+  /**
+   * Gets the mouse position
+   * @param {number} x - The x coordinate
+   * @param {number} y - The y coordinate
+   * @returns {number[]} - The tile position
+   */
   getCursorPosition(x: number, y: number) {
     if (this.canvas) {
       const rect = this.canvas?.getBoundingClientRect();
@@ -234,6 +357,11 @@ export default class Game {
     return [x, y];
   }
 
+  /**
+   * Tile click handler
+   * @param {number} x - The x coordinate
+   * @param {number} y - The y coordinate
+   */
   handleClick = ({ x, y }: MouseEvent) => {
     const [cursorX, cursorY] = this.getCursorPosition(x, y);
     const tileToMove = this.tiles.find((tile) => tile.isMouseOver(cursorX, cursorY));
@@ -242,6 +370,11 @@ export default class Game {
     }
   };
 
+  /**
+   * Arrow key press handler
+   * @param {KeyboardEvent} e - The event
+   * @param {string} e.code - The key code
+   */
   onArrowKeyPress = ({ code }: KeyboardEvent) => {
     const [, , zeroIdx] = this.getTilePos(0);
     let tileToMove: Tile | undefined;
@@ -267,31 +400,44 @@ export default class Game {
     }
   };
 
+  /**
+   * Calculates the game score
+   * @returns {number} - The score
+   */
   calcScore() {
     if (this.#stats) {
       const { movesCount, time } = this.#stats;
-      return Math.round((1 / Math.sqrt(time) + 2 / (movesCount ** 2)) * 1000);
+      return Math.round((1 / Math.sqrt(time) + 2 / (movesCount ** 2)) * 1000 * this.boardSize);
     }
     return 0;
   }
 
+  /**
+   * Checks if the game is won
+   * Compares the current numbers array with the success pattern
+   * Calls the victory callback if the game is won
+   * @returns {boolean} - The result
+   */
   isVictory() {
-    const etalon: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
-
-    // eslint-disable-next-line no-restricted-syntax, prefer-const
-    for (let i in etalon) {
-      if (etalon[i] !== this.tiles[i].content) {
-        return;
+    let result = true;
+    this.successPattern.forEach((el, i) => {
+      if (el !== this.tiles[i].content) {
+        result = false;
       }
-    }
+    });
 
-    // eslint-disable-next-line no-alert
-    this.#stats?.stopTimer();
-    const score = this.calcScore();
-    this.onPuzzleSolved(score);
-    this.stop();
+    if (result) {
+      this.#stats?.stopTimer();
+      const score = this.calcScore();
+      this.onPuzzleSolved(score);
+      this.stop();
+    }
   }
 
+  /**
+   * Game state getter
+   * @returns {string}
+   */
   get state() {
     return this.#state;
   }
