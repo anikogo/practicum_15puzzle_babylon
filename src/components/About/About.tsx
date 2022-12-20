@@ -23,13 +23,13 @@ export default function About() {
         </p>
         <ul className="mt-4 space-y-1 max-w-md list-disc list-inside text-gray-500 dark:text-gray-400">
           <li>
-            Kventi111
+            <a href="https://github.com/Kventi111" target="_blank" rel="noreferrer">Kventi111</a>
           </li>
           <li>
-            rkkmkkfx
+            <a href="https://github.com/rkkmkkfx" target="_blank" rel="noreferrer">rkkmkkfx</a>
           </li>
           <li>
-            bmazurm
+            <a href="https://github.com/bmazurm" target="_blank" rel="noreferrer">bmazurm</a>
           </li>
         </ul>
         <h2 className="relative z-0 inline-flex min-w-full border-b pt-6 pb-4">

@@ -5,12 +5,12 @@ Yandex Practicum Middle Frontend Developer | Module 2 | Game 15puzzle
 
 - #### rkkmkkfx
     - Sergey Baranov
-    
+
     - [GitHub](https://github.com/rkkmkkfx)
 
 - #### bmazurme
     - Bogdan Mazur
-    
+
     - [GitHub](https://github.com/bmazurme)
 
 ### Tech Stack
@@ -27,6 +27,16 @@ Yandex Practicum Middle Frontend Developer | Module 2 | Game 15puzzle
 ![NPM](https://img.shields.io/badge/-NPM-black?style=flat-square&logo=npm)
 ![Git](https://img.shields.io/badge/-Git-black?style=flat-square&logo=git)
 ![Eslint](https://img.shields.io/badge/-Eslint-black?style=flat-square&logo=eslint)
+
+### Installation
+
+Clone the repository on your computer: `git clone ...`
+
+Install dependencies: `npm install`
+
+Launch: `npm start`, dev `npm run dev`
+
+Test: `npm run test`
 
 
 ### MEMORYLEAKS
@@ -64,11 +74,19 @@ DB_NAME= #
 
 [https://cloud.yandex.ru/docs/container-registry/tutorials/run-docker-on-vm#before-begin](https://cloud.yandex.ru/docs/container-registry/tutorials/run-docker-on-vm#before-begin)
 
+`docker exec -it container_ID_or_name /bin/bash`
+
 ```
 # on an M1 mac…
 
 # --platform linux/amd64
 ```
+
+Identify what is running in port 5432: `sudo lsof -i :5432`
+
+Kill all the processes that are running under this port: `sudo kill -9 <pid>`
+
+Run the command again to verify no process is running now: `sudo lsof -i :5432`
 
 ### NGINX
 

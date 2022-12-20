@@ -143,7 +143,7 @@ export default function Forum({ users }: { users:
         values.title = '';
         values.category = '';
         values.content = '';
-      } catch ({ status, data: { reason } }: any) {
+      } catch ({ status, data: { reason } }) {
         errorHandler(new Error(`${status}: ${reason}`));
       }
     }

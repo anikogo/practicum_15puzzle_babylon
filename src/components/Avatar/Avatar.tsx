@@ -13,7 +13,8 @@ export default function Avatar({
   firstName,
   secondName,
 }: OwnProps) {
-  const initials = firstName[0] + secondName[0];
+  const initials = firstName ? firstName[0] + secondName[0] : '';
+
   return (
     <div
       className={classnames(
@@ -22,7 +23,7 @@ export default function Avatar({
       )}
     >
       {src
-        ? <img crossOrigin="anonymous" src={src} alt={`${firstName} ${secondName}`} className="m-0 object-cover h-full w-full" />
+        ? <img src={src} alt={`${firstName} ${secondName}`} className="m-0 object-cover h-full w-full" />
         : <span className="uppercase">{initials}</span>}
     </div>
   );
