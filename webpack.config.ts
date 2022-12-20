@@ -24,7 +24,7 @@ const common = {
   module: {
     rules: [
       {
-        test: /\.(svg|png|jpe?g|gif)$/i,
+        test: /\.(svg|png|jpe?g|gif|mp3)$/i,
         use: ['file-loader'],
       },
       {

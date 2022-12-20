@@ -66,7 +66,7 @@ function TopicComment({ comment, setTopic, topic }:
         userId: currentUser?.id,
       });
 
-      console.log(result);
+      // console.log(result);
 
       const comments = [...topic.comments];
       comments.push((result as { data: IComment })?.data);

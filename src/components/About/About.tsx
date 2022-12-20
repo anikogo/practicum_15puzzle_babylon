@@ -1,6 +1,7 @@
 export default function About() {
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full h-[calc(100vh_-_128px)]">
+
       <div className="w-full mx-auto px-4 sm:px-6 py-6 bg-gray-100 sm:rounded-lg">
         <h2 className="relative z-0 inline-flex min-w-full border-b pt-6 pb-4">
           Game

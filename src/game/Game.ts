@@ -2,6 +2,14 @@ import Field from './Field';
 import { populateArray, shuffleArray } from '../utils';
 import Tile from './Tile';
 import Stats from './Stats';
+import playSound from '../utils/playSound';
+
+type GameOptions = {
+  boardSize: number;
+  fieldFillColors: string | string[];
+  tileFillColors: string | string[];
+  onPuzzleSolved: (score: number) => void;
+};
 
 type GameOptions = {
   boardSize: number;
@@ -233,6 +241,7 @@ export default class Game {
             this.#slices.push(slice);
           }
         }
+
         if (typeof tileFillColors !== 'string') {
           this.#tileFill = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
           for (let i = 0; i < tileFillColors.length; i++) {
@@ -339,6 +348,10 @@ export default class Game {
             this.#isAnimate = false;
             this.isVictory();
           });
+
+        if (localStorage.getItem('sound') === 'on') {
+          playSound();
+        }
       }
     }
   }
