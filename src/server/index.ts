@@ -29,7 +29,15 @@ const helmetConfig = {
     scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
     connectSrc: ["'self'", 'https://ya-praktikum.tech/api/v2/', 'https://robohash.org/'],
     styleSrc: ["'self'", "'unsafe-inline'"],
-    imgSrc: ["'self'", 'https://robohash.org/', 'https://ya-praktikum.tech/api/v2/resources/'],
+    imgSrc: [
+      "'self'",
+      'data:image/png;base64',
+      'data:image/jpg;base64',
+      'data:image/jpeg;base64',
+      'data:image/gif;base64',
+      'https://robohash.org/',
+      'https://ya-praktikum.tech/api/v2/resources/',
+    ],
   },
 };
 
