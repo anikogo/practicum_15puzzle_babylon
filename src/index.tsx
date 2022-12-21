@@ -11,6 +11,8 @@ import App from './App';
 
 import './styles.css';
 
+let fullScreen = false;
+
 ReactDOM.hydrate(
   <ThemeContext.Provider value="light">
     <StrictMode>
@@ -35,5 +37,17 @@ function startServiceWorker() {
     });
   }
 }
+
+document.addEventListener('keydown', (event) => {
+  if (event.code === 'KeyF') {
+    fullScreen = !fullScreen;
+  }
+
+  if (fullScreen) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+});
 
 startServiceWorker();

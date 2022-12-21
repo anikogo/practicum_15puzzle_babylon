@@ -76,7 +76,6 @@ export default class Tile {
       this.size + this.padding * 2,
       this.size + this.padding * 2,
     );
-
     // draw the tile
     if (this.content !== 0) {
       this.#ctx.beginPath();
