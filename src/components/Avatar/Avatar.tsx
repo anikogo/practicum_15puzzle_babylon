@@ -24,7 +24,7 @@ export default function Avatar({
     >
       {src
         ? <img src={src} alt={`${firstName} ${secondName}`} className="m-0 object-cover h-full w-full" />
-        : <span className="uppercase">{initials}</span>}
+        : <span className="uppercase h-full w-full">{initials}</span>}
     </div>
   );
 }

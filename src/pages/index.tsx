@@ -12,6 +12,7 @@ import Game from '../game/Game';
 import Content from '../components/Content';
 import Button from '../components/Button';
 import Select from '../components/Select';
+import PageMeta from '../components/PageMeta';
 
 import withUser from '../hoc/withUser';
 import { useAddUserMutation } from '../store';
@@ -107,142 +108,148 @@ function IndexPage({ user }: { user?: User }) {
   };
 
   return (
-    <Content heading="Game" className="flex w-full h-[calc(100vh_-_128px)]">
-      <div
-        ref={gameRef}
-        className={classnames(
-          'flex gap-5 m-auto p-6 w-[750px] h-[530px] rounded-2xl',
-          'bg-[#374251] relative items-stretch justify-between',
-        )}
-      >
-        <div className="relative">
-          <canvas
-            ref={canvasRef}
-            width={480}
-            height={480}
-          />
-          {fillImage && (
-            <img
-              src={fillImage?.src}
-              alt=""
-              className={classnames(
-                'absolute top-0 left-0 w-full h-full object-cover',
-                {
-                  hidden: !isHintVisible && gameState !== 'solved',
-                },
-              )}
+    <>
+      <PageMeta
+        title="15 Puzzle Game"
+        description="Play 15 puzzle game online"
+      />
+      <Content heading="Game" className="flex w-full h-[calc(100vh_-_184px)]">
+        <div
+          ref={gameRef}
+          className={classnames(
+            'flex gap-5 m-auto p-6 w-[750px] h-[530px] rounded-2xl',
+            'bg-[#374251] relative items-stretch justify-between',
+          )}
+        >
+          <div className="relative">
+            <canvas
+              ref={canvasRef}
+              width={480}
+              height={480}
             />
-          )}
-        </div>
-        <div className="text-white text-3xl w-full max-w-[350px]">
-          <p className="my-3">
-            Moves:&nbsp;
-            {moves}
-          </p>
-          <p className="my-3">
-            Time:&nbsp;
-            {formattedTime(time)}
-          </p>
-          {gameScore > 0 ? (
-            <p className="my-3">
-              Score:&nbsp;
-              {gameScore}
-            </p>
-          ) : (
-            <p className="my-3">
-              &nbsp;
-            </p>
-          )}
-          <Button
-            className="w-full mb-3"
-            variant="filled"
-            color="green"
-            as={Link}
-            to="/"
-            onClick={() => {
-              if (gameState === 'stopped') {
-                game.start();
-              } else {
-                game.stop();
-                setGameScore(0);
-              }
-              setGameState(game.state);
-            }}
-          >
-            {game.state === 'stopped' ? 'Start' : 'Stop'}
-          </Button>
-          <Select
-            value={boardSize}
-            onChange={(value) => {
-              game.stop();
-              setGameState(game.state);
-              setGameScore(0);
-              setBoardSize(Number(value));
-            }}
-            options={[
-              { value: 3, label: '3x3' },
-              { value: 4, label: '4x4' },
-              { value: 5, label: '5x5' },
-              { value: 6, label: '6x6' },
-            ]}
-          />
-          <div className="my-3 grid grid-cols-2 grid-rows-2 gap-3">
-            {colors.map(({ from, to, name }) => (
-              <Button
-                key={name}
-                onClick={() => {
-                  setTileFillColors([from, to]);
-                  setFillImage(undefined);
-                }}
-                variant="filled"
+            {fillImage && (
+              <img
+                src={fillImage?.src}
+                alt=""
                 className={classnames(
-                  'w-full h-12 bg-gradient-to-br rounded',
+                  'absolute top-0 left-0 w-full h-full object-cover',
                   {
-                    'from-green-300 to-green-500': name === 'green',
-                    'from-indigo-300 to-indigo-500': name === 'indigo',
-                    'from-amber-300 to-amber-500': name === 'amber',
-                    'from-rose-300 to-rose-500': name === 'rose',
+                    hidden: !isHintVisible && gameState !== 'solved',
                   },
                 )}
               />
-            ))}
+            )}
           </div>
-          {fillImage ? (
+          <div className="text-white text-3xl w-full max-w-[350px]">
+            <p className="my-3">
+              Moves:&nbsp;
+              {moves}
+            </p>
+            <p className="my-3">
+              Time:&nbsp;
+              {formattedTime(time)}
+            </p>
+            {gameScore > 0 ? (
+              <p className="my-3">
+                Score:&nbsp;
+                {gameScore}
+              </p>
+            ) : (
+              <p className="my-3">
+                &nbsp;
+              </p>
+            )}
             <Button
+              className="w-full mb-3"
               variant="filled"
               color="green"
-              className="w-full cursor-pointer"
-              onClick={() => setFillImage(undefined)}
+              as={Link}
+              to="/"
+              onClick={() => {
+                if (gameState === 'stopped') {
+                  game.start();
+                } else {
+                  game.stop();
+                  setGameScore(0);
+                }
+                setGameState(game.state);
+              }}
             >
-              Numbers mode
+              {game.state === 'stopped' ? 'Start' : 'Stop'}
             </Button>
-          ) : (
-            <label className="flex flex-col justify-between relative" htmlFor="imageInput">
-              <Button as="div" variant="filled" color="green" className="w-full cursor-pointer">Image mode</Button>
-              <input
-                type="file"
-                id="imageInput"
-                onChange={handleImageLoad}
-                className={classnames(
-                  'visually-hidden',
-                )}
-              />
-            </label>
-          )}
-          {fillImage && (
-            <Button
-              variant="filled"
-              color="red"
-              className="w-full"
-              onMouseDown={() => setIsHintVisible(true)}
-              onMouseUp={() => setIsHintVisible(false)}
-            >
-              Hint
-            </Button>
-          )}
+            <Select
+              value={boardSize}
+              onChange={(value) => {
+                game.stop();
+                setGameState(game.state);
+                setGameScore(0);
+                setBoardSize(Number(value));
+              }}
+              options={[
+                { value: 3, label: '3x3' },
+                { value: 4, label: '4x4' },
+                { value: 5, label: '5x5' },
+                { value: 6, label: '6x6' },
+              ]}
+            />
+            <div className="my-3 grid grid-cols-2 grid-rows-2 gap-3">
+              {colors.map(({ from, to, name }) => (
+                <Button
+                  key={name}
+                  onClick={() => {
+                    setTileFillColors([from, to]);
+                    setFillImage(undefined);
+                  }}
+                  variant="filled"
+                  className={classnames(
+                    'w-full h-12 bg-gradient-to-br rounded',
+                    {
+                      'from-green-300 to-green-500': name === 'green',
+                      'from-indigo-300 to-indigo-500': name === 'indigo',
+                      'from-amber-300 to-amber-500': name === 'amber',
+                      'from-rose-300 to-rose-500': name === 'rose',
+                    },
+                  )}
+                />
+              ))}
+            </div>
+            {fillImage ? (
+              <Button
+                variant="filled"
+                color="green"
+                className="w-full cursor-pointer"
+                onClick={() => setFillImage(undefined)}
+              >
+                Numbers mode
+              </Button>
+            ) : (
+              <label className="flex flex-col justify-between relative" htmlFor="imageInput">
+                <Button as="div" variant="filled" color="green" className="w-full cursor-pointer">Image mode</Button>
+                <input
+                  type="file"
+                  id="imageInput"
+                  onChange={handleImageLoad}
+                  className={classnames(
+                    'visually-hidden',
+                  )}
+                />
+              </label>
+            )}
+            {fillImage && (
+              <Button
+                variant="filled"
+                color="red"
+                className="w-full"
+                onMouseDown={() => setIsHintVisible(true)}
+                onMouseUp={() => setIsHintVisible(false)}
+              >
+                Hint
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
-    </Content>
+      </Content>
+    </>
   );
 }
 

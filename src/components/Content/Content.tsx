@@ -2,6 +2,7 @@ import type { PropsWithChildren } from 'react';
 import classnames from 'classnames';
 
 import Header from '../Header';
+import Footer from '../Footer';
 
 type Props = PropsWithChildren<{
   heading?: string;
@@ -29,6 +30,7 @@ export default function Content({ heading, className, children }: Props) {
       >
         {children}
       </main>
+      <Footer />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 
+import PageMeta from '../components/PageMeta';
 import Content from '../components/Content';
 import UserForm, { type FormPayload } from '../components/UserForm';
 import Notification, { type NotificationProps } from '../components/Notification';
@@ -34,21 +35,27 @@ function ProfilePage() {
   };
 
   return (
-    <Content heading="Profile" className="h-[calc(100vh_-_128px)] w-full flex">
-      <div className="rounded-3xl bg-gray-100 w-max pt-4 pb-8 px-8 m-auto">
-        <UserForm userData={userData} onSubmit={onSubmit} />
-        {notification && (
-          <Notification
-            type={notification.type}
-            className="mt-4 absolute w-[calc(100%-4rem)] bottom-4 left-0 ml-8"
-          >
-            <span>
-              {notification.message}
-            </span>
-          </Notification>
-        )}
-      </div>
-    </Content>
+    <>
+      <PageMeta
+        title="Profile"
+        description="User profile page"
+      />
+      <Content heading="Profile" className="min-h-[calc(100vh_-_184px)] w-full flex">
+        <div className="rounded-3xl bg-gray-100 w-max pt-4 pb-8 px-8 m-auto">
+          <UserForm userData={userData} onSubmit={onSubmit} />
+          {notification && (
+            <Notification
+              type={notification.type}
+              className="mt-4 absolute w-[calc(100%-4rem)] bottom-4 left-0 ml-8"
+            >
+              <span>
+                {notification.message}
+              </span>
+            </Notification>
+          )}
+        </div>
+      </Content>
+    </>
   );
 }
 

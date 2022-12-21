@@ -1,12 +1,19 @@
 import Content from '../components/Content';
-import withUser from '../hoc/withUser';
 import About from '../components/About';
+import PageMeta from '../components/PageMeta';
+import withUser from '../hoc/withUser';
 
 function AboutPage() {
   return (
-    <Content heading="About">
-      <About />
-    </Content>
+    <>
+      <PageMeta
+        title="About"
+        description="Information about the project"
+      />
+      <Content heading="About" className="min-h-[calc(100vh_-_184px)]">
+        <About />
+      </Content>
+    </>
   );
 }
 
