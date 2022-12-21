@@ -9,7 +9,7 @@ import Button from '../components/Button';
 
 import useUser from '../hook/useUser';
 import withUser from '../hoc/withUser';
-import { useSignInMutation/* , useGetServiceIdQuery */ } from '../store';
+import { useSignInMutation, useGetServiceIdQuery } from '../store';
 
 type FormPayload = {
   login: string;
@@ -45,7 +45,7 @@ function SignInPage() {
   const navigate = useNavigate();
   const userData = useUser();
   const [signIn] = useSignInMutation();
-  // const { data: oauthData } = useGetServiceIdQuery(window.location.origin);
+  const { data: oauthData } = useGetServiceIdQuery(window.location.origin);
   const { control, handleSubmit } = useForm<FormPayload>({
     defaultValues: {
       login: '',
@@ -68,11 +68,11 @@ function SignInPage() {
     }
   });
 
-  // const oauthHandler = () => {
-  //   if (oauthData) {
-  //     document.location.href = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${oauthData.service_id}&redirect_uri=${window.location.origin}`;
-  //   }
-  // };
+  const oauthHandler = () => {
+    if (oauthData) {
+      document.location.href = `https://oauth.yandex.ru/authorize?response_type=code&client_id=${oauthData.service_id}&redirect_uri=${window.location.origin}`;
+    }
+  };
 
   return (
     <Content heading="Sign In" className="h-[calc(100vh_-_128px)] w-full flex">
@@ -106,9 +106,9 @@ function SignInPage() {
           </Button>
         </form>
 
-        {/* <Button variant="outline" onClick={oauthHandler}>
+        <Button variant="outline" onClick={oauthHandler}>
           <span>Sign In with Yandex</span>
-        </Button> */}
+        </Button>
       </div>
     </Content>
   );
