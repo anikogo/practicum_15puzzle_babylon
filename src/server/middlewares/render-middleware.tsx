@@ -14,22 +14,21 @@ import { store } from '../../store';
 import type { RootState } from '../../store';
 import routes from '../../routes';
 
-function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetData): string {
+function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetData, theme: () => boolean): string {
   return `
   <!DOCTYPE html>
-  <html lang="en">
+  <html lang="en" ${theme() ? 'class="dark"' : ''}>
     <head>
       ${helmetData.title.toString()}
       ${helmetData.meta.toString()}
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      
       <link rel="shortcut icon" type="image/png" href="/images/favicon.jpg">
       <link href="/main.css" rel="stylesheet">
     </head>
     <body>
-      <div id="app">${reactHtml}</div>
+      <div id="app" class="bg-white dark:bg-black">${reactHtml}</div>
       <script>
         window.__INITIAL_STATE__ = ${JSON.stringify(reduxState)}
       </script>
@@ -40,6 +39,7 @@ function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetDat
 }
 
 export default (req: Request, res: Response) => {
+  const theme = () => true;
   const location = req.url;
   const initialState = store.getState();
   const helmetData = Helmet.renderStatic();
@@ -50,7 +50,7 @@ export default (req: Request, res: Response) => {
       </StaticRouter>
     </ReduxProvider>
   ));
-  res.send(getHtml(reactHtml, initialState, helmetData));
+  res.send(getHtml(reactHtml, initialState, helmetData, theme));
 
   const dataRequirements: (Promise<void> | void)[] = routes
     .map((route) => {

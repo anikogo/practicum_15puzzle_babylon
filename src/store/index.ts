@@ -12,6 +12,7 @@ import {
 import userReducer from './slices/userSlice';
 import { isServer } from '../utils';
 import gameStatsReducer from './slices/gameStatsSlice';
+import userThemeReducer from './slices/userThemeSlice';
 
 export * from './api/appApi/endpoints';
 export * from './api/authApi/endpoints';
@@ -36,6 +37,7 @@ export const store = configureStore({
     // Add the generated reducer as a specific top-level slice
     user: userReducer,
     gameStats: gameStatsReducer,
+    userTheme: userThemeReducer,
     [appApi.reducerPath]: appApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [forumApi.reducerPath]: forumApi.reducer,

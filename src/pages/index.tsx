@@ -47,7 +47,6 @@ function IndexPage({ user }: { user?: User }) {
 
   const gameRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
     const canvas = canvasRef.current;
     const gameContainer = gameRef.current;
