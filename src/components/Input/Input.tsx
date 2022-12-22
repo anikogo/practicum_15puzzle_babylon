@@ -30,7 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         value={value}
         className={classnames(
           className,
-          'rounded border border-[#E1E1E1] w-auto py-2 px-4 text-grey-800',
+          'rounded border border-[#E1E1E1] w-auto py-2 px-4 text-gray-800',
           { 'border-error': errorText },
         )}
       />
