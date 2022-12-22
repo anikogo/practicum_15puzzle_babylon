@@ -41,7 +41,7 @@ function ProfilePage() {
         description="User profile page"
       />
       <Content heading="Profile" className="min-h-[calc(100vh_-_184px)] w-full flex">
-        <div className="rounded-3xl bg-gray-100 w-max pt-4 pb-8 px-8 m-auto">
+        <div className="bg-orange-200 dark:bg-[#374251] rounded-3xl bg-gray-100 w-max pt-4 pb-8 px-8 m-auto">
           <UserForm userData={userData} onSubmit={onSubmit} />
           {notification && (
             <Notification
