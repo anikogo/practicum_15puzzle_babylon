@@ -74,9 +74,9 @@ function SignInPage() {
         description="Sign In page"
       />
       <Content heading="Sign In" className="h-[calc(100vh_-_184px)] w-full flex">
-        <div className="rounded-3xl bg-gray-100 w-[445px] p-8 m-auto">
-          <h2 className="text-center">Sign in to your account</h2>
-          <form onSubmit={onSubmit} className="grid">
+        <div className="rounded-3xl bg-gray-100 w-[445px] p-8 m-auto bg-orange-200 dark:bg-[#374251]">
+          <h2 className="text-center text-gray-800 dark:text-white">Sign in to your account</h2>
+          <form onSubmit={onSubmit} className="grid mt-8 text-gray-800 dark:text-white">
             {inputs.map((input) => (
               <Controller
                 key={input.name}
@@ -96,9 +96,7 @@ function SignInPage() {
               />
             ))}
             <Button
-              variant="filled"
-              color="green"
-              className="mt-4 mb-16"
+              className="mt-4 mb-16 btn-orange-filled dark:btn-green-filled"
             >
               <span>Sign In</span>
             </Button>

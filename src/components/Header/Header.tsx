@@ -15,12 +15,10 @@ import Tab from '../Tab';
 import Logo from '../Logo';
 import Button from '../Button';
 import ToggleButton from '../ToggleButton';
-import Range from '../Range';
 import Avatar from '../Avatar';
 
 import useUser from '../../hook/useUser';
 import { useSignOutMutation } from '../../store';
-import playSound from '../../utils/playSound';
 
 type HeaderProps = {
   disabled?: boolean;
@@ -29,10 +27,8 @@ type HeaderProps = {
 export default function Header({ disabled }: HeaderProps) {
   const { pathname } = useLocation();
   const user = useUser();
-  const html = document.querySelector('html');
+  const html = globalThis.document?.querySelector('html');
   const [theme, setTheme] = useState<boolean>(false);
-  const [sound, setSound] = useState<boolean>(false);
-  const [volume, setVolume] = useState<string>('0.1');
 
   const [signOut] = useSignOutMutation();
 
@@ -41,12 +37,6 @@ export default function Header({ disabled }: HeaderProps) {
     await signOut();
     close();
   };
-
-  useEffect(() => {
-    if (sound) {
-      playSound();
-    }
-  }, [sound]);
 
   const setSelector = () => {
     if (theme && html) {
@@ -61,30 +51,19 @@ export default function Header({ disabled }: HeaderProps) {
     localStorage.setItem('theme', !theme ? 'dark' : 'light');
   };
 
-  const toggleSound = () => {
-    setSound(!sound);
-    localStorage.setItem('sound', !sound ? 'on' : 'off');
-  };
-
-  const setVolumeVal = (volumeValue: string) => {
-    localStorage.setItem('volume', volumeValue);
-    setVolume(volumeValue);
-  };
-
   useEffect(() => {
     const userTheme = localStorage.getItem('theme');
-    const userSound = localStorage.getItem('sound');
-    const userVolume = localStorage.getItem('volume');
 
     setTheme(userTheme === 'dark');
-    setSound(userSound === 'on');
-    setVolume(userVolume ?? '0');
 
     setSelector();
-  }, [theme, sound, volume]);
+  }, [theme]);
 
   return (
-    <Popover as="header" className="bg-gray-700 fixed w-full top-0 z-10 border-b-2 border-gray-800">
+    <Popover
+      as="header"
+      className="bg-orange-100 dark:bg-gray-700 fixed w-full top-0 z-10 border-b-2 border-orange-700 dark:border-gray-800"
+    >
       <div className="mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-2 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1 space-x-6">
@@ -95,25 +74,31 @@ export default function Header({ disabled }: HeaderProps) {
                 <Link to="/"><Logo /></Link>
                 <nav className="hidden md:flex items-center space-x-2">
                   <Button
-                    variant={pathname === '/leaderboard' ? 'filled' : 'link'}
-                    color="green"
                     as={Link}
+                    className={classnames({
+                      'btn-orange-filled dark:btn-green-filled': pathname === '/leaderboard',
+                      'btn-orange-text dark:btn-green-text': pathname !== '/leaderboard',
+                    })}
                     to="/leaderboard"
                   >
                     Leaderboard
                   </Button>
                   <Button
-                    variant={pathname === '/forum' ? 'filled' : 'link'}
-                    color="green"
                     as={Link}
+                    className={classnames({
+                      'btn-orange-filled dark:btn-green-filled': pathname === '/forum',
+                      'btn-orange-text dark:btn-green-text': pathname !== '/forum',
+                    })}
                     to="/forum"
                   >
                     Forum
                   </Button>
                   <Button
-                    variant={pathname === '/about' ? 'filled' : 'link'}
-                    color="green"
                     as={Link}
+                    className={classnames({
+                      'btn-orange-filled dark:btn-green-filled': pathname === '/about',
+                      'btn-orange-text dark:btn-green-text': pathname !== '/about',
+                    })}
                     to="/about"
                   >
                     About
@@ -125,23 +110,25 @@ export default function Header({ disabled }: HeaderProps) {
             )}
           </div>
           <div className="-mr-2 -my-2 md:hidden">
-            <Button as={Popover.Button} variant="icon">
+            <Button as={Popover.Button} className="btn-icon">
               <span className="sr-only">Open menu</span>
               <MenuIcon className="h-6 w-6" aria-hidden="true" />
             </Button>
+          </div>
+          <div className="md:flex items-center gap-4">
+            <ToggleButton
+              id="theme"
+              labelLeft="🌕"
+              labelRight="🌑"
+              checked={theme}
+              onToggle={toggleTheme}
+            />
           </div>
           <nav>
             {user ? (
               <Popover className="relative flex gap-4">
                 {({ open, close }) => (
                   <>
-
-                    <div className="md:flex items-center gap-4">
-                      <Range label="Volume" value={volume} rangeSlide={setVolumeVal} />
-                      <ToggleButton label="Sound" value={sound} toggleAction={toggleSound} />
-                      <ToggleButton label="Dark theme" value={theme} toggleAction={toggleTheme} />
-                    </div>
-
                     <Avatar
                       className="max-h-12 w-auto"
                       firstName={user.first_name}
@@ -206,19 +193,22 @@ export default function Header({ disabled }: HeaderProps) {
             ) : (
               <span>
                 <Button
-                  color="green"
-                  variant={pathname === '/signin' ? 'filled' : 'outline'}
                   as={Link}
+                  className={classnames({
+                    'btn-orange-filled dark:btn-green-filled': pathname === '/signin',
+                    'btn-orange-text dark:btn-green-text': pathname !== '/signin',
+                  })}
                   to="/signin"
                 >
                   Sign In
                 </Button>
                 <Button
-                  color="green"
-                  variant={pathname === '/signup' ? 'filled' : 'outline'}
                   as={Link}
+                  className={classnames('ml-4', {
+                    'btn-orange-filled dark:btn-green-filled': pathname === '/signup',
+                    'btn-orange-text dark:btn-green-text': pathname !== '/signup',
+                  })}
                   to="/signup"
-                  className="ml-4"
                 >
                   Sign Up
                 </Button>

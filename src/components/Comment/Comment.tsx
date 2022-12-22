@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { FormEvent, useState, useEffect } from 'react';
+import {
+  useState,
+  useEffect,
+  type FormEvent,
+  type ChangeEvent,
+} from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 
@@ -21,6 +26,7 @@ import {
 
 import useFormWithValidation from '../../hook/useValidator';
 
+import Button from '../Button';
 import ITopic from '../Topic/ITopic';
 import IComment from './IComment';
 import ILike from './ILike';
@@ -53,7 +59,7 @@ function TopicComment({ comment, setTopic, topic }:
 
   const { values, handleChange }:
   { values: Record<string, string>, handleChange:
-  (event: React.ChangeEvent<HTMLInputElement>) => void } = useFormWithValidation();
+  (event: ChangeEvent<HTMLInputElement>) => void } = useFormWithValidation();
 
   const handlerAdd = async (e: FormEvent) => {
     e.preventDefault();
@@ -181,10 +187,9 @@ function TopicComment({ comment, setTopic, topic }:
           <div className="flex w-full gap-x-2 justify-between items-center">
             <div className="w-[150px]">
               <div className="relative">
-                <button
-                  type="button"
+                <Button
                   onClick={handlerToggleLike}
-                  className="text-gray-900 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 mr-2 mb-2"
+                  className="btn-icon"
                 >
                   <svg
                     className="w-6 h-6"
@@ -205,32 +210,29 @@ function TopicComment({ comment, setTopic, topic }:
                   >
                     {likes.length}
                   </span>
-                </button>
+                </Button>
               </div>
             </div>
 
             <nav className="relative z-0 inline-flex rounded-md -space-x-px gap-x-2">
-              <button
-                type="button"
+              <Button
                 onClick={handlerToggleDeletePopup}
-                className="w-[100px] btn hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
+                className="btn-red-filled"
               >
                 Delete
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
                 onClick={handlerToggleEditPopup}
-                className="w-[100px] btn hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
+                className="btn-orange-outline dark:btn-green-outline"
               >
                 Edit
-              </button>
-              <button
-                type="submit"
+              </Button>
+              <Button
                 onClick={handlerToggleAddPopup}
-                className="w-[100px] btn hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
+                className="btn-orange-filled dark:btn-green-filled"
               >
                 Add
-              </button>
+              </Button>
             </nav>
           </div>
         </div>

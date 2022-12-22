@@ -15,13 +15,6 @@ function LeaderboardPage() {
   const [getUsers, { data, error, isLoading }] = useGetTeamUsersMutation();
   const [tableData, setTableData] = useState(data);
 
-  const Urls = {
-    AVATAR: {
-      DEFAULT: 'https://robohash.org/corporissitanimi.png?size=50x50&set=set1',
-      CUSTOM: 'https://ya-praktikum.tech/api/v2/resources/',
-    },
-  };
-
   useEffect(() => {
     if (!tableData) {
       getUsers({
@@ -33,8 +26,8 @@ function LeaderboardPage() {
           ?.map((item: { data: User & { score: number } }) => ({
             ...item?.data,
             avatar: (item?.data.avatar && item?.data.avatar !== 'null')
-              ? `${Urls.AVATAR.CUSTOM}${item.data?.avatar}`
-              : Urls.AVATAR.DEFAULT,
+              ? `${item.data?.avatar}`
+              : 'https://robohash.org/corporissitanimi.png?size=50x50&set=set1',
           })));
       });
     }

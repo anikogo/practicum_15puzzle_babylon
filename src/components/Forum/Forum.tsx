@@ -1,4 +1,3 @@
-/* eslint-disable react/button-has-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useMemo, useState, FormEvent } from 'react';
 import {
@@ -22,6 +21,8 @@ import { selectCurrentUser } from '../../store/slices/userSlice';
 
 import Pagination from '../Pagination';
 import PopupEditTopicModal from '../PopupEditTopicModal';
+
+import Button from '../Button';
 
 import { usePostTopicMutation } from '../../store';
 import useFormWithValidation from '../../hook/useValidator';
@@ -159,13 +160,12 @@ export default function Forum({ users }: { users:
         <div className="py-3 hidden sm:flex sm:items-center w-full">
           <div className="flex w-full gap-x-2 justify-between items-center">
             <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-              <button
-                className="btn hover:text-gray-500 bg-green-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500"
-                type="button"
+              <Button
+                className="btn-orange-filled dark:btn-green-filled"
                 onClick={handlerTogglePopup}
               >
                 Add topic
-              </button>
+              </Button>
             </nav>
           </div>
         </div>

@@ -88,7 +88,10 @@ export default function UserForm({ userData, onSubmit }: UserFormProps): JSX.Ele
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-[445px] grid">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-[445px] grid text-gray-800 dark:text-white"
+    >
       <div className="grid my-4">
         <Controller
           control={control}
@@ -119,7 +122,7 @@ export default function UserForm({ userData, onSubmit }: UserFormProps): JSX.Ele
           />
         ))}
       </div>
-      <Button variant="filled" color="green" className="mt-8">
+      <Button className="mt-8 btn-green-filled">
         <span>{userData ? 'Update' : 'Sign up'}</span>
       </Button>
     </form>

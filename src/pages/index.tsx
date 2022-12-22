@@ -17,11 +17,13 @@ import PageMeta from '../components/PageMeta';
 import withUser from '../hoc/withUser';
 import { useAddUserMutation } from '../store';
 import makeDataSelector from '../store/makeDataSelector';
+import Range from '../components/Range';
+import ToggleButton from '../components/ToggleButton';
 
 const colors = [
   { from: '#86efac', to: '#22c55e', name: 'green' },
   { from: '#a5b4fc', to: '#6366f1', name: 'indigo' },
-  { from: '#fcd34d', to: '#f59e0b', name: 'amber' },
+  { from: '#67e8f9', to: '#06b6d4', name: 'cyan' },
   { from: '#fda4af', to: '#f43f5e', name: 'rose' },
 ];
 
@@ -40,13 +42,54 @@ function IndexPage({ user }: { user?: User }) {
   const [gameScore, setGameScore] = useState(0);
   const [tileFillColors, setTileFillColors] = useState(['#86efac', '#22c55e']);
   const [fillImage, setFillImage] = useState<HTMLImageElement | undefined>();
+  const [isImageMode, setIsImageMode] = useState(false);
   const [isHintVisible, setIsHintVisible] = useState(false);
+  const [sound, setSound] = useState<boolean>(false);
+  const [volume, setVolume] = useState<string>('0.1');
   const [gameState, setGameState] = useState(game.state);
   const [postScore] = useAddUserMutation();
   const { moves, time } = useSelector(statsSelector);
 
   const gameRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const toggleSound = (enabled: boolean) => {
+    if (enabled && volume === '0') {
+      setVolume('0.5');
+    }
+
+    if (!enabled) {
+      setVolume('0');
+    }
+
+    setSound(enabled);
+    localStorage.setItem('sound', sound ? 'on' : 'off');
+  };
+
+  const setVolumeVal = (volumeValue: string) => {
+    if (volumeValue === '0') {
+      setSound(false);
+    }
+    if (volumeValue !== '0' && !sound) {
+      setSound(true);
+    }
+    localStorage.setItem('volume', volumeValue);
+    setVolume(volumeValue);
+  };
+
+  useEffect(() => {
+    const userSound = localStorage.getItem('sound');
+    const userVolume = localStorage.getItem('volume');
+
+    setSound(userSound === 'on');
+    setVolume(userVolume ?? '0');
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('sound', sound ? 'on' : 'off');
+    localStorage.setItem('volume', volume);
+  }, [sound, volume]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const gameContainer = gameRef.current;
@@ -57,6 +100,7 @@ function IndexPage({ user }: { user?: User }) {
       fieldFillColors: '#374251',
       tileFillColors,
       image: fillImage,
+      volume: +volume,
       onPuzzleSolved: (score) => {
         postScore({
           data: {
@@ -103,7 +147,14 @@ function IndexPage({ user }: { user?: User }) {
         img.src = reader.result as string;
       };
       reader.readAsDataURL(file);
+      game.stop();
     }
+  };
+
+  const handleGameModeChange = (value: boolean): void => {
+    setIsImageMode(value);
+    setFillImage(undefined);
+    game.stop();
   };
 
   return (
@@ -116,17 +167,17 @@ function IndexPage({ user }: { user?: User }) {
         <div
           ref={gameRef}
           className={classnames(
-            'flex gap-5 m-auto p-6 w-[750px] h-[530px] rounded-2xl',
-            'bg-[#374251] relative items-stretch justify-between',
+            'flex gap-5 m-auto p-6 w-[870px] h-[650px] rounded-2xl',
+            'bg-orange-300 dark:bg-[#374251] relative items-stretch justify-between',
           )}
         >
           <div className="relative">
             <canvas
               ref={canvasRef}
-              width={480}
-              height={480}
+              width={600}
+              height={600}
             />
-            {fillImage && (
+            {(fillImage || gameState === 'started') && (
               <img
                 src={fillImage?.src}
                 alt=""
@@ -139,7 +190,7 @@ function IndexPage({ user }: { user?: User }) {
               />
             )}
           </div>
-          <div className="text-white text-3xl w-full max-w-[350px]">
+          <div className="text-gray-700 dark:text-white text-3xl w-full max-w-[350px]">
             <p className="my-3">
               Moves:&nbsp;
               {moves}
@@ -155,13 +206,11 @@ function IndexPage({ user }: { user?: User }) {
               </p>
             ) : (
               <p className="my-3">
-                &nbsp;
+                Score:&nbsp;&mdash;&nbsp;&brvbar;&brvbar;&nbsp;&mdash;
               </p>
             )}
             <Button
-              className="w-full mb-3"
-              variant="filled"
-              color="green"
+              className="w-full btn-orange-filled dark:btn-green-filled"
               as={Link}
               to="/"
               onClick={() => {
@@ -176,75 +225,102 @@ function IndexPage({ user }: { user?: User }) {
             >
               {game.state === 'stopped' ? 'Start' : 'Stop'}
             </Button>
-            <Select
-              value={boardSize}
-              onChange={(value) => {
-                game.stop();
-                setGameState(game.state);
-                setGameScore(0);
-                setBoardSize(Number(value));
-              }}
-              options={[
-                { value: 3, label: '3x3' },
-                { value: 4, label: '4x4' },
-                { value: 5, label: '5x5' },
-                { value: 6, label: '6x6' },
-              ]}
-            />
-            <div className="my-3 grid grid-cols-2 grid-rows-2 gap-3">
-              {colors.map(({ from, to, name }) => (
-                <Button
-                  key={name}
-                  onClick={() => {
-                    setTileFillColors([from, to]);
-                    setFillImage(undefined);
-                  }}
-                  variant="filled"
-                  className={classnames(
-                    'w-full h-12 bg-gradient-to-br rounded',
-                    {
-                      'from-green-300 to-green-500': name === 'green',
-                      'from-indigo-300 to-indigo-500': name === 'indigo',
-                      'from-amber-300 to-amber-500': name === 'amber',
-                      'from-rose-300 to-rose-500': name === 'rose',
-                    },
-                  )}
-                />
-              ))}
+
+            <div className="my-6">
+              <h6 className="text-sm font-bold">Board size:</h6>
+              <Select
+                value={boardSize}
+                onChange={(value) => {
+                  game.stop();
+                  setGameState(game.state);
+                  setGameScore(0);
+                  setBoardSize(Number(value));
+                }}
+                options={[
+                  { value: 3, label: '3x3' },
+                  { value: 4, label: '4x4' },
+                  { value: 5, label: '5x5' },
+                  { value: 6, label: '6x6' },
+                ]}
+              />
             </div>
-            {fillImage ? (
-              <Button
-                variant="filled"
-                color="green"
-                className="w-full cursor-pointer"
-                onClick={() => setFillImage(undefined)}
-              >
-                Numbers mode
-              </Button>
-            ) : (
-              <label className="flex flex-col justify-between relative" htmlFor="imageInput">
-                <Button as="div" variant="filled" color="green" className="w-full cursor-pointer">Image mode</Button>
-                <input
-                  type="file"
-                  id="imageInput"
-                  onChange={handleImageLoad}
-                  className={classnames(
-                    'visually-hidden',
-                  )}
-                />
-              </label>
-            )}
-            {fillImage && (
-              <Button
-                variant="filled"
-                color="red"
-                className="w-full"
-                onMouseDown={() => setIsHintVisible(true)}
-                onMouseUp={() => setIsHintVisible(false)}
-              >
-                Hint
-              </Button>
-            )}
+            <div className="relative my-6 align-center">
+              <h6 className="text-sm font-bold mb-1">Game sound:</h6>
+              <ToggleButton
+                id="sound"
+                labelLeft="🔇"
+                labelRight="🔈"
+                checked={sound}
+                className="text-base"
+                onToggle={toggleSound}
+              />
+              <Range
+                label="Volume:"
+                value={volume}
+                rangeSlide={setVolumeVal}
+                className="text-base mt-1"
+              />
+            </div>
+            <div className="my-6">
+              <h6 className="text-sm font-bold mb-1">Game mode:</h6>
+              <ToggleButton
+                id="fillType"
+                checked={isImageMode}
+                labelLeft="Numbers"
+                labelRight="Image"
+                className="text-base"
+                onToggle={handleGameModeChange}
+              />
+              {isImageMode ? (
+                <div className="my-3 grid gap-3 items-center">
+                  <label className="flex flex-col justify-between relative" htmlFor="imageInput">
+                    <Button
+                      as="div"
+                      className="w-full cursor-pointer h-12 btn-orange-filled dark:btn-green-filled"
+                    >
+                      Select image
+                    </Button>
+                    <input
+                      type="file"
+                      id="imageInput"
+                      onChange={handleImageLoad}
+                      className={classnames(
+                        'visually-hidden',
+                      )}
+                    />
+                  </label>
+                  <Button
+                    disabled={!fillImage}
+                    className="w-full h-12 btn-red-outline"
+                    onMouseDown={() => setIsHintVisible(true)}
+                    onMouseUp={() => setIsHintVisible(false)}
+                  >
+                    Hint
+                  </Button>
+                </div>
+              ) : (
+                <div className="my-3 grid grid-cols-2 grid-rows-2 gap-3">
+                  {colors.map(({ from, to, name }) => (
+                    <Button
+                      key={name}
+                      onClick={() => {
+                        setTileFillColors([from, to]);
+                        setFillImage(undefined);
+                      }}
+                      className={classnames(
+                        'w-full h-12 bg-gradient-to-br rounded',
+                        {
+                          'from-green-300 to-green-500': name === 'green',
+                          'from-indigo-300 to-indigo-500': name === 'indigo',
+                          'from-cyan-300 to-cyan-500': name === 'cyan',
+                          'from-rose-300 to-rose-500': name === 'rose',
+                        },
+                      )}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </Content>

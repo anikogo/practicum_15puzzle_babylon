@@ -1,7 +1,6 @@
 import Content from '../components/Content';
 import About from '../components/About';
 import PageMeta from '../components/PageMeta';
-import withUser from '../hoc/withUser';
 
 function AboutPage() {
   return (
@@ -17,4 +16,4 @@ function AboutPage() {
   );
 }
 
-export default withUser(AboutPage);
+export default AboutPage;

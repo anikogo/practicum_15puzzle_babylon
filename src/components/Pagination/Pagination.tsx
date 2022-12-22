@@ -36,8 +36,8 @@ export default function Pagination({
   return (
     <div className="py-3 flex items-center justify-between sticky top-full">
       <div className="flex-1 flex justify-between sm:hidden">
-        <Button variant="icon" onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</Button>
-        <Button variant="icon" onClick={() => nextPage()} disabled={!canNextPage}>Next</Button>
+        <Button className="btn-icon" onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</Button>
+        <Button className="btn-icon" onClick={() => nextPage()} disabled={!canNextPage}>Next</Button>
       </div>
       <div className="hidden sm:flex sm:items-center w-full">
         <div className="flex w-full gap-x-2 justify-between items-center">
@@ -60,8 +60,7 @@ export default function Pagination({
           </span>
           <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
             <Button
-              variant="icon"
-              className="rounded-l-md"
+              className="rounded-l-md btn-icon"
               onClick={() => gotoPage(0)}
               disabled={!canPreviousPage}
             >
@@ -69,7 +68,7 @@ export default function Pagination({
               <ChevronDoubleLeftIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </Button>
             <Button
-              variant="icon"
+              className="btn-icon"
               onClick={() => previousPage()}
               disabled={!canPreviousPage}
             >
@@ -77,7 +76,7 @@ export default function Pagination({
               <ChevronLeftIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </Button>
             <Button
-              variant="icon"
+              className="btn-icon"
               onClick={() => nextPage()}
               disabled={!canNextPage}
             >
@@ -85,8 +84,7 @@ export default function Pagination({
               <ChevronRightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </Button>
             <Button
-              variant="icon"
-              className="rounded-r-md"
+              className="rounded-r-md btn-icon"
               onClick={() => gotoPage(pageCount - 1)}
               disabled={!canNextPage}
             >

@@ -1,11 +1,30 @@
-export default function Range({ label, value, rangeSlide }
-: { label: string, value: string, rangeSlide: (value: string) => void }) {
+import classnames from 'classnames';
+
+type RangeProps = {
+  label?: string;
+  value: string;
+  rangeSlide: (value: string) => void;
+  className?: string;
+};
+
+export default function Range({
+  label,
+  value,
+  rangeSlide,
+  className,
+}: RangeProps) {
   return (
-    <div className="relative inline-flex relative items-center gap-2">
-      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-      <label htmlFor={label} className="ml-3 text-sm font-medium text-gray-400 dark:text-gray-500">
-        {label}
-      </label>
+    <div
+      className={classnames(
+        'relative flex relative items-center gap-2',
+        className,
+      )}
+    >
+      {label && (
+        <label htmlFor={label} className="mr-3 font-medium">
+          {label}
+        </label>
+      )}
       <input
         value={value}
         min="0"
@@ -13,18 +32,11 @@ export default function Range({ label, value, rangeSlide }
         step="0.05"
         type="range"
         onChange={(e) => rangeSlide(e.target.value)}
-        className="
-          form-range
-          appearance-none
-          w-full
-          h-4
-          p-0
-          bg-transparent
-          bg-gray-200
-          rounded-full
-          focus:outline-none focus:ring-1 focus:shadow-none
-          accent-green-600 focus:accent-green-600
-        "
+        className={classnames(
+          'form-range appearance-none w-full h-4 p-0 bg-transparent bg-gray-200 rounded-full',
+          'focus:outline-none focus:ring-1 focus:shadow-none accent-orange-600 dark:accent-green-600',
+          'focus:accent-orange-600 dark:focus:accent-green-600',
+        )}
         id={label}
       />
     </div>
