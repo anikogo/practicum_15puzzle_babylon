@@ -22,7 +22,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   } = props;
   return (
     <div className={classnames('grid relative')}>
-      {label && <label htmlFor={id} className={classnames('text-gray-400 mb-1')}>{label}</label>}
+      {label && <label htmlFor={id} className={classnames('mb-1')}>{label}</label>}
       <input
         ref={ref}
         onChange={onChange}

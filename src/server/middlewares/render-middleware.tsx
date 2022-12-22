@@ -28,7 +28,7 @@ function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetDat
       <link href="/main.css" rel="stylesheet">
     </head>
     <body>
-      <div id="app" class="bg-white dark:bg-black">${reactHtml}</div>
+      <div id="app">${reactHtml}</div>
       <script>
         window.__INITIAL_STATE__ = ${JSON.stringify(reduxState)}
       </script>

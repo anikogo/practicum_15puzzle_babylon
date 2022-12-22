@@ -15,13 +15,6 @@ function LeaderboardPage() {
   const [getUsers, { data, error, isLoading }] = useGetTeamUsersMutation();
   const [tableData, setTableData] = useState(data);
 
-  const Urls = {
-    AVATAR: {
-      DEFAULT: 'https://robohash.org/corporissitanimi.png?size=50x50&set=set1',
-      CUSTOM: 'https://ya-praktikum.tech/api/v2/resources/',
-    },
-  };
-
   useEffect(() => {
     if (!tableData) {
       getUsers({
@@ -33,8 +26,8 @@ function LeaderboardPage() {
           ?.map((item: { data: User & { score: number } }) => ({
             ...item?.data,
             avatar: (item?.data.avatar && item?.data.avatar !== 'null')
-              ? `${Urls.AVATAR.CUSTOM}${item.data?.avatar}`
-              : Urls.AVATAR.DEFAULT,
+              ? `${item.data?.avatar}`
+              : 'https://robohash.org/corporissitanimi.png?size=50x50&set=set1',
           })));
       });
     }
@@ -50,7 +43,7 @@ function LeaderboardPage() {
         title="Leaderboard"
         description="Game leaderboard with user stats"
       />
-      <Content className="bg-gray-100 h-[calc(100vh_-_128px)]" heading="Leaderboard">
+      <Content className="bg-gray-100 min-h-[calc(100vh_-_184px)]" heading="Leaderboard">
         { isLoading ? (<Preloader />) : (<LeaderboardTable users={tableData ?? []} />) }
       </Content>
     </>

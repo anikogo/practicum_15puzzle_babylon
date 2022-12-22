@@ -46,7 +46,7 @@ export default function AvatarChanger({ onChange, ...user }: AvatarChangerProps)
   return (
     <label
       className={classnames(
-        'bg-white rounded-xl p-4 flex flex-col justify-between h-full relative',
+        'rounded-xl p-4 flex flex-col justify-between h-full relative',
       )}
       htmlFor="avatar"
     >
@@ -54,7 +54,7 @@ export default function AvatarChanger({ onChange, ...user }: AvatarChangerProps)
         src={newSrc || avatar}
         firstName={firstName}
         secondName={secondName}
-        className="self-center text-7xl border-4 border-transparents hover:border-gray-700 hover:cursor-pointer"
+        className="self-center text-7xl border-4 border-transparents hover:border-gray-700 dark:hover:border-green-700 hover:cursor-pointer"
       />
       <input
         ref={elementInputFile}

@@ -6,6 +6,7 @@ import { useErrorHandler } from 'react-error-boundary';
 import Content from '../components/Content';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import PageMeta from '../components/PageMeta';
 
 import useUser from '../hook/useUser';
 import withUser from '../hoc/withUser';
@@ -67,38 +68,42 @@ function SignInPage() {
     }
   });
   return (
-    <Content heading="Sign In" className="h-[calc(100vh_-_128px)] w-full flex">
-      <div className="rounded-3xl bg-gray-100 w-[445px] p-8 m-auto">
-        <h2 className="text-center">Sign in to your account</h2>
-        <form onSubmit={onSubmit} className="grid">
-          {inputs.map((input) => (
-            <Controller
-              key={input.name}
-              name={input.name as keyof FormPayload}
-              rules={{
-                pattern: input.pattern,
-                required: input.required,
-              }}
-              control={control}
-              render={({ field, fieldState }) => (
-                <Input
-                  {...field}
-                  {...input}
-                  errorText={fieldState.error?.message}
-                />
-              )}
-            />
-          ))}
-          <Button
-            variant="filled"
-            color="green"
-            className="mt-4 mb-16"
-          >
-            <span>Sign In</span>
-          </Button>
-        </form>
-      </div>
-    </Content>
+    <>
+      <PageMeta
+        title="Sign In"
+        description="Sign In page"
+      />
+      <Content heading="Sign In" className="h-[calc(100vh_-_184px)] w-full flex">
+        <div className="rounded-3xl bg-gray-100 w-[445px] p-8 m-auto bg-orange-200 dark:bg-[#374251]">
+          <h2 className="text-center text-gray-800 dark:text-white">Sign in to your account</h2>
+          <form onSubmit={onSubmit} className="grid mt-8 text-gray-800 dark:text-white">
+            {inputs.map((input) => (
+              <Controller
+                key={input.name}
+                name={input.name as keyof FormPayload}
+                rules={{
+                  pattern: input.pattern,
+                  required: input.required,
+                }}
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    {...input}
+                    errorText={fieldState.error?.message}
+                  />
+                )}
+              />
+            ))}
+            <Button
+              className="mt-4 mb-16 btn-orange-filled dark:btn-green-filled"
+            >
+              <span>Sign In</span>
+            </Button>
+          </form>
+        </div>
+      </Content>
+    </>
   );
 }
 

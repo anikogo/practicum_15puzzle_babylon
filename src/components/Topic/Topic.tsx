@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useErrorHandler } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 
+import Button from '../Button';
 import TopicComment from '../Comment';
 import Avatar from '../Avatar/index';
 import PopupModal from '../PopupModal';
@@ -141,20 +142,18 @@ function Topic({ data } : { data: ITopic }) {
         </h2>
 
         <div className="mt-4 inline-flex rounded-md shadow-sm" role="group">
-          <button
-            type="button"
+          <Button
             onClick={handlerToggleEditPopup}
-            className="py-2 px-4 text-sm font-medium text-gray-900 bg-white rounded-l-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+            className="btn-grey-filled"
           >
             Edit
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
             onClick={handlerToggleDeletePopup}
-            className="py-2 px-4 text-sm font-medium text-gray-900 bg-white rounded-r-md border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white"
+            className="btn-grey-filled"
           >
             Delete
-          </button>
+          </Button>
         </div>
         <p className="my-4 text-left whitespace-normal">{topic.content}</p>
         <div className="py-3 hidden sm:flex sm:items-center w-full border-t pt-6">
@@ -206,12 +205,12 @@ function Topic({ data } : { data: ITopic }) {
             </div>
           </div>
           <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-            <button
-              className="btn hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset"
+            <Button
+              className="btn-orange-filled dark:btn-green-filled"
               type="submit"
             >
               Add comment
-            </button>
+            </Button>
           </nav>
         </form>
       </div>

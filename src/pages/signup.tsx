@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useErrorHandler } from 'react-error-boundary';
 
 import Content from '../components/Content';
+import PageMeta from '../components/PageMeta';
 import UserForm, { type FormPayload } from '../components/UserForm';
 
 import useUser from '../hook/useUser';
@@ -30,12 +31,18 @@ function SignUpPage() {
   };
 
   return (
-    <Content heading="Sign Up" className="h-[calc(100vh_-_128px)] w-full flex">
-      <div className="rounded-3xl bg-gray-100 w-max pt-4 pb-8 px-8 m-auto">
-        <h2 className="text-center">Creane new account</h2>
-        <UserForm onSubmit={onSubmit} />
-      </div>
-    </Content>
+    <>
+      <PageMeta
+        title="Sign Up"
+        description="Sign Up page"
+      />
+      <Content heading="Sign Up" className="h-[calc(100vh_-_184px)] w-full flex">
+        <div className="bg-orange-200 dark:bg-[#374251] rounded-3xl w-max pt-4 pb-8 px-8 m-auto">
+          <h2 className="text-center text-gray-800 dark:text-white">Creane new account</h2>
+          <UserForm onSubmit={onSubmit} />
+        </div>
+      </Content>
+    </>
   );
 }
 

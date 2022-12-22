@@ -5,7 +5,8 @@ import Content from '../components/Content';
 import withUser from '../hoc/withUser';
 
 import Forum from '../components/Forum';
-import Preloader from '../components/Preloader/index';
+import Preloader from '../components/Preloader';
+import PageMeta from '../components/PageMeta';
 
 function ForumPage() {
   const handleError = useErrorHandler();
@@ -16,9 +17,15 @@ function ForumPage() {
   }
 
   return (
-    <Content className="bg-gray-100" heading="Forum">
-      { isLoading ? (<Preloader />) : (<Forum users={data ?? []} />) }
-    </Content>
+    <>
+      <PageMeta
+        title="Forum"
+        description="Forum page"
+      />
+      <Content className="bg-gray-100 min-h-[calc(100vh_-_184px)]" heading="Forum">
+        { isLoading ? (<Preloader />) : (<Forum users={data ?? []} />) }
+      </Content>
+    </>
   );
 }
 

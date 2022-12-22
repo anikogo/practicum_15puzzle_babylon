@@ -29,18 +29,14 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
               <div className="border-t pt-6">
                 Try to
                 <Button
-                  color="green"
-                  variant="filled"
-                  className="mx-3"
+                  className="mx-3 btn-green-filled"
                   onClick={resetErrorBoundary}
                 >
                   Reload app
                 </Button>
                 or
                 <Button
-                  color="green"
-                  variant="outline"
-                  className="mx-3"
+                  className="mx-3 btn-green-outline"
                   onClick={resetErrorBoundary}
                   as={Link}
                   to="/"

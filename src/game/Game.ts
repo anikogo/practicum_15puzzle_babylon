@@ -8,14 +8,8 @@ type GameOptions = {
   boardSize: number;
   fieldFillColors: string | string[];
   tileFillColors: string | string[];
-  onPuzzleSolved: (score: number) => void;
-};
-
-type GameOptions = {
-  boardSize: number;
-  fieldFillColors: string | string[];
-  tileFillColors: string | string[];
   image?: HTMLImageElement;
+  volume?: number;
   onPuzzleSolved: (score: number) => void;
 };
 
@@ -51,6 +45,8 @@ export default class Game {
   tileWidth: number;
 
   #state: string;
+
+  #volume: number;
 
   tiles: Tile[];
 
@@ -88,6 +84,7 @@ export default class Game {
     this.successPattern = [];
     this.tileWidth = 0;
     this.#state = 'stopped';
+    this.#volume = globalThis.localStorage?.getItem('volume') ? Number(globalThis.localStorage.getItem('volume')) : 0;
     this.#isAnimate = false;
     this.onPuzzleSolved = () => {};
     this.#stats = new Stats();
@@ -207,11 +204,15 @@ export default class Game {
     fieldFillColors,
     tileFillColors,
     image,
+    volume,
     onPuzzleSolved,
   }: GameOptions) {
+    if (volume !== this.#volume) {
+      this.#volume = +(volume ?? 0);
+    }
     this.boardSize = boardSize;
     this.onPuzzleSolved = onPuzzleSolved;
-    if (this.state === 'stopped') {
+    if (this.#state === 'stopped') {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
       if (image) {
@@ -327,6 +328,9 @@ export default class Game {
         || (!code && (Math.abs(zeroCol - col) + Math.abs(zeroRow - row)) === 1);
 
       if (canMove) {
+        if (this.#volume) {
+          playSound('click');
+        }
         [this.tiles[zeroIdx], this.tiles[ttmIdx]] = [this.tiles[ttmIdx], this.tiles[zeroIdx]];
         this.numbers = this.tiles.map((t) => +t.content);
         const newZeroX = tile.x;
@@ -348,10 +352,8 @@ export default class Game {
             this.#isAnimate = false;
             this.isVictory();
           });
-
-        if (localStorage.getItem('sound') === 'on') {
-          playSound();
-        }
+      } else {
+        playSound('wrong');
       }
     }
   }
@@ -420,7 +422,11 @@ export default class Game {
   calcScore() {
     if (this.#stats) {
       const { movesCount, time } = this.#stats;
-      return Math.round((1 / Math.sqrt(time) + 2 / (movesCount ** 2)) * 1000 * this.boardSize);
+      let score = Math.round((1 / Math.sqrt(time) + 2 / (movesCount ** 2)) * 1000 * this.boardSize);
+      if (this.#imageLoaded) {
+        score *= 10;
+      }
+      return score;
     }
     return 0;
   }
@@ -443,6 +449,7 @@ export default class Game {
       this.#stats?.stopTimer();
       const score = this.calcScore();
       this.onPuzzleSolved(score);
+      playSound('tada');
       this.stop();
     }
   }

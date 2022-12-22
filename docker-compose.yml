@@ -29,9 +29,9 @@ services:
       - ./src/migrations/dbinit.sql:/docker-entrypoint-initdb.d/dbinit.sql
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: newPassword
-      POSTGRES_DB: my-db-name
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-newPassword}
+      POSTGRES_DB: ${POSTGRES_DB:-my-db-name}
       env_file:
         .env
     networks:
