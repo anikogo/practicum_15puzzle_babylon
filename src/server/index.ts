@@ -31,10 +31,7 @@ const helmetConfig = {
     styleSrc: ["'self'", "'unsafe-inline'"],
     imgSrc: [
       "'self'",
-      'data:image/png;base64',
-      'data:image/jpg;base64',
-      'data:image/jpeg;base64',
-      'data:image/gif;base64',
+      'data:',
       'https://robohash.org/',
       'https://ya-praktikum.tech/api/v2/resources/',
     ],
