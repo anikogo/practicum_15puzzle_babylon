@@ -1,5 +1,5 @@
 import { StrictMode } from 'react';
-import * as ReactDOM from 'react-dom';
+import { hydrateRoot } from 'react-dom/client';
 
 import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -13,7 +13,8 @@ import './styles.css';
 
 let fullScreen = false;
 
-ReactDOM.hydrate(
+hydrateRoot(
+  document.getElementById('app') as HTMLElement,
   <ThemeContext.Provider value="light">
     <StrictMode>
       <Provider store={store}>
@@ -23,7 +24,6 @@ ReactDOM.hydrate(
       </Provider>
     </StrictMode>
   </ThemeContext.Provider>,
-  document.getElementById('app'),
 );
 
 function startServiceWorker() {
