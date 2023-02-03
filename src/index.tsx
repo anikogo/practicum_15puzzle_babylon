@@ -38,8 +38,8 @@ function startServiceWorker() {
   }
 }
 
-document.addEventListener('keydown', (event) => {
-  if (event.code === 'KeyF') {
+document.addEventListener('keydown', (event: KeyboardEvent) => {
+  if (event.code === 'KeyF' && event.shiftKey) {
     fullScreen = !fullScreen;
   }
 
