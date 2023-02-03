@@ -163,7 +163,7 @@ function IndexPage({ user }: { user?: User }) {
         title="15 Puzzle Game"
         description="Play 15 puzzle game online"
       />
-      <Content heading="Game" className="flex w-full h-[calc(100vh_-_184px)]">
+      <Content heading="Game" className="flex w-full h-min-[calc(100vh_-_184px)]">
         <div
           ref={gameRef}
           className={classnames(
