@@ -7,7 +7,7 @@ type ToggleButtonProps = {
   labelRight?: string;
   className?: string;
   checked: boolean;
-  onToggle: (checked: boolean) => void;
+  onToggle: (checked: boolean) => void | React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function ToggleButton({
@@ -18,9 +18,7 @@ export default function ToggleButton({
   checked,
   onToggle,
 }: ToggleButtonProps) {
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onToggle(event.target.checked);
-  };
+  const onChange = (event: ChangeEvent<HTMLInputElement>) => onToggle(event.target.checked);
 
   return (
     <label

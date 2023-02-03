@@ -1,9 +1,4 @@
-import {
-  Fragment,
-  type MouseEventHandler,
-  useEffect,
-  useState,
-} from 'react';
+import { Fragment, type MouseEventHandler, useContext } from 'react';
 
 import { Link, useLocation } from 'react-router-dom';
 import classnames from 'classnames';
@@ -19,18 +14,17 @@ import Avatar from '../Avatar';
 
 import useUser from '../../hook/useUser';
 import { useSignOutMutation } from '../../store';
+import ThemeContext from '../../context/ThemeContext';
 
 type HeaderProps = {
   disabled?: boolean;
 };
 
 export default function Header({ disabled }: HeaderProps) {
+  const { style, setStyle } = useContext(ThemeContext);
+  const [signOut] = useSignOutMutation();
   const { pathname } = useLocation();
   const user = useUser();
-  const html = globalThis.document?.querySelector('html');
-  const [theme, setTheme] = useState<boolean>(false);
-
-  const [signOut] = useSignOutMutation();
 
   const signOutHandler = (close: () => void): MouseEventHandler => async (event) => {
     event.preventDefault();
@@ -38,26 +32,10 @@ export default function Header({ disabled }: HeaderProps) {
     close();
   };
 
-  const setSelector = () => {
-    if (theme && html) {
-      html.classList.add('dark');
-    } else if (html) {
-      html.classList.remove('dark');
-    }
+  const toggleTheme = (theme: boolean) => {
+    setStyle(theme);
+    localStorage.setItem('theme', theme.toString());
   };
-
-  const toggleTheme = () => {
-    setTheme(!theme);
-    localStorage.setItem('theme', !theme ? 'dark' : 'light');
-  };
-
-  useEffect(() => {
-    const userTheme = localStorage.getItem('theme');
-
-    setTheme(userTheme === 'dark');
-
-    setSelector();
-  }, [theme]);
 
   return (
     <Popover
@@ -103,8 +81,6 @@ export default function Header({ disabled }: HeaderProps) {
                   >
                     About
                   </Button>
-
-                  {/* <ToggleButton /> */}
                 </nav>
               </>
             )}
@@ -120,7 +96,7 @@ export default function Header({ disabled }: HeaderProps) {
               id="theme"
               labelLeft="🌕"
               labelRight="🌑"
-              checked={theme}
+              checked={style}
               onToggle={toggleTheme}
             />
           </div>
