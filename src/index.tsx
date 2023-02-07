@@ -1,29 +1,24 @@
 import { StrictMode } from 'react';
-import * as ReactDOM from 'react-dom';
+import { hydrateRoot } from 'react-dom/client';
 
 import { unstable_HistoryRouter as HistoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import { store, history } from './store';
-import ThemeContext from './context/ThemeContext';
 
 import App from './App';
 
 import './styles.css';
 
-let fullScreen = false;
-
-ReactDOM.hydrate(
-  <ThemeContext.Provider value="light">
-    <StrictMode>
-      <Provider store={store}>
-        <HistoryRouter history={history}>
-          <App />
-        </HistoryRouter>
-      </Provider>
-    </StrictMode>
-  </ThemeContext.Provider>,
-  document.getElementById('app'),
+hydrateRoot(
+  document.getElementById('app') as HTMLElement,
+  <StrictMode>
+    <Provider store={store}>
+      <HistoryRouter history={history}>
+        <App />
+      </HistoryRouter>
+    </Provider>
+  </StrictMode>,
 );
 
 function startServiceWorker() {
@@ -37,17 +32,5 @@ function startServiceWorker() {
     });
   }
 }
-
-document.addEventListener('keydown', (event) => {
-  if (event.code === 'KeyF') {
-    fullScreen = !fullScreen;
-  }
-
-  if (fullScreen) {
-    document.documentElement.requestFullscreen();
-  } else {
-    document.exitFullscreen();
-  }
-});
 
 startServiceWorker();

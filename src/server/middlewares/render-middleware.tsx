@@ -14,10 +14,10 @@ import { store } from '../../store';
 import type { RootState } from '../../store';
 import routes from '../../routes';
 
-function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetData, theme: () => boolean): string {
+function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetData): string {
   return `
   <!DOCTYPE html>
-  <html lang="en" ${theme() ? 'class="dark"' : ''}>
+  <html lang="en">
     <head>
       ${helmetData.title.toString()}
       ${helmetData.meta.toString()}
@@ -39,7 +39,6 @@ function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetDat
 }
 
 export default (req: Request, res: Response) => {
-  const theme = () => true;
   const location = req.url;
   const initialState = store.getState();
   const helmetData = Helmet.renderStatic();
@@ -50,7 +49,7 @@ export default (req: Request, res: Response) => {
       </StaticRouter>
     </ReduxProvider>
   ));
-  res.send(getHtml(reactHtml, initialState, helmetData, theme));
+  res.send(getHtml(reactHtml, initialState, helmetData));
 
   const dataRequirements: (Promise<void> | void)[] = routes
     .map((route) => {

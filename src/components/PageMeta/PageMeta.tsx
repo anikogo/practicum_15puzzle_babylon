@@ -1,4 +1,4 @@
-import Helmet from 'react-helmet';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 type PageMetaProps = {
   title?: string;
@@ -22,20 +22,22 @@ export default function PageMeta({
   const { title, description, image } = prepareData(_title, _desc, _img);
 
   return (
-    <Helmet>
-      <title>{title}</title>
-      <meta property="og:title" content={title} />
-      <meta property="twitter:title" content={title} />
-      {Boolean(description) && (
-        <meta name="description" content={description} />
-      )}
-      {Boolean(description) && (
-        <meta property="og:description" content={description} />
-      )}
-      {Boolean(description) && (
-        <meta property="twitter:description" content={description} />
-      )}
-      {Boolean(image) && <meta property="og:image" content={image} />}
-    </Helmet>
+    <HelmetProvider>
+      <Helmet>
+        <title>{title}</title>
+        <meta property="og:title" content={title} />
+        <meta property="twitter:title" content={title} />
+        {Boolean(description) && (
+          <meta name="description" content={description} />
+        )}
+        {Boolean(description) && (
+          <meta property="og:description" content={description} />
+        )}
+        {Boolean(description) && (
+          <meta property="twitter:description" content={description} />
+        )}
+        {Boolean(image) && <meta property="og:image" content={image} />}
+      </Helmet>
+    </HelmetProvider>
   );
 }
