@@ -26,18 +26,20 @@ export default function App(): JSX.Element {
 
   return (
     <ThemeContext.Provider value={providerValue}>
-      <ErrorBoundaryWrapper>
-        <div className={`${!style
-          ? 'bg-gradient-to-b from-orange-100 to-orange-50'
-          : 'dark bg-gradient-to-b dark:from-gray-100 dark:to-gray-50'}`}
-        >
+      <div className={`${!style
+        ? 'bg-gradient-to-b from-orange-100 to-orange-50'
+        : 'dark bg-gradient-to-b dark:from-gray-100 dark:to-gray-50'}`}
+      >
+        <ErrorBoundaryWrapper>
+
           <Routes>
             {routes.map(({ fetchData, ...routeProps }) => (
               <Route key={routeProps.path} {...routeProps} />
             ))}
           </Routes>
-        </div>
-      </ErrorBoundaryWrapper>
+        </ErrorBoundaryWrapper>
+      </div>
+
     </ThemeContext.Provider>
   );
 }
