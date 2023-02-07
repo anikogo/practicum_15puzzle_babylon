@@ -44,7 +44,7 @@ export default function Header({ disabled }: HeaderProps) {
     >
       <div className="mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center py-2 md:justify-start md:space-x-10">
-          <div className="flex justify-start lg:w-0 lg:flex-1 space-x-6">
+          <div className="flex justify-start md:w-0 md:flex-1 space-x-6">
             {disabled ? (
               <Logo />
             ) : (
@@ -105,20 +105,20 @@ export default function Header({ disabled }: HeaderProps) {
               <Popover className="relative flex gap-4">
                 {({ open, close }) => (
                   <>
-                    <Avatar
-                      className="max-h-12 w-auto"
-                      firstName={user.first_name}
-                      secondName={user.second_name}
-                      src={user.avatar}
-                    />
                     <Tab
                       as={Popover.Button}
                       className="flex items-center"
                       active={open || pathname === '/profile'}
                     >
-                      <span>
+                      <Avatar
+                        className="max-h-12 w-auto"
+                        firstName={user.first_name}
+                        secondName={user.second_name}
+                        src={user.avatar}
+                      />
+                      {/* <span>
                         {user.display_name ?? `${user.first_name} ${user.second_name}`}
-                      </span>
+                      </span> */}
                       <ChevronDownIcon
                         className={classnames('ml-2 h-5 w-5', {
                           'text-gray-600': open,

@@ -17,7 +17,7 @@ import routes from '../../routes';
 function getHtml(reactHtml: string, reduxState: RootState, helmetData: HelmetData, theme: () => boolean): string {
   return `
   <!DOCTYPE html>
-  <html lang="en" ${theme() ? 'class="dark"' : ''}>
+  <html lang="en">
     <head>
       ${helmetData.title.toString()}
       ${helmetData.meta.toString()}
